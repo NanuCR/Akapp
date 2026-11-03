@@ -848,14 +848,14 @@ export default function App() {
                 }}
               />
 
-              {/* Píldoras de filtro centradas en 3 columnas iguales */}
-              <div className="grid grid-cols-3 gap-1.5">
+              {/* Píldoras de filtro en 2 columnas iguales */}
+              <div className="grid grid-cols-2 gap-2">
                 <Button
                   size="sm"
                   radius="full"
                   variant={difficultyFilter === "todas" ? "solid" : "flat"}
                   color={difficultyFilter === "todas" ? "primary" : "default"}
-                  className="min-h-[44px] text-xs font-semibold px-2"
+                  className="min-h-[44px] text-xs font-semibold px-3"
                   onPress={() => setDifficultyFilter("todas")}
                 >
                   Cerca de mí (3)
@@ -865,21 +865,10 @@ export default function App() {
                   radius="full"
                   variant={difficultyFilter === "con-guia" ? "solid" : "flat"}
                   color={difficultyFilter === "con-guia" ? "primary" : "default"}
-                  className="min-h-[44px] text-xs font-semibold px-2"
+                  className="min-h-[44px] text-xs font-semibold px-3"
                   onPress={() => setDifficultyFilter("con-guia")}
                 >
                   Con guía hoy
-                </Button>
-                <Button
-                  size="sm"
-                  radius="full"
-                  variant="flat"
-                  className="min-h-[44px] text-xs font-semibold px-2"
-                  onPress={() =>
-                    handleRouteSearch("¿Qué ruta me recomiendas de 2 horas?")
-                  }
-                >
-                  Ruta 2h (AX)
                 </Button>
               </div>
 
