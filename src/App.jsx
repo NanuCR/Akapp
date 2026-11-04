@@ -301,7 +301,7 @@ const BENEFITS = [
     place: "Soda Doña María · Sector Volcán Poás",
     requirement: "Equivale a ~10 hitos escaneados",
     cost: 150,
-    code: "TSIRO-CAFE-10",
+    code: "AKAPP-CAFE-10",
   },
   {
     id: "b2",
@@ -312,7 +312,7 @@ const BENEFITS = [
     place: "Restaurante El Trillo · Fraijanes",
     requirement: "Equivale a ~20 hitos escaneados",
     cost: 300,
-    code: "TSIRO-ALMUERZO-15",
+    code: "AKAPP-ALMUERZO-15",
   },
   {
     id: "b3",
@@ -323,7 +323,7 @@ const BENEFITS = [
     place: "Asociación de Guías Locales · Poás y Tenorio",
     requirement: "Aplicable al reservar guía en ruta",
     cost: 450,
-    code: "TSIRO-GUIA-15",
+    code: "AKAPP-GUIA-15",
   },
   {
     id: "b4",
@@ -334,7 +334,7 @@ const BENEFITS = [
     place: "Posada Río Agrio · Bajos del Toro",
     requirement: "Recompensa de temporada (80 hitos)",
     cost: 1200,
-    code: "TSIRO-POSADA-20",
+    code: "AKAPP-POSADA-20",
   },
 ];
 
@@ -1472,7 +1472,7 @@ export default function App() {
   const [isDark, setIsDark] = useState(false);
   const [vibrateOnScan, setVibrateOnScan] = useState(true);
 
-  // Saldo proporcional de Esteban (285 Tsirö acumulados tras varias caminatas)
+  // Saldo proporcional de Esteban (285 puntos acumulados tras varias caminatas)
   const [tsiro, setTsiro] = useState(285);
   const [xp, setXp] = useState(1880);
   const [totalKm, setTotalKm] = useState(42.6);
@@ -1597,7 +1597,7 @@ export default function App() {
         setAxSuggestion({
           routeId: "poas",
           title: "Recomendación AX: Parque Nacional Volcán Poás",
-          text: "A 18 km de tu ubicación. Tiene 4 piedras Àk (+50 Tsirö en total) y 2 guías certificados disponibles para salir hoy.",
+          text: "A 18 km de tu ubicación. Tiene 4 piedras Àk (+50 pts en total) y 2 guías certificados disponibles para salir hoy.",
         });
       }, 240);
     } else {
@@ -1945,7 +1945,7 @@ export default function App() {
                           {route.condition} · ★ {route.rating}
                         </BadgePill>
                         <BadgePill tone="secondary">
-                          +{route.totalTsiro} Tsirö
+                          +{route.totalTsiro} pts
                         </BadgePill>
                       </div>
 
@@ -2063,7 +2063,7 @@ export default function App() {
               <div className="flex items-center justify-between gap-2 px-1">
                 <h2 className="text-sm font-semibold">Piedras Àk</h2>
                 <span className="text-xs text-default-500">
-                  Hasta +{openedRoute.totalTsiro} Tsirö
+                  Hasta +{openedRoute.totalTsiro} pts
                 </span>
               </div>
               {openedRoute.aks.map((ak) => (
@@ -2083,7 +2083,7 @@ export default function App() {
                     {ak.trail} · {ak.km}
                   </span>
                   <span className="text-xs text-default-500 tabular-nums">
-                    +{ak.tsiro} Tsirö · +{ak.xp} XP · {ak.lat.toFixed(4)},{" "}
+                    +{ak.tsiro} pts · +{ak.xp} XP · {ak.lat.toFixed(4)},{" "}
                     {ak.lng.toFixed(4)}
                   </span>
                 </div>
@@ -2317,7 +2317,7 @@ export default function App() {
                   Sellaste todas las piedras Àk
                 </h1>
                 <p className="text-xs text-default-500">
-                  Ya tienes los {scannedAkIds.length} hitos disponibles. Usa tus Tsirö en Cupones.
+                  Ya tienes los {scannedAkIds.length} hitos disponibles. Usa tus puntos en Cupones.
                 </p>
                 <Button
                   radius="full"
@@ -2385,7 +2385,7 @@ export default function App() {
         {activeView === "cupones" && (
           <main className="tab-view flex flex-col gap-4 mt-2 flex-1">
             
-            {/* Tarjeta Héroe de Billetera Tsirö perfectamente alineada */}
+            {/* Tarjeta Héroe de Billetera de puntos perfectamente alineada */}
             <div className="p-4 rounded-3xl bg-primary text-primary-foreground flex items-center justify-between gap-3 shadow-sm">
               <div>
                 <h1 className="text-xs font-medium opacity-90">
@@ -2393,7 +2393,7 @@ export default function App() {
                 </h1>
                 <div className="flex items-baseline gap-2 mt-0.5">
                   <strong className="font-display text-2xl tabular-nums leading-none">
-                    {tsiro} Tsirö
+                    {tsiro} pts
                   </strong>
                   <span className="text-xs opacity-80">disponibles</span>
                 </div>
@@ -2576,7 +2576,7 @@ export default function App() {
                               : "neutral"
                           }
                         >
-                          {item.cost} Tsirö
+                          {item.cost} pts
                         </BadgePill>
                       </div>
 
@@ -2616,7 +2616,7 @@ export default function App() {
                             ? "Reclamado · Disponible offline"
                             : canAfford
                             ? item.requirement
-                            : `Tienes ${tsiro}/${item.cost} Tsirö (faltan ${
+                            : `Tienes ${tsiro}/${item.cost} pts (faltan ${
                                 item.cost - tsiro
                               })`}
                         </span>
@@ -2683,7 +2683,7 @@ export default function App() {
                       <h1 className="text-base font-semibold truncate">
                         Esteban Morales
                       </h1>
-                      <BadgePill tone="secondaryFlat">{tsiro} Tsirö</BadgePill>
+                      <BadgePill tone="secondaryFlat">{tsiro} pts</BadgePill>
                     </div>
                     <p className="text-xs text-default-500 mt-0.5">
                       Rango: Baqueano de Montaña · Nivel {level}
@@ -2790,7 +2790,7 @@ export default function App() {
 
                 {redeemedCouponsList.length === 0 ? (
                   <p className="text-xs text-default-500">
-                    Aún no has canjeado cupones. Ve a la pestaña Cupones para canjear tus Tsirö.
+                    Aún no has canjeado cupones. Ve a la pestaña Cupones para canjear tus puntos.
                   </p>
                 ) : (
                   redeemedCouponsList.map((c) => (
