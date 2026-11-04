@@ -803,6 +803,371 @@ function SettingToggle({ label, isOn, onChange }) {
   );
 }
 
+const STONE_READ_MS = 3400;
+const STONE_FILL_SECONDS = 2.6;
+const STONE_SIZE = { width: 680, height: 1440, centerX: 340, centerY: 584, reach: 820 };
+const STONE_GLOW_GREEN = "#9BBF4E";
+const STONE_LIGHT_BLOBS = [
+  [0, 0, 1],
+  [1, 0.9, 0.92],
+  [2.1, 0.8, 0.95],
+  [4.2, 1, 0.9],
+];
+
+function createStoneLayer() {
+  const canvas = document.createElement("canvas");
+  canvas.width = STONE_SIZE.width;
+  canvas.height = STONE_SIZE.height;
+  return [canvas, canvas.getContext("2d")];
+}
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = reject;
+    image.src = src;
+  });
+}
+
+// Conserva la luz de la piedra tallada, pero la deja solo en verde
+function tintStoneGreen(image) {
+  const [canvas, context] = createStoneLayer();
+  context.drawImage(image, 0, 0);
+  context.globalCompositeOperation = "color";
+  context.fillStyle = STONE_GLOW_GREEN;
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  return canvas;
+}
+
+let stoneImagesPromise = null;
+
+function loadStoneImages() {
+  if (!stoneImagesPromise) {
+    stoneImagesPromise = Promise.all([
+      loadImage("/scan/rock-base.jpg"),
+      loadImage("/scan/rock-lit.jpg"),
+      loadImage("/scan/rock-white.jpg"),
+    ])
+      .then(([base, lit, white]) => ({
+        base,
+        lit: tintStoneGreen(lit),
+        white: tintStoneGreen(white),
+      }))
+      .catch((error) => {
+        stoneImagesPromise = null;
+        throw error;
+      });
+  }
+  return stoneImagesPromise;
+}
+
+// Piedra tallada que se ilumina desde el centro con partículas de luz
+function StoneReadCanvas() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const { width, height, centerX, centerY, reach } = STONE_SIZE;
+    const context = canvasRef.current.getContext("2d");
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    const fillSeconds = reducedMotion ? 1 : STONE_FILL_SECONDS;
+    const [litLayer, litContext] = createStoneLayer();
+    const [edgeLayer, edgeContext] = createStoneLayer();
+    const [maskLayer, maskContext] = createStoneLayer();
+    const particles = reducedMotion
+      ? []
+      : Array.from({ length: 80 }, () => ({
+          angle: Math.random() * Math.PI * 2,
+          born: Math.random() * fillSeconds,
+          life: 0.8 + Math.random() * 0.9,
+          speed: 70 + Math.random() * 150,
+          size: 2 + Math.random() * 5,
+        }));
+
+    const easeFill = (progress) =>
+      0.45 * (1 - (1 - progress) ** 2) +
+      0.55 * (0.5 - 0.5 * Math.cos(Math.PI * progress));
+
+    const paintLiquidMask = (radius, seconds) => {
+      maskContext.globalCompositeOperation = "source-over";
+      maskContext.clearRect(0, 0, width, height);
+      maskContext.globalCompositeOperation = "lighter";
+      STONE_LIGHT_BLOBS.forEach(([phase, amplitude, scale]) => {
+        const x = centerX + Math.cos(seconds * 0.9 + phase) * 26 * amplitude;
+        const y = centerY + Math.sin(seconds * 1.1 + phase) * 26 * amplitude;
+        const size = Math.max(1, radius * scale);
+        const gradient = maskContext.createRadialGradient(x, y, 0, x, y, size);
+        gradient.addColorStop(0, "rgba(0,0,0,0.5)");
+        gradient.addColorStop(0.5, "rgba(0,0,0,0.5)");
+        gradient.addColorStop(1, "rgba(0,0,0,0)");
+        maskContext.fillStyle = gradient;
+        maskContext.fillRect(0, 0, width, height);
+      });
+    };
+
+    const paintThroughMask = (layerContext, image) => {
+      layerContext.globalCompositeOperation = "source-over";
+      layerContext.clearRect(0, 0, width, height);
+      layerContext.drawImage(image, 0, 0);
+      layerContext.globalCompositeOperation = "destination-in";
+      layerContext.drawImage(maskLayer, 0, 0);
+    };
+
+    const paintParticles = (seconds, radius) => {
+      context.globalCompositeOperation = "lighter";
+      particles.forEach((particle) => {
+        const age = seconds - particle.born;
+        if (age < 0 || age > particle.life) return;
+        const distance = radius * 0.6 + particle.speed * age;
+        const x = centerX + Math.cos(particle.angle) * distance;
+        const y = centerY + Math.sin(particle.angle) * distance - 50 * age;
+        context.globalAlpha = Math.sin((Math.PI * age) / particle.life);
+        context.fillStyle = "#D4EFA0";
+        context.beginPath();
+        context.arc(x, y, particle.size, 0, Math.PI * 2);
+        context.fill();
+      });
+    };
+
+    let frameId = null;
+    let cancelled = false;
+
+    loadStoneImages()
+      .then((images) => {
+        if (cancelled) return;
+        const startedAt = performance.now();
+
+        const paintFrame = (now) => {
+          const seconds = Math.max(0, (now - startedAt) / 1000);
+          const progress = Math.min(1, seconds / fillSeconds);
+          const radius = easeFill(progress) * reach;
+
+          context.globalCompositeOperation = "source-over";
+          context.globalAlpha = 1;
+          context.drawImage(images.base, 0, 0);
+
+          paintLiquidMask(radius, seconds);
+          paintThroughMask(litContext, images.lit);
+          context.drawImage(litLayer, 0, 0);
+
+          if (progress < 1) {
+            maskContext.globalCompositeOperation = "source-over";
+            maskContext.clearRect(0, 0, width, height);
+            const edge = maskContext.createRadialGradient(
+              centerX,
+              centerY,
+              radius * 0.35,
+              centerX,
+              centerY,
+              Math.max(2, radius * 0.95)
+            );
+            edge.addColorStop(0, "rgba(0,0,0,0)");
+            edge.addColorStop(0.6, "rgba(0,0,0,1)");
+            edge.addColorStop(1, "rgba(0,0,0,0)");
+            maskContext.fillStyle = edge;
+            maskContext.fillRect(0, 0, width, height);
+            paintThroughMask(edgeContext, images.white);
+            context.globalCompositeOperation = "lighter";
+            context.globalAlpha = 0.42 * (1 - progress * progress);
+            context.drawImage(edgeLayer, 0, 0);
+          }
+
+          paintParticles(seconds, radius);
+
+          const flash = seconds - fillSeconds + 0.15;
+          if (flash > 0 && flash < 0.85) {
+            context.globalCompositeOperation = "lighter";
+            context.globalAlpha = 0.32 * Math.sin((Math.PI * flash) / 0.85);
+            context.drawImage(images.lit, 0, 0);
+          }
+
+          frameId = requestAnimationFrame(paintFrame);
+        };
+
+        frameId = requestAnimationFrame(paintFrame);
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(frameId);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      width={STONE_SIZE.width}
+      height={STONE_SIZE.height}
+      className="absolute inset-0 w-full h-full object-cover"
+      role="img"
+      aria-label="Piedra tallada que se llena de luz"
+    />
+  );
+}
+
+// Escucha NFC estilo AirDrop, detección y lectura de la piedra
+function NfcScanOverlay({ stage, ak, onCancel }) {
+  const isReading = stage === "reading";
+  const isDetected = stage === "detected";
+
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      className="fixed inset-0 z-50 bg-[#090A07] text-[#E8EBDD] overflow-hidden"
+    >
+      {isReading ? (
+        <>
+          <StoneReadCanvas />
+          <div className="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-b from-transparent to-[#090A07]/90" />
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-t from-transparent to-[#090A07]/90" />
+          <div className="absolute top-8 inset-x-0 flex justify-center">
+            <LogoMark className="w-28 logo-awaken" decorative />
+          </div>
+          <div className="absolute bottom-16 inset-x-6 text-center">
+            <p className="font-display text-xl">Leyendo el Àk...</p>
+            <p className="text-xs opacity-75 mt-1">
+              {ak.code} · {ak.name}
+            </p>
+          </div>
+        </>
+      ) : (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-12 px-6 text-center">
+          <div className="relative w-72 h-72 flex items-center justify-center">
+            {!isDetected && (
+              <>
+                <span className="proximity-wave" />
+                <span className="proximity-wave proximity-wave-2" />
+                <span className="proximity-wave proximity-wave-3" />
+              </>
+            )}
+            <div
+              className={`w-28 h-28 rounded-full bg-[#8FA65A] text-[#090A07] flex items-center justify-center ${
+                isDetected ? "proximity-lock" : ""
+              }`}
+            >
+              <span className="rune-mark w-16 h-16" aria-hidden="true" />
+            </div>
+          </div>
+
+          <div>
+            <p className="font-display text-2xl">
+              {isDetected ? "Piedra detectada" : "Acerca tu teléfono a la piedra"}
+            </p>
+            <p className="text-sm opacity-75 mt-2">
+              {isDetected
+                ? `${ak.code} · ${ak.name}`
+                : "Buscando el chip NFC del Àk, sin necesidad de señal"}
+            </p>
+          </div>
+
+          <div className="h-11">
+            {!isDetected && (
+              <button
+                type="button"
+                onClick={onCancel}
+                className="min-h-[44px] px-6 rounded-full text-sm font-medium border border-white/25"
+              >
+                Cancelar
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ScanResultModal({
+  ak,
+  progress,
+  balance,
+  onBackToMap,
+  onKeepExploring,
+}) {
+  const isRouteComplete = progress.done === progress.total;
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="scanResultTitle"
+        className="scan-result-card w-full max-w-md bg-content1 text-foreground rounded-3xl shadow-xl p-6 flex flex-col gap-5"
+      >
+        <div className="flex flex-col items-center text-center gap-3">
+          <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+            <span className="rune-mark w-10 h-10" aria-hidden="true" />
+          </div>
+          <h2
+            id="scanResultTitle"
+            className="text-xs font-semibold tracking-wider text-primary"
+          >
+            PIEDRA {progress.done} DE {progress.total} · ¡ESCANEADA!
+          </h2>
+          <div>
+            <p className="font-display text-2xl leading-tight">
+              {ak.code} {ak.name}
+            </p>
+            <p className="text-sm text-default-500 mt-1">
+              {ak.trail} · {progress.routeName}
+            </p>
+          </div>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-default-100 flex flex-col gap-2.5">
+          <p className="text-center">
+            <strong className="font-display text-4xl tabular-nums">
+              +{ak.tsiro}
+            </strong>
+            <span className="text-sm text-default-500 block mt-1">
+              puntos añadidos a tu saldo
+            </span>
+          </p>
+          <div className="pt-2.5 border-t border-default-200 flex items-center justify-between text-sm tabular-nums">
+            <span className="text-default-500">Saldo total</span>
+            <strong className="font-semibold">
+              {balance.toLocaleString("en-US")} pts
+            </strong>
+          </div>
+        </div>
+
+        {isRouteComplete && (
+          <p className="text-sm text-center">
+            <span className="text-default-500">Nueva insignia: </span>
+            <strong className="font-semibold">
+              Guardián de {progress.routeName}
+            </strong>
+          </p>
+        )}
+
+        <div className="flex flex-col gap-2">
+          <Button
+            autoFocus
+            radius="full"
+            color="primary"
+            className="min-h-[48px] font-medium text-sm"
+            onPress={onBackToMap}
+          >
+            Volver al mapa
+          </Button>
+          <Button
+            radius="full"
+            variant="light"
+            className="min-h-[48px] font-medium text-sm"
+            onPress={onKeepExploring}
+          >
+            Seguir explorando
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ProfileBubble({ onPress, className = "" }) {
   return (
     <button
@@ -1167,7 +1532,7 @@ export default function App() {
 
   // Estado de Escáner NFC
   const [scannerAkId, setScannerAkId] = useState("ak-03");
-  const [scanState, setScanState] = useState("idle"); // "idle" | "scanning" | "done"
+  const [scanState, setScanState] = useState("idle"); // "idle" | "listening" | "detected" | "reading" | "done"
   const [nearAkId, setNearAkId] = useState(null);
   const scanTimerRef = useRef(null);
 
@@ -1317,21 +1682,40 @@ export default function App() {
 
   useEffect(() => () => clearTimeout(scanTimerRef.current), []);
 
+  const finishScan = (ak) => {
+    setTsiro((prev) => prev + ak.tsiro);
+    setXp((prev) => prev + ak.xp);
+    setTotalKm((prev) => Number((prev + 1.2).toFixed(1)));
+    setScannedAkIds((prev) => [...prev, ak.id]);
+    setScanState("done");
+  };
+
+  // Escucha NFC, detección simulada al acercar el teléfono y lectura de la piedra
   const startScan = (ak) => {
-    if (scanState === "scanning") return;
+    if (scanState !== "idle") return;
     setScannerAkId(ak.id);
-    setScanState("scanning");
-    if (vibrateOnScan) navigator.vibrate?.([40, 80, 40]);
+    setScanState("listening");
+    loadStoneImages().catch(() => {});
 
     scanTimerRef.current = setTimeout(() => {
-      setTsiro((prev) => prev + ak.tsiro);
-      setXp((prev) => prev + ak.xp);
-      setTotalKm((prev) => Number((prev + 1.2).toFixed(1)));
-      setScannedAkIds((prev) => [...prev, ak.id]);
-      setScanState("done");
-      setActiveView("escanear");
-      if (vibrateOnScan) navigator.vibrate?.(120);
-    }, 2400);
+      setScanState("detected");
+      if (vibrateOnScan) navigator.vibrate?.(30);
+
+      scanTimerRef.current = setTimeout(() => {
+        setScanState("reading");
+        if (vibrateOnScan) navigator.vibrate?.([25, 40, 70]);
+
+        scanTimerRef.current = setTimeout(
+          () => finishScan(ak),
+          STONE_READ_MS
+        );
+      }, 700);
+    }, 2600);
+  };
+
+  const handleCancelScan = () => {
+    clearTimeout(scanTimerRef.current);
+    setScanState("idle");
   };
 
   // Botón central: escanea la siguiente piedra pendiente de la ruta abierta
@@ -1348,9 +1732,14 @@ export default function App() {
     setActiveView("escanear");
   };
 
-  const handleContinueAfterScan = () => {
+  const handleResultBackToMap = () => {
     setScanState("idle");
-    setActiveView("explorar");
+    setActiveView(openedRoute ? "explorar" : "mapa");
+  };
+
+  const handleResultKeepExploring = () => {
+    setScanState("idle");
+    goToExplore();
   };
 
   const handleResetDemo = () => {
@@ -1919,89 +2308,31 @@ export default function App() {
         )}
 
         {/* ========================================================= */}
-        {/* VISTA: RESULTADO DEL ESCANEO NFC DE LA PIEDRA ÀK          */}
+        {/* VISTA: TODAS LAS PIEDRAS ÀK SELLADAS                      */}
         {/* ========================================================= */}
         {activeView === "escanear" && (
           <main className="flex flex-col gap-4 mt-2 flex-1">
-            {scanState === "done" ? (
-              <Card
-                shadow="sm"
-                className="border border-default-200 bg-content1 rounded-3xl"
-              >
-                <CardBody className="p-6 flex flex-col items-center text-center gap-4">
-                  <span className="text-xs font-medium tracking-wider text-default-500">
-                    PIEDRA {scannerRouteProgress.done} DE{" "}
-                    {scannerRouteProgress.total}
-                  </span>
-                  <LogoMark className="w-40 text-primary logo-glow" />
-                  <div>
-                    <h1 className="font-display text-2xl">Àk escaneada</h1>
-                    <p className="text-xs text-default-500 mt-1">
-                      {scannerAk.code} · {scannerAk.name} · {scannerAk.trail}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center justify-center gap-2">
-                    <BadgePill tone="secondaryFlat">
-                      +{scannerAk.tsiro} Tsirö
-                    </BadgePill>
-                    <BadgePill tone="primaryFlat">+{scannerAk.xp} XP</BadgePill>
-                  </div>
-
-                  {scannerRouteProgress.done === scannerRouteProgress.total && (
-                    <div className="w-full p-3 rounded-2xl bg-primary/10 border border-primary/30">
-                      <span className="text-xs font-medium text-default-500 block">
-                        NUEVA INSIGNIA
-                      </span>
-                      <strong className="text-sm font-semibold">
-                        Guardián de {scannerRouteProgress.routeName}
-                      </strong>
-                    </div>
-                  )}
-
-                  <div className="w-full grid grid-cols-2 gap-2 mt-1">
-                    <Button
-                      radius="full"
-                      variant="flat"
-                      className="min-h-[48px] font-medium text-xs"
-                      onPress={() => setActiveView("cupones")}
-                    >
-                      Ver premios ({tsiro} Tsirö)
-                    </Button>
-                    <Button
-                      radius="full"
-                      color="primary"
-                      className="min-h-[48px] font-medium text-xs"
-                      onPress={handleContinueAfterScan}
-                    >
-                      Seguir la ruta
-                    </Button>
-                  </div>
-                </CardBody>
-              </Card>
-            ) : (
-              <Card
-                shadow="none"
-                className="border border-default-200 bg-content1 rounded-3xl"
-              >
-                <CardBody className="p-6 flex flex-col items-center text-center gap-3">
-                  <h1 className="font-display text-xl">
-                    Sellaste todas las piedras Àk
-                  </h1>
-                  <p className="text-xs text-default-500">
-                    Ya tienes los {scannedAkIds.length} hitos disponibles. Usa tus Tsirö en Cupones.
-                  </p>
-                  <Button
-                    radius="full"
-                    color="primary"
-                    className="min-h-[48px] w-full font-medium text-xs"
-                    onPress={() => setActiveView("cupones")}
-                  >
-                    Ir a Cupones
-                  </Button>
-                </CardBody>
-              </Card>
-            )}
+            <Card
+              shadow="none"
+              className="border border-default-200 bg-content1 rounded-3xl"
+            >
+              <CardBody className="p-6 flex flex-col items-center text-center gap-3">
+                <h1 className="font-display text-xl">
+                  Sellaste todas las piedras Àk
+                </h1>
+                <p className="text-xs text-default-500">
+                  Ya tienes los {scannedAkIds.length} hitos disponibles. Usa tus Tsirö en Cupones.
+                </p>
+                <Button
+                  radius="full"
+                  color="primary"
+                  className="min-h-[48px] w-full font-medium text-xs"
+                  onPress={() => setActiveView("cupones")}
+                >
+                  Ir a Cupones
+                </Button>
+              </CardBody>
+            </Card>
           </main>
         )}
 
@@ -2489,26 +2820,23 @@ export default function App() {
         )}
       </div>
 
-      {/* ANIMACIÓN MÍSTICA DE ESCANEO NFC */}
-      {scanState === "scanning" && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="fixed inset-0 z-50 bg-[#090A07] text-[#E8EBDD] flex flex-col items-center justify-center gap-10 px-6 text-center overflow-hidden"
-        >
-          <div className="relative w-72 h-72 flex items-center justify-center">
-            <span className="nfc-ring" />
-            <span className="nfc-ring nfc-ring-2" />
-            <span className="nfc-ring nfc-ring-3" />
-            <LogoMark className="w-48 logo-awaken" />
-          </div>
-          <div>
-            <p className="font-display text-xl">Leyendo el Àk...</p>
-            <p className="text-xs opacity-75 mt-1">
-              {scannerAk.code} · {scannerAk.name}
-            </p>
-          </div>
-        </div>
+      {/* FLUJO NFC: PROXIMIDAD, LECTURA RÚNICA Y RESULTADO */}
+      {["listening", "detected", "reading"].includes(scanState) && (
+        <NfcScanOverlay
+          stage={scanState}
+          ak={scannerAk}
+          onCancel={handleCancelScan}
+        />
+      )}
+
+      {scanState === "done" && (
+        <ScanResultModal
+          ak={scannerAk}
+          progress={scannerRouteProgress}
+          balance={tsiro}
+          onBackToMap={handleResultBackToMap}
+          onKeepExploring={handleResultKeepExploring}
+        />
       )}
 
       {/* BARRA INFERIOR FIJA: 5 ACCESOS CON LA RUNA AL CENTRO */}
