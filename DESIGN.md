@@ -4,12 +4,12 @@
 Reading this as: aplicación móvil de exploración de rutas naturales, hitos NFC y guías locales en Costa Rica al estilo Strava y AllTrails, en un lenguaje visual deportivo de montaña limpio y táctil, dial ENERGY 2 / RHYTHM 2 / MOTION 2.
 
 ## Dials
-- **ENERGY**: 2 (Contraste nítido de instrumentación deportiva de montaña con acento cian para métricas activas, nodos Àk y lectura bajo el sol).
+- **ENERGY**: 2 (Contraste nítido de instrumentación deportiva de montaña con acento verde para métricas activas, nodos Àk y lectura bajo el sol).
 - **RHYTHM**: 2 (Composición estructurada con cinco accesos inferiores: Mapa general, Explorar con modo sendero, runa central de escaneo NFC, Cupones y Configuración; Perfil se abre desde el avatar superior derecho).
 - **MOTION**: 2 (Animación de trazo SVG al escanear el grabado rúnico NFC y selección interactiva de nodos Àk en el mapa del sendero).
 
 ## Decisiones de Diseño (R-31: Razón en una línea)
-- **Por qué esta paleta de color**: Verdes de conservación (bosque `#0F5C46`, texto `#0E2A22`) con cian `#0E7490` para acciones y estados activos, sobre blanco y gris muy claro (`#F8FAF9`). Contraste WCAG AA verificado. Modo noche en verde profundo (`#07140F`) con esmeralda `#4FD1A5` y cian `#38D6E8`.
+- **Por qué esta paleta de color**: Solo verdes. De día, verde bosque `#0F5C46` y `#14704F` sobre blanco y tonos claros (`#F8FAF9`). De noche, verde musgo `#8FA65A` y `#A9BC6E` sobre negro (`#090A07`). Contraste WCAG AA verificado.
 - **Por qué este layout**: Barra inferior de cinco accesos con la runa al centro y avatar arriba a la derecha. Al abrir un parque, 1/3 superior de minimapa estilo Waze y 2/3 inferiores con piedras Àk y accesos flotantes de micrófono (izquierda) y cámara (derecha) para ciencia ciudadana del SINAC.
 - **Por qué esta tipografía**: Pila de sistema estilo Apple (`-apple-system`, `SF Pro`) con `Inter` como respaldo. Títulos en `font-light` con tracking cerrado, y textos en `font-medium` o `font-semibold` para una jerarquía limpia.
 - **Por qué este espaciado**: Objetivos táctiles de mínimo 44x44px con separación de 8px a 12px para operar con una mano en movimiento.

@@ -24,17 +24,17 @@ body {
 @keyframes logoAwaken {
   0%,
   35% {
-    background-color: #1D3A31;
+    background-color: #23281B;
     filter: none;
   }
   65% {
-    background-color: #67E8F9;
-    filter: drop-shadow(0 0 12px rgba(207, 250, 254, 0.95))
-      drop-shadow(0 0 26px rgba(34, 211, 238, 0.75));
+    background-color: #A9BC6E;
+    filter: drop-shadow(0 0 12px rgba(226, 236, 190, 0.95))
+      drop-shadow(0 0 26px rgba(143, 166, 90, 0.75));
   }
   100% {
-    background-color: #67E8F9;
-    filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.5));
+    background-color: #A9BC6E;
+    filter: drop-shadow(0 0 6px rgba(143, 166, 90, 0.5));
   }
 }
 
@@ -43,7 +43,7 @@ body {
 }
 
 .logo-glow {
-  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.55));
+  filter: drop-shadow(0 0 8px rgba(143, 166, 90, 0.55));
 }
 
 @keyframes nfcRing {
@@ -63,7 +63,7 @@ body {
 .nfc-ring {
   position: absolute;
   inset: 0;
-  border: 2px solid #67E8F9;
+  border: 2px solid #A9BC6E;
   border-radius: 9999px;
   animation: nfcRing 1.8s ease-out infinite;
 }
@@ -80,10 +80,10 @@ body {
 @keyframes nfcCall {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.7);
+    box-shadow: 0 0 0 0 rgba(143, 166, 90, 0.7);
   }
   50% {
-    box-shadow: 0 0 0 14px rgba(34, 211, 238, 0);
+    box-shadow: 0 0 0 14px rgba(143, 166, 90, 0);
   }
 }
 
@@ -116,7 +116,7 @@ body {
   position: absolute;
   inset: 0;
   border-radius: 9999px;
-  background: rgba(34, 211, 238, 0.28);
+  background: rgba(143, 166, 90, 0.28);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -129,6 +129,6 @@ body {
   }
 
   .logo-awaken {
-    background-color: #67E8F9;
+    background-color: #A9BC6E;
   }
 }

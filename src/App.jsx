@@ -464,14 +464,14 @@ function walkLength(walkPath) {
 const MAP_ARROW_HTML = `<div class="nav-arrow-pulse"></div>
   <div class="nav-arrow">
     <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true">
-      <path d="M16 3 L27 28 L16 22 L5 28 Z" fill="#22D3EE" stroke="#06231A" stroke-width="2.5" stroke-linejoin="round" />
+      <path d="M16 3 L27 28 L16 22 L5 28 Z" fill="#0F5C46" stroke="#FFFFFF" stroke-width="2.5" stroke-linejoin="round" />
     </svg>
   </div>`;
 
 function createAkIcon(ak, isDone, isSelected) {
   const background = isDone ? "#0F7A5A" : "#0E2A22";
   const ring = isSelected
-    ? "box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.75);"
+    ? "box-shadow: 0 0 0 4px rgba(143, 166, 90, 0.85);"
     : "box-shadow: 0 2px 5px rgba(0,0,0,0.35);";
 
   return L.divIcon({
@@ -552,7 +552,7 @@ function TrailMiniMap({
     }).addTo(layer);
 
     L.polyline(route.trailPath, {
-      color: "#0E7490",
+      color: "#0F5C46",
       weight: 4.5,
       dashArray: "7 5",
       lineCap: "round",
@@ -636,7 +636,7 @@ function GeneralParksMap({ onOpenRoute }) {
           className: "ak-custom-pin",
           html: `<div style="display:flex;flex-direction:column;align-items:center;width:150px;">
             <div style="background:#FFFFFF;color:#0E2A22;border:1px solid rgba(14,42,34,0.18);border-radius:9999px;padding:4px 10px;font-size:12px;font-weight:600;line-height:1.1;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.4);">${label}</div>
-            <div style="width:12px;height:12px;border-radius:9999px;background:#0E7490;border:2px solid #FFFFFF;margin-top:3px;"></div>
+            <div style="width:12px;height:12px;border-radius:9999px;background:#0F5C46;border:2px solid #FFFFFF;margin-top:3px;"></div>
           </div>`,
           iconSize: [150, 46],
           iconAnchor: [75, 44],
@@ -2482,7 +2482,7 @@ export default function App() {
         <div
           role="status"
           aria-live="polite"
-          className="fixed inset-0 z-50 bg-[#04140F] text-[#E6F0EB] flex flex-col items-center justify-center gap-10 px-6 text-center overflow-hidden"
+          className="fixed inset-0 z-50 bg-[#090A07] text-[#E8EBDD] flex flex-col items-center justify-center gap-10 px-6 text-center overflow-hidden"
         >
           <div className="relative w-72 h-72 flex items-center justify-center">
             <span className="nfc-ring" />
