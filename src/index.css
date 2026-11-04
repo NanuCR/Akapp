@@ -196,40 +196,181 @@ button[data-pressed="true"] {
   animation: logoAwaken 2.4s ease-out forwards;
 }
 
-/* Ondas de proximidad estilo AirDrop */
-@keyframes proximityWave {
+/* Ondas de energia del escaneo: esmeralda hacia musgo */
+@keyframes energyWave {
   0% {
-    transform: scale(0.35);
+    transform: scale(0.3);
     opacity: 0;
   }
-  20% {
-    opacity: 0.7;
+  18% {
+    opacity: 1;
   }
   100% {
-    transform: scale(1.25);
+    transform: scale(1.55);
     opacity: 0;
   }
 }
 
-.proximity-wave {
+@keyframes energySpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes energyBreathe {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.94);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes energyShock {
+  0% {
+    transform: scale(0.35);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+@keyframes energySpark {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--spark-angle)) translateY(-44px) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--spark-angle))
+      translateY(calc(var(--spark-distance) * -1)) scale(0.1);
+  }
+}
+
+.energy-ambient {
   position: absolute;
-  inset: 0;
-  border: 1px solid rgba(169, 188, 110, 0.8);
+  inset: -30%;
   border-radius: 9999px;
   background: radial-gradient(
     circle,
-    rgba(143, 166, 90, 0) 55%,
-    rgba(143, 166, 90, 0.16) 100%
+    rgba(52, 211, 153, 0.34) 0%,
+    rgba(143, 166, 90, 0.16) 42%,
+    rgba(143, 166, 90, 0) 70%
   );
-  animation: proximityWave 2.4s ease-out infinite;
+  animation: energyBreathe 3s ease-in-out infinite;
 }
 
-.proximity-wave-2 {
+.energy-wave {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    rgba(52, 211, 153, 0) 50%,
+    rgba(52, 211, 153, 0.2) 60%,
+    rgba(169, 188, 110, 0.6) 69%,
+    rgba(212, 239, 160, 0.85) 70.5%,
+    rgba(212, 239, 160, 0) 71%
+  );
+  animation: energyWave 3.2s cubic-bezier(0.22, 0.6, 0.36, 1) infinite;
+  will-change: transform, opacity;
+}
+
+.energy-wave-2 {
   animation-delay: 0.8s;
 }
 
-.proximity-wave-3 {
+.energy-wave-3 {
   animation-delay: 1.6s;
+}
+
+.energy-wave-4 {
+  animation-delay: 2.4s;
+}
+
+.energy-halo {
+  position: absolute;
+  inset: 20%;
+  border-radius: 9999px;
+  background: conic-gradient(
+    rgba(52, 211, 153, 0),
+    rgba(52, 211, 153, 0.75),
+    rgba(212, 239, 160, 0.95),
+    rgba(52, 211, 153, 0) 62%
+  );
+  -webkit-mask: radial-gradient(circle, transparent 60%, #000 62%, #000 69%, transparent 71%);
+  mask: radial-gradient(circle, transparent 60%, #000 62%, #000 69%, transparent 71%);
+  filter: blur(2px);
+  animation: energySpin 2.8s linear infinite;
+}
+
+.energy-core {
+  background: linear-gradient(145deg, #a9bc6e, #34d399);
+  box-shadow:
+    0 0 28px 6px rgba(52, 211, 153, 0.4),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45);
+}
+
+.energy-shock {
+  position: absolute;
+  inset: 8%;
+  border-radius: 9999px;
+  border: 2px solid rgba(212, 239, 160, 0.9);
+  box-shadow:
+    0 0 26px 4px rgba(52, 211, 153, 0.55),
+    inset 0 0 26px 4px rgba(52, 211, 153, 0.35);
+  animation: energyShock 0.9s var(--ease-smooth-out) both;
+}
+
+.energy-shock-2 {
+  animation-delay: 0.12s;
+}
+
+.energy-shock-3 {
+  animation-delay: 0.24s;
+}
+
+.energy-sparks {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+}
+
+.energy-sparks i {
+  position: absolute;
+  width: var(--spark-size);
+  height: var(--spark-size);
+  margin: calc(var(--spark-size) / -2);
+  border-radius: 9999px;
+  background: #d4efa0;
+  box-shadow: 0 0 8px 2px rgba(52, 211, 153, 0.75);
+  animation: energySpark 0.85s var(--ease-smooth-out) both;
+}
+
+.scan-stage-in {
+  animation: viewFade 0.4s ease-out;
+}
+
+/* Anillo de exito en el modal de resultado */
+@keyframes scanSuccessRing {
+  0% {
+    box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(52, 211, 153, 0);
+  }
+}
+
+.scan-success-badge {
+  animation: scanSuccessRing 1s ease-out 0.35s 2;
 }
 
 @keyframes proximityLock {
@@ -444,8 +585,29 @@ button[data-pressed="true"] {
     animation: none !important;
   }
 
+  .energy-ambient,
+  .energy-wave,
+  .energy-halo,
+  .energy-shock,
+  .energy-sparks,
+  .scan-success-badge {
+    animation: none;
+  }
+
+  .energy-wave {
+    opacity: 0.45;
+    transform: scale(1.1);
+  }
+
+  .energy-wave-2,
+  .energy-wave-3,
+  .energy-wave-4,
+  .energy-shock,
+  .energy-sparks {
+    display: none;
+  }
+
   .logo-awaken,
-  .proximity-wave,
   .proximity-lock,
   .scan-result-card,
   .nfc-call,

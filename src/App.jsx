@@ -910,6 +910,14 @@ const STONE_READ_MS = 3400;
 const STONE_FILL_SECONDS = 2.6;
 const STONE_SIZE = { width: 680, height: 1440, centerX: 340, centerY: 584, reach: 820 };
 const STONE_GLOW_GREEN = "#9BBF4E";
+const SCAN_EMERALD = "52, 211, 153";
+const SCAN_MINT = "212, 239, 160";
+const SCAN_SPARKS = Array.from({ length: 18 }, (_, index) => ({
+  angle: index * 20,
+  distance: 100 + (index * 37) % 70,
+  delay: (index * 53) % 160,
+  size: 3 + (index * 7) % 4,
+}));
 const STONE_LIGHT_BLOBS = [
   [0, 0, 1],
   [1, 0.9, 0.92],
@@ -987,6 +995,7 @@ function StoneReadCanvas() {
           life: 0.8 + Math.random() * 0.9,
           speed: 70 + Math.random() * 150,
           size: 2 + Math.random() * 5,
+          color: Math.random() < 0.5 ? SCAN_MINT : SCAN_EMERALD,
         }));
 
     const easeFill = (progress) =>
@@ -1027,10 +1036,37 @@ function StoneReadCanvas() {
         const x = centerX + Math.cos(particle.angle) * distance;
         const y = centerY + Math.sin(particle.angle) * distance - 50 * age;
         context.globalAlpha = Math.sin((Math.PI * age) / particle.life);
-        context.fillStyle = "#D4EFA0";
+        context.fillStyle = `rgb(${particle.color})`;
         context.beginPath();
         context.arc(x, y, particle.size, 0, Math.PI * 2);
         context.fill();
+      });
+    };
+
+    // Ondas concentricas que salen del centro y se apagan al terminar el llenado
+    const paintEnergyWaves = (seconds) => {
+      if (reducedMotion) return;
+      const fade = Math.max(0, Math.min(1, (fillSeconds + 0.3 - seconds) / 0.5));
+      context.globalCompositeOperation = "lighter";
+      context.globalAlpha = fade;
+      [0, 1, 2].forEach((index) => {
+        const phase = (seconds / 2.1 + index / 3) % 1;
+        const outer = 90 + phase * reach;
+        const strength = 0.5 * (1 - phase) ** 1.5;
+        const ring = context.createRadialGradient(
+          centerX,
+          centerY,
+          outer * 0.86,
+          centerX,
+          centerY,
+          outer
+        );
+        ring.addColorStop(0, `rgba(${SCAN_EMERALD}, 0)`);
+        ring.addColorStop(0.65, `rgba(${SCAN_EMERALD}, ${strength})`);
+        ring.addColorStop(0.92, `rgba(${SCAN_MINT}, ${strength})`);
+        ring.addColorStop(1, `rgba(${SCAN_MINT}, 0)`);
+        context.fillStyle = ring;
+        context.fillRect(0, 0, width, height);
       });
     };
 
@@ -1077,12 +1113,13 @@ function StoneReadCanvas() {
             context.drawImage(edgeLayer, 0, 0);
           }
 
+          paintEnergyWaves(seconds);
           paintParticles(seconds, radius);
 
           const flash = seconds - fillSeconds + 0.15;
           if (flash > 0 && flash < 0.85) {
             context.globalCompositeOperation = "lighter";
-            context.globalAlpha = 0.32 * Math.sin((Math.PI * flash) / 0.85);
+            context.globalAlpha = 0.48 * Math.sin((Math.PI * flash) / 0.85);
             context.drawImage(images.lit, 0, 0);
           }
 
@@ -1117,13 +1154,15 @@ function NfcScanOverlay({ stage, ak, onCancel }) {
   const isDetected = stage === "detected";
 
   return (
-    <div
+    <motion.div
       role="status"
       aria-live="polite"
       className="fixed inset-0 z-50 bg-[#090A07] text-[#E8EBDD] overflow-hidden"
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
     >
       {isReading ? (
-        <>
+        <div className="scan-stage-in absolute inset-0">
           <StoneReadCanvas />
           <div className="absolute inset-x-0 bottom-0 h-72 bg-gradient-to-b from-transparent to-[#090A07]/90" />
           <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-t from-transparent to-[#090A07]/90" />
@@ -1136,19 +1175,41 @@ function NfcScanOverlay({ stage, ak, onCancel }) {
               {ak.code} · {ak.name}
             </p>
           </div>
-        </>
+        </div>
       ) : (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-12 px-6 text-center">
           <div className="relative w-72 h-72 flex items-center justify-center">
-            {!isDetected && (
+            <span className="energy-ambient" />
+            {isDetected ? (
               <>
-                <span className="proximity-wave" />
-                <span className="proximity-wave proximity-wave-2" />
-                <span className="proximity-wave proximity-wave-3" />
+                <span className="energy-shock" />
+                <span className="energy-shock energy-shock-2" />
+                <span className="energy-shock energy-shock-3" />
+                <span className="energy-sparks">
+                  {SCAN_SPARKS.map((spark) => (
+                    <i
+                      key={spark.angle}
+                      style={{
+                        "--spark-angle": `${spark.angle}deg`,
+                        "--spark-distance": `${spark.distance}px`,
+                        "--spark-size": `${spark.size}px`,
+                        animationDelay: `${spark.delay}ms`,
+                      }}
+                    />
+                  ))}
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="energy-wave" />
+                <span className="energy-wave energy-wave-2" />
+                <span className="energy-wave energy-wave-3" />
+                <span className="energy-wave energy-wave-4" />
+                <span className="energy-halo" />
               </>
             )}
             <div
-              className={`w-28 h-28 rounded-full bg-[#8FA65A] text-[#090A07] flex items-center justify-center ${
+              className={`energy-core relative w-28 h-28 rounded-full text-[#090A07] flex items-center justify-center ${
                 isDetected ? "proximity-lock" : ""
               }`}
             >
@@ -1180,17 +1241,11 @@ function NfcScanOverlay({ stage, ak, onCancel }) {
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
 
-function ScanResultModal({
-  ak,
-  progress,
-  balance,
-  onBackToMap,
-  onKeepExploring,
-}) {
+function ScanResultModal({ ak, progress, balance, onBackToMap }) {
   const isRouteComplete = progress.done === progress.total;
 
   return (
@@ -1210,10 +1265,10 @@ function ScanResultModal({
         initial={{ y: "100%" }}
         animate={{ y: 0 }}
         exit={{ y: "100%", transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] } }}
-        transition={{ type: "spring", bounce: 0.22, duration: 0.5 }}
+        transition={{ type: "spring", bounce: 0.22, duration: 0.5, delay: 0.15 }}
       >
         <div className="flex flex-col items-center text-center gap-3">
-          <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+          <div className="scan-success-badge w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
             <span className="rune-mark w-10 h-10" aria-hidden="true" />
           </div>
           <h2
@@ -1258,25 +1313,15 @@ function ScanResultModal({
           </p>
         )}
 
-        <div className="flex flex-col gap-2">
-          <Button
-            autoFocus
-            radius="full"
-            color="primary"
-            className="min-h-[48px] font-medium text-sm"
-            onPress={onBackToMap}
-          >
-            Volver al mapa
-          </Button>
-          <Button
-            radius="full"
-            variant="light"
-            className="min-h-[48px] font-medium text-sm"
-            onPress={onKeepExploring}
-          >
-            Seguir explorando
-          </Button>
-        </div>
+        <Button
+          autoFocus
+          radius="full"
+          color="primary"
+          className="w-full min-h-[56px] text-base font-semibold"
+          onPress={onBackToMap}
+        >
+          Volver al mapa
+        </Button>
       </motion.div>
     </motion.div>
     </MotionConfig>
@@ -1874,7 +1919,7 @@ export default function App() {
           () => finishScan(ak),
           STONE_READ_MS
         );
-      }, 700);
+      }, 1000);
     }, 2600);
   };
 
@@ -1902,10 +1947,6 @@ export default function App() {
     setActiveView(navigatingRouteId ? "explorar" : "mapa");
   };
 
-  const handleResultKeepExploring = () => {
-    setScanState("idle");
-    goToExplore();
-  };
 
   const handleResetDemo = () => {
     setTsiro(285);
@@ -3017,13 +3058,18 @@ export default function App() {
       </div>
 
       {/* FLUJO NFC: PROXIMIDAD, LECTURA RÚNICA Y RESULTADO */}
-      {["listening", "detected", "reading"].includes(scanState) && (
-        <NfcScanOverlay
-          stage={scanState}
-          ak={scannerAk}
-          onCancel={handleCancelScan}
-        />
-      )}
+      <MotionConfig reducedMotion="user">
+        <AnimatePresence>
+          {["listening", "detected", "reading"].includes(scanState) && (
+            <NfcScanOverlay
+              key="nfc-scan"
+              stage={scanState}
+              ak={scannerAk}
+              onCancel={handleCancelScan}
+            />
+          )}
+        </AnimatePresence>
+      </MotionConfig>
 
       <AnimatePresence>
         {scanState === "done" && (
@@ -3033,7 +3079,6 @@ export default function App() {
             progress={scannerRouteProgress}
             balance={tsiro}
             onBackToMap={handleResultBackToMap}
-            onKeepExploring={handleResultKeepExploring}
           />
         )}
       </AnimatePresence>
