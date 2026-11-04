@@ -2542,11 +2542,11 @@ export default function App() {
               type="button"
               onClick={handleNfcPress}
               aria-label="Escanear piedra Àk por NFC"
-              className={`w-[72px] h-[72px] -mt-7 rounded-full bg-secondary text-secondary-foreground border-4 border-background shadow-xl inline-flex items-center justify-center transition-transform active:scale-95 ${
+              className={`w-[72px] h-[72px] -mt-7 rounded-full bg-secondary text-secondary-foreground border-4 border-background shadow-xl inline-flex items-center justify-center nfc-button ${
                 nearAkId ? "nfc-call" : ""
               }`}
             >
-              <LogoMark className="w-[52px]" decorative />
+              <span className="rune-mark w-11 h-11" aria-hidden="true" />
             </button>
           </div>
 

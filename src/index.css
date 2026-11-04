@@ -12,6 +12,27 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+.rune-mark {
+  display: block;
+  background-color: currentColor;
+  -webkit-mask: url("/runa-akapp.svg") center / contain no-repeat;
+  mask: url("/runa-akapp.svg") center / contain no-repeat;
+}
+
+/* Brillo verde del boton central al presionarlo */
+.nfc-button {
+  transition:
+    transform 0.15s ease-out,
+    box-shadow 0.2s ease-out;
+}
+
+.nfc-button:active {
+  transform: scale(0.95);
+  box-shadow:
+    0 0 0 5px rgba(143, 166, 90, 0.35),
+    0 0 24px 8px rgba(143, 166, 90, 0.6);
+}
+
 .logo-mark {
   display: block;
   aspect-ratio: 617.68 / 331.89;
