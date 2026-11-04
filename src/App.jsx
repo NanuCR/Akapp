@@ -1271,7 +1271,6 @@ function TrailView({
   onArrivalChange,
   reports,
   onAddReport,
-  children,
 }) {
   const nextAk = useMemo(
     () => route.aks.find((ak) => !scannedAkIds.includes(ak.id)) || null,
@@ -1395,7 +1394,7 @@ function TrailView({
           <button
             type="button"
             onClick={onBack}
-            aria-label="Volver a rutas cercanas"
+            aria-label="Volver al detalle del parque"
             className="pointer-events-auto w-11 h-11 rounded-full bg-black/75 text-white border border-white/25 backdrop-blur-md inline-flex items-center justify-center"
           >
             <BackIcon className="w-5 h-5" />
@@ -1470,7 +1469,7 @@ function TrailView({
                     {ak.code} · {ak.name}
                   </strong>
                   <span className="text-xs text-default-500 block tabular-nums">
-                    {ak.trail} · Km {ak.km} · +{ak.tsiro} Tsirö
+                    {ak.trail} · {ak.km} · +{ak.tsiro} Tsirö
                   </span>
                 </div>
                 {isDone ? (
@@ -1520,7 +1519,6 @@ function TrailView({
           </div>
         )}
 
-        {children}
       </div>
 
       {/* Accesos flotantes de ciencia ciudadana */}
@@ -1596,7 +1594,7 @@ export default function App() {
 
   // Estado de Explorar Rutas y Detalle de Ruta
   const [routeQuery, setRouteQuery] = useState("");
-  const [difficultyFilter, setDifficultyFilter] = useState("todas");
+  const [navigatingRouteId, setNavigatingRouteId] = useState(null);
   const [axLoading, setAxLoading] = useState(false);
   const [axSuggestion, setAxSuggestion] = useState(null);
   const [openedRouteId, setOpenedRouteId] = useState(null);
@@ -1650,7 +1648,10 @@ export default function App() {
   const currentLevelXp = xp % 250;
   const levelProgress = Math.round((currentLevelXp / 250) * 100);
 
-  const isOnTrail = activeView === "explorar" && Boolean(openedRoute);
+  const isOnTrail =
+    activeView === "explorar" &&
+    Boolean(openedRoute) &&
+    navigatingRouteId === openedRoute.id;
   const isMapView = activeView === "mapa";
   const mapGlassClass =
     "px-3.5 rounded-full bg-content1/85 backdrop-blur-md shadow-sm";
@@ -1713,22 +1714,18 @@ export default function App() {
       clean.includes("recomienda");
 
     return ROUTES.filter((r) => {
-      if (difficultyFilter === "con-guia") {
-        const hasGuide = r.guides.some((g) => g.available);
-        if (!hasGuide) return false;
-      }
-
       if (!clean || isQuestion) return true;
       return `${r.name} ${r.region} ${r.trailsSummary}`
         .toLowerCase()
         .includes(clean);
     });
-  }, [routeQuery, difficultyFilter]);
+  }, [routeQuery]);
 
   const openRouteDetail = (route) => {
     const firstPending =
       route.aks.find((a) => !scannedAkIds.includes(a.id)) || route.aks[0];
     setOpenedRouteId(route.id);
+    setNavigatingRouteId(null);
     setGuidesDropdownOpen(false);
     setSelectedMapAkId(firstPending.id);
   };
@@ -1743,6 +1740,7 @@ export default function App() {
 
   const goToExplore = () => {
     setOpenedRouteId(null);
+    setNavigatingRouteId(null);
     setActiveView("explorar");
   };
 
@@ -1811,7 +1809,7 @@ export default function App() {
 
   const handleResultBackToMap = () => {
     setScanState("idle");
-    setActiveView(openedRoute ? "explorar" : "mapa");
+    setActiveView(navigatingRouteId ? "explorar" : "mapa");
   };
 
   const handleResultKeepExploring = () => {
@@ -1828,8 +1826,7 @@ export default function App() {
     setJustRedeemedCoupon(null);
     setReports([]);
     setScanState("idle");
-    setOpenedRouteId(null);
-    setActiveView("explorar");
+    goToExplore();
   };
 
   const handleRedeemCoupon = (benefit) => {
@@ -1942,30 +1939,6 @@ export default function App() {
                 }}
               />
 
-              {/* Píldoras de filtro en 2 columnas iguales */}
-              <div className="grid grid-cols-2 gap-2">
-                <Button
-                  size="sm"
-                  radius="full"
-                  variant={difficultyFilter === "todas" ? "solid" : "flat"}
-                  color={difficultyFilter === "todas" ? "primary" : "default"}
-                  className="min-h-[44px] text-xs font-medium px-3"
-                  onPress={() => setDifficultyFilter("todas")}
-                >
-                  Cerca de mí (3)
-                </Button>
-                <Button
-                  size="sm"
-                  radius="full"
-                  variant={difficultyFilter === "con-guia" ? "solid" : "flat"}
-                  color={difficultyFilter === "con-guia" ? "primary" : "default"}
-                  className="min-h-[44px] text-xs font-medium px-3"
-                  onPress={() => setDifficultyFilter("con-guia")}
-                >
-                  Con guía hoy
-                </Button>
-              </div>
-
               {axLoading && (
                 <Card shadow="none" className="border border-default-200 bg-content1 rounded-2xl">
                   <CardBody className="py-3 px-4 text-xs text-default-600 text-center">
@@ -2006,7 +1979,7 @@ export default function App() {
             <div className="flex items-center justify-between gap-2 px-1">
               <div className="min-w-0">
                 <h1 className="font-display text-lg tracking-tight">
-                  Rutas cerca de ti
+                  Cerca de mí
                 </h1>
                 <span className="text-xs text-default-500 block">
                   Fotografía y cartografía GPS de parques nacionales
@@ -2027,7 +2000,6 @@ export default function App() {
                     variant="flat"
                     className="min-h-[44px] font-medium px-4"
                     onPress={() => {
-                      setDifficultyFilter("todas");
                       handleRouteSearch("");
                     }}
                   >
@@ -2040,13 +2012,6 @@ export default function App() {
             {/* Tarjetas con Fotografía Real del Parque Nacional */}
             <div className="flex flex-col gap-4">
               {filteredRoutes.map((route) => {
-                const availableGuidesCount = route.guides.filter(
-                  (g) => g.available
-                ).length;
-                const completedInRoute = route.aks.filter((a) =>
-                  scannedAkIds.includes(a.id)
-                ).length;
-
                 return (
                   <Card
                     key={route.id}
@@ -2093,66 +2058,19 @@ export default function App() {
                       </div>
                     </div>
 
-                    <CardBody className="p-4 flex flex-col gap-3">
-                      <p className="text-xs text-default-600 leading-relaxed">
+                    <CardBody className="p-4 flex flex-col gap-3.5">
+                      <p className="text-sm text-default-600 leading-relaxed">
                         {route.trailsSummary}
                       </p>
-
-                      {/* Bento de 4 Métricas Rápidas perfectamente centradas */}
-                      <div className="grid grid-cols-4 gap-1.5 text-center text-xs tabular-nums">
-                        <div className="p-2 rounded-2xl bg-default-100 flex flex-col items-center justify-center">
-                          <span className="text-[11px] text-default-500">
-                            Distancia
-                          </span>
-                          <strong className="font-semibold mt-0.5">
-                            {route.distance}
-                          </strong>
-                        </div>
-                        <div className="p-2 rounded-2xl bg-default-100 flex flex-col items-center justify-center">
-                          <span className="text-[11px] text-default-500">
-                            Desnivel
-                          </span>
-                          <strong className="font-semibold mt-0.5">
-                            {route.elevation}
-                          </strong>
-                        </div>
-                        <div className="p-2 rounded-2xl bg-default-100 flex flex-col items-center justify-center">
-                          <span className="text-[11px] text-default-500">
-                            Hitos Àk
-                          </span>
-                          <strong className="font-semibold mt-0.5">
-                            {completedInRoute}/{route.aks.length}
-                          </strong>
-                        </div>
-                        <div className="p-2 rounded-2xl bg-default-100 flex flex-col items-center justify-center">
-                          <span className="text-[11px] text-default-500">
-                            Guías hoy
-                          </span>
-                          <strong className="font-semibold mt-0.5">
-                            {availableGuidesCount > 0
-                              ? `${availableGuidesCount} disp.`
-                              : "Libre"}
-                          </strong>
-                        </div>
-                      </div>
-                    </CardBody>
-
-                    <Divider />
-
-                    <CardFooter className="px-4 py-3 flex justify-between items-center gap-2">
-                      <span className="text-xs font-medium text-default-500">
-                        {route.difficulty} · {route.duration}
-                      </span>
                       <Button
-                        size="sm"
                         radius="full"
                         color="primary"
-                        className="min-h-[44px] font-medium text-xs px-4"
+                        className="w-full min-h-[52px] text-base font-semibold"
                         onPress={() => openRouteDetail(route)}
                       >
-                        Ver senderos y Àk
+                        Ver senderos
                       </Button>
-                    </CardFooter>
+                    </CardBody>
                   </Card>
                 );
               })}
@@ -2161,21 +2079,114 @@ export default function App() {
         )}
 
         {/* ========================================================= */}
-        {/* SUB-VISTA EXPLORAR: MODO SENDERO ESTILO WAZE               */}
+        {/* SUB-VISTA EXPLORAR: DETALLE DEL PARQUE ANTES DE LA RUTA    */}
         {/* ========================================================= */}
-        {isOnTrail && (
-          <TrailView
-            route={openedRoute}
-            scannedAkIds={scannedAkIds}
-            selectedAkId={selectedMapAkId}
-            onSelectAk={setSelectedMapAkId}
-            onBack={() => setOpenedRouteId(null)}
-            onOpenProfile={() => setActiveView("perfil")}
-            onScanAk={startScan}
-            onArrivalChange={setNearAkId}
-            reports={reports}
-            onAddReport={handleAddReport}
-          >
+        {activeView === "explorar" && openedRoute && !isOnTrail && (
+          <main className="flex flex-col gap-5 mt-1 flex-1 pb-16">
+            <div className="relative h-56 rounded-3xl overflow-hidden bg-default-200">
+              <img
+                src={openedRoute.photo}
+                alt={openedRoute.photoAlt}
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <button
+                type="button"
+                onClick={goToExplore}
+                aria-label="Volver a parques cerca de mí"
+                className="absolute top-3 left-3 w-11 h-11 rounded-full bg-black/60 text-white border border-white/25 backdrop-blur-md inline-flex items-center justify-center"
+              >
+                <BackIcon className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="px-1">
+              <span className="text-xs text-default-500 block">
+                {openedRoute.region} · {openedRoute.condition}
+              </span>
+              <h1 className="font-display text-2xl leading-tight mt-1">
+                {openedRoute.name}
+              </h1>
+              <p className="text-sm text-default-600 leading-relaxed mt-2">
+                {openedRoute.trailsSummary}.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                ["Distancia", openedRoute.distance],
+                ["Duración", openedRoute.duration],
+                ["Dificultad", openedRoute.difficulty],
+                ["Desnivel", openedRoute.elevation],
+              ].map(([label, value]) => (
+                <div
+                  key={label}
+                  className="p-3 rounded-2xl bg-content1 border border-default-200"
+                >
+                  <span className="text-xs text-default-500 block">{label}</span>
+                  <strong className="text-sm font-semibold tabular-nums">
+                    {value}
+                  </strong>
+                </div>
+              ))}
+            </div>
+
+            <section className="flex flex-col gap-2">
+              <h2 className="text-sm font-semibold px-1">Senderos</h2>
+              <div className="rounded-2xl bg-content1 border border-default-200 divide-y divide-default-200">
+                {[...new Set(openedRoute.aks.map((ak) => ak.trail))].map(
+                  (trail) => (
+                    <div
+                      key={trail}
+                      className="p-3.5 flex items-center justify-between gap-3"
+                    >
+                      <span className="text-sm font-medium">{trail}</span>
+                      <span className="text-xs text-default-500 shrink-0">
+                        {openedRoute.aks.filter((ak) => ak.trail === trail).length}{" "}
+                        piedras Àk
+                      </span>
+                    </div>
+                  )
+                )}
+                <div className="p-3.5 flex items-center justify-between gap-3">
+                  <span className="text-xs text-default-500">Superficie</span>
+                  <span className="text-xs font-medium text-right">
+                    {openedRoute.surface}
+                  </span>
+                </div>
+              </div>
+            </section>
+
+            <section className="flex flex-col gap-2">
+              <div className="flex items-center justify-between gap-2 px-1">
+                <h2 className="text-sm font-semibold">Piedras Àk</h2>
+                <span className="text-xs text-default-500">
+                  Hasta +{openedRoute.totalTsiro} Tsirö
+                </span>
+              </div>
+              {openedRoute.aks.map((ak) => (
+                <div
+                  key={ak.id}
+                  className="p-3.5 rounded-2xl bg-content1 border border-default-200 flex flex-col gap-1.5"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <strong className="text-sm font-semibold min-w-0 truncate">
+                      {ak.code} · {ak.name}
+                    </strong>
+                    {scannedAkIds.includes(ak.id) && (
+                      <BadgePill tone="successFlat">Sellado</BadgePill>
+                    )}
+                  </div>
+                  <span className="text-xs text-default-500 tabular-nums">
+                    {ak.trail} · {ak.km}
+                  </span>
+                  <span className="text-xs text-default-500 tabular-nums">
+                    +{ak.tsiro} Tsirö · +{ak.xp} XP · {ak.lat.toFixed(4)},{" "}
+                    {ak.lng.toFixed(4)}
+                  </span>
+                </div>
+              ))}
+            </section>
+
             {/* Botón Desplegable Opcional de Guías Locales con Icono de Sombrero Safari */}
             <div className="flex flex-col gap-2.5">
               <button
@@ -2348,7 +2359,38 @@ export default function App() {
                 </Card>
               )}
             </div>
-          </TrailView>
+
+            <div className="fixed inset-x-0 bottom-[116px] z-20 px-4 pointer-events-none">
+              <div className="max-w-md mx-auto pointer-events-auto">
+                <Button
+                  radius="full"
+                  color="primary"
+                  className="w-full min-h-[56px] text-base font-semibold shadow-lg"
+                  onPress={() => setNavigatingRouteId(openedRoute.id)}
+                >
+                  Iniciar ruta
+                </Button>
+              </div>
+            </div>
+          </main>
+        )}
+
+        {/* ========================================================= */}
+        {/* SUB-VISTA EXPLORAR: NAVEGACIÓN ACTIVA ESTILO WAZE          */}
+        {/* ========================================================= */}
+        {isOnTrail && (
+          <TrailView
+            route={openedRoute}
+            scannedAkIds={scannedAkIds}
+            selectedAkId={selectedMapAkId}
+            onSelectAk={setSelectedMapAkId}
+            onBack={() => setNavigatingRouteId(null)}
+            onOpenProfile={() => setActiveView("perfil")}
+            onScanAk={startScan}
+            onArrivalChange={setNearAkId}
+            reports={reports}
+            onAddReport={handleAddReport}
+          />
         )}
 
         {/* ========================================================= */}
