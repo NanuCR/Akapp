@@ -333,6 +333,10 @@ button[data-pressed="true"] {
   bottom: 84px;
 }
 
+.trail-map .leaflet-bottom {
+  bottom: 76px;
+}
+
 .nav-arrow-pin {
   position: relative;
 }

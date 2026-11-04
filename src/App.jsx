@@ -582,7 +582,7 @@ function TrailMiniMap({
     }
   }, [position, heading, following]);
 
-  // Tocar un Àk en la lista lleva el mapa hasta esa piedra
+  // Tocar un Àk lleva el mapa hasta esa piedra
   useEffect(() => {
     if (previousSelectedRef.current === selectedAkId) return;
     previousSelectedRef.current = selectedAkId;
@@ -596,14 +596,14 @@ function TrailMiniMap({
     <div className="relative w-full h-full">
       <div
         ref={containerRef}
-        className="absolute inset-0 z-0"
+        className="trail-map absolute inset-0 z-0"
         aria-label={`Mapa en tiempo real de ${route.name}`}
       />
       {!following && (
         <button
           type="button"
           onClick={() => setFollowing(true)}
-          className="absolute z-10 bottom-3 left-1/2 -translate-x-1/2 min-h-[40px] px-4 rounded-full bg-black/75 text-white text-xs font-semibold border border-white/25 backdrop-blur-md"
+          className="absolute z-10 bottom-[104px] left-1/2 -translate-x-1/2 min-h-[40px] px-4 rounded-full bg-black/75 text-white text-xs font-semibold border border-white/25 backdrop-blur-md"
         >
           Volver a mi posición
         </button>
@@ -1281,11 +1281,7 @@ function TrailView({
   scannedAkIds,
   selectedAkId,
   onSelectAk,
-  onBack,
-  onOpenProfile,
-  onScanAk,
   onArrivalChange,
-  reports,
   onAddReport,
 }) {
   const nextAk = useMemo(
@@ -1392,150 +1388,27 @@ function TrailView({
     }
   };
 
-  const routeReports = reports.filter((r) => r.routeName === route.name);
-
   return (
-    <div className="sheet-rise fixed inset-y-0 inset-x-0 mx-auto w-full max-w-md z-20 bg-background flex flex-col">
-      {/* Tercio superior: minimapa en tiempo real */}
-      <div className="relative h-[33dvh] shrink-0 overflow-hidden">
-        <TrailMiniMap
-          route={route}
-          scannedAkIds={scannedAkIds}
-          selectedAkId={selectedAkId}
-          onSelectAk={onSelectAk}
-          position={position}
-          heading={heading}
-        />
-        <div className="absolute z-10 top-3 inset-x-3 flex items-center justify-between pointer-events-none">
-          <button
-            type="button"
-            onClick={onBack}
-            aria-label="Volver al detalle del parque"
-            className="pointer-events-auto w-11 h-11 rounded-full bg-black/75 text-white border border-white/25 backdrop-blur-md inline-flex items-center justify-center"
-          >
-            <BackIcon className="w-5 h-5" />
-          </button>
-          <ProfileBubble onPress={onOpenProfile} className="pointer-events-auto" />
-        </div>
-      </div>
+    <div className="sheet-rise fixed inset-0 z-20 bg-background">
+      <TrailMiniMap
+        route={route}
+        scannedAkIds={scannedAkIds}
+        selectedAkId={selectedAkId}
+        onSelectAk={onSelectAk}
+        position={position}
+        heading={heading}
+      />
 
-      {/* Dos tercios inferiores: progreso, piedras Àk y guías */}
-      <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-3.5 pb-44 flex flex-col gap-3">
-        <div className="flex items-center justify-between gap-2">
-          <h1 className="font-display text-lg leading-tight min-w-0">
-            {route.name}
-          </h1>
-          <BadgePill tone="secondary">+{route.totalTsiro} Tsirö</BadgePill>
-        </div>
-
-        <div
-          className={`p-3.5 rounded-2xl border ${
-            arrived
-              ? "border-secondary bg-secondary/10"
-              : "border-default-200 bg-content1"
-          }`}
-        >
-          {nextAk ? (
-            <>
-              <span className="text-xs font-medium text-default-500 block">
-                {arrived ? "Llegaste a la piedra" : `Siguiente, a ${remaining} m`}
-              </span>
-              <strong className="text-sm font-semibold block">
-                {nextAk.code} · {nextAk.name}
-              </strong>
-              {arrived && (
-                <span className="text-xs text-secondary font-medium block mt-0.5">
-                  Toca la runa de abajo para escanear
-                </span>
-              )}
-            </>
-          ) : (
-            <strong className="text-sm font-semibold block">
-              Sellaste todas las piedras de esta ruta
-            </strong>
-          )}
-        </div>
-
-        {notice && (
-          <div
+      {notice && (
+        <div className="absolute z-20 inset-x-4 bottom-44 flex justify-center pointer-events-none">
+          <span
             role="status"
-            className="p-3 rounded-2xl bg-success/15 border border-success/30 text-xs font-medium text-center"
+            className="px-4 py-2 rounded-full bg-content1 text-xs font-medium text-center shadow-lg"
           >
             {notice}
-          </div>
-        )}
-
-        <div className="flex flex-col gap-2">
-          {route.aks.map((ak) => {
-            const isDone = scannedAkIds.includes(ak.id);
-            const isSelected = selectedAkId === ak.id;
-
-            return (
-              <div
-                key={ak.id}
-                onClick={() => onSelectAk(ak.id)}
-                className={`p-3 rounded-2xl border flex items-center justify-between gap-2 cursor-pointer transition-colors ${
-                  isSelected
-                    ? "border-secondary bg-secondary/5"
-                    : "border-default-200 bg-content1"
-                }`}
-              >
-                <div className="min-w-0">
-                  <strong className="text-sm font-semibold block truncate">
-                    {ak.code} · {ak.name}
-                  </strong>
-                  <span className="text-xs text-default-500 block tabular-nums">
-                    {ak.trail} · {ak.km} · +{ak.tsiro} Tsirö
-                  </span>
-                </div>
-                {isDone ? (
-                  <BadgePill tone="successFlat">Sellado</BadgePill>
-                ) : (
-                  <Button
-                    size="sm"
-                    radius="full"
-                    color="secondary"
-                    className="min-h-[40px] text-xs font-medium px-4 shrink-0"
-                    onPress={() => onScanAk(ak)}
-                  >
-                    Escanear
-                  </Button>
-                )}
-              </div>
-            );
-          })}
+          </span>
         </div>
-
-        {routeReports.length > 0 && (
-          <div className="flex flex-col gap-2">
-            <h2 className="text-sm font-semibold">Tus aportes al SINAC</h2>
-            {routeReports.map((report) => (
-              <div
-                key={report.id}
-                className="p-2.5 rounded-2xl border border-default-200 bg-content1 flex items-center gap-2.5"
-              >
-                {report.type === "foto" ? (
-                  <img
-                    src={report.url}
-                    alt="Foto georreferenciada"
-                    className="w-12 h-12 rounded-xl object-cover shrink-0"
-                  />
-                ) : (
-                  <audio
-                    src={report.url}
-                    controls
-                    className="h-10 min-w-0 flex-1"
-                  />
-                )}
-                <span className="text-xs text-default-500 tabular-nums shrink-0">
-                  {report.lat.toFixed(5)}, {report.lng.toFixed(5)}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-
-      </div>
+      )}
 
       {/* Accesos flotantes de ciencia ciudadana */}
       <button
@@ -1543,10 +1416,10 @@ function TrailView({
         onClick={toggleRecording}
         aria-pressed={isRecording}
         aria-label={isRecording ? "Detener grabación" : "Grabar audio o canto de aves"}
-        className={`absolute z-20 left-4 bottom-24 w-14 h-14 rounded-full inline-flex items-center justify-center shadow-lg border-2 ${
+        className={`absolute z-20 left-4 bottom-24 w-14 h-14 rounded-full inline-flex items-center justify-center shadow-lg ${
           isRecording
-            ? "bg-danger text-white border-white record-pulse"
-            : "bg-content1 text-foreground border-default-300"
+            ? "bg-danger text-white record-pulse"
+            : "bg-content1 text-foreground"
         }`}
       >
         <MicIcon />
@@ -1556,7 +1429,7 @@ function TrailView({
         type="button"
         onClick={() => photoInputRef.current?.click()}
         aria-label="Tomar foto georreferenciada"
-        className="absolute z-20 right-4 bottom-24 w-14 h-14 rounded-full bg-content1 text-foreground border-2 border-default-300 inline-flex items-center justify-center shadow-lg"
+        className="absolute z-20 right-4 bottom-24 w-14 h-14 rounded-full bg-content1 text-foreground inline-flex items-center justify-center shadow-lg"
       >
         <CameraIcon />
       </button>
@@ -1669,7 +1542,7 @@ export default function App() {
     activeView === "explorar" &&
     Boolean(openedRoute) &&
     navigatingRouteId === openedRoute.id;
-  const isMapView = activeView === "mapa";
+  const isMapView = activeView === "mapa" || isOnTrail;
   const tabMotionRef = useRef({ view: activeView, direction: 1 });
   if (tabMotionRef.current.view !== activeView) {
     tabMotionRef.current = {
@@ -1899,9 +1772,8 @@ export default function App() {
       <div className="w-full max-w-md min-h-dvh flex flex-col pb-32 px-4 pt-3">
         
         {/* CABECERA FIJA: puntos a la izquierda, logo al centro y avatar a la derecha */}
-        {!isOnTrail && (
-          <header
-            className={`sticky top-0 z-10 -mx-4 px-4 py-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2 ${
+        <header
+            className={`sticky top-0 z-30 -mx-4 px-4 py-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2 ${
               isMapView ? "" : "glass-bar"
             }`}
           >
@@ -1932,8 +1804,7 @@ export default function App() {
               onPress={() => setActiveView("perfil")}
               className="justify-self-end"
             />
-          </header>
-        )}
+        </header>
 
         {/* ========================================================= */}
         {/* VISTA 1: EXPLORAR (CON FOTOGRAFÍAS REALES DE LOS PARQUES) */}
@@ -2418,11 +2289,7 @@ export default function App() {
             scannedAkIds={scannedAkIds}
             selectedAkId={selectedMapAkId}
             onSelectAk={setSelectedMapAkId}
-            onBack={() => setNavigatingRouteId(null)}
-            onOpenProfile={() => setActiveView("perfil")}
-            onScanAk={startScan}
             onArrivalChange={setNearAkId}
-            reports={reports}
             onAddReport={handleAddReport}
           />
         )}
