@@ -5,13 +5,13 @@ Reading this as: aplicación móvil de exploración de rutas naturales, hitos NF
 
 ## Dials
 - **ENERGY**: 2 (Contraste nítido de instrumentación deportiva de montaña con acento terracota para métricas activas, nodos Àk y lectura bajo el sol).
-- **RHYTHM**: 2 (Composición estructurada con 4 vistas separadas: Explorar rutas cercanas con detalle de mapa y guías, Escanear Àk, Cupones separados con códigos visibles en línea y Perfil).
+- **RHYTHM**: 2 (Composición estructurada con cinco accesos inferiores: Mapa general, Explorar con modo sendero, runa central de escaneo NFC, Cupones y Configuración; Perfil se abre desde el avatar superior derecho).
 - **MOTION**: 2 (Animación de trazo SVG al escanear el grabado rúnico NFC y selección interactiva de nodos Àk en el mapa del sendero).
 
 ## Decisiones de Diseño (R-31: Razón en una línea)
-- **Por qué esta paleta de color**: Base piedra cálida (`#F7F6F2`) y verde bosque (`#14281D`) con acento terracota (`#B04A12`) para mantener contraste WCAG AA superior a 4.5:1 en exteriores, más modo oscuro volcánico (`#0F1210`).
-- **Por qué este layout**: Cuatro vistas separadas en la barra inferior (`Explorar`, `Escanear Àk`, `Cupones`, `Perfil`) más datos de usuario arriba a la derecha para no mezclar el catálogo de cupones con el explorador de rutas.
-- **Por qué esta tipografía**: `Plus Jakarta Sans` para telemetría de ritmo, altitud y saldos en `Tsirö`, combinada con `Fraunces` en nombres de parques e hitos ancestrales `Àk`.
+- **Por qué esta paleta de color**: Paleta de la demo visual: noche (`#070707`), obsidiana (`#10201D`), lumbre (`#F1BF57`), ámbar (`#F5A114`) y jade (`#34C38F`), con modo día en arena (`#EDE8DC`).
+- **Por qué este layout**: Barra inferior de cinco accesos con la runa al centro y avatar arriba a la derecha. Al abrir un parque, 1/3 superior de minimapa estilo Waze y 2/3 inferiores con piedras Àk y accesos flotantes de micrófono (izquierda) y cámara (derecha) para ciencia ciudadana del SINAC.
+- **Por qué esta tipografía**: `Outfit` para interfaz, saldos en `Tsirö` y datos de ruta, combinada con `Marcellus` en títulos y nombres de parques.
 - **Por qué este espaciado**: Objetivos táctiles de mínimo 44x44px con separación de 8px a 12px para operar con una mano en movimiento.
-- **Por qué usar tarjetas diferenciadas**: Las tarjetas de ruta muestran telemetría y disponibilidad de guías; la vista de detalle de ruta despliega el mapa de nodos `Àk` y el selector de guías; y la vista de cupones muestra una caja de código permanente en pantalla al reclamar un beneficio.
-- **Por qué usar el glifo rúnico SVG y la moneda Tsirö**: El grabado octogonal representa el `Àk` (piedra en Bribri) y `Tsirö` (semilla de cacao, moneda ancestral indígena) otorga recompensas proporcionales (+15 a +25 Tsirö por hito).
+- **Por qué usar tarjetas diferenciadas**: Las tarjetas de ruta muestran telemetría y disponibilidad de guías; el modo sendero despliega el minimapa con flecha de dirección, los nodos `Àk` y el selector de guías; y la vista de cupones muestra una caja de código permanente en pantalla al reclamar un beneficio.
+- **Por qué usar el logo rúnico y la moneda Tsirö**: El logotipo tallado de Akapp es el disparador del escaneo de cada `Àk` (piedra en Bribri) y `Tsirö` (semilla de cacao, moneda ancestral indígena) otorga recompensas proporcionales (+15 a +25 Tsirö por hito).

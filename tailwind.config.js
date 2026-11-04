@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
-        serif: ['"Fraunces"', 'Georgia', 'serif']
+        sans: ['"Outfit"', 'system-ui', 'sans-serif'],
+        serif: ['"Marcellus"', 'Georgia', 'serif']
       }
     },
   },
@@ -21,32 +21,44 @@ export default {
       themes: {
         light: {
           colors: {
-            background: "#F7F6F2",
-            foreground: "#14281D",
+            background: "#EDE8DC",
+            foreground: "#1E2624",
+            content1: "#FFFFFF",
+            content2: "#F6F2E9",
             primary: {
-              DEFAULT: "#14281D",
-              foreground: "#FFFFFF",
+              DEFAULT: "#C98A12",
+              foreground: "#070707",
             },
             secondary: {
-              DEFAULT: "#B04A12",
+              DEFAULT: "#D2500A",
               foreground: "#FFFFFF",
             },
-            focus: "#B04A12",
+            success: {
+              DEFAULT: "#1E9467",
+              foreground: "#FFFFFF",
+            },
+            focus: "#D2500A",
           },
         },
         dark: {
           colors: {
-            background: "#0F1210",
-            foreground: "#ECEAE4",
+            background: "#070707",
+            foreground: "#D6DBB3",
+            content1: "#10201D",
+            content2: "#152F2A",
             primary: {
-              DEFAULT: "#ECEAE4",
-              foreground: "#0F1210",
+              DEFAULT: "#F1BF57",
+              foreground: "#070707",
             },
             secondary: {
-              DEFAULT: "#F08C4B",
-              foreground: "#0F1210",
+              DEFAULT: "#F5A114",
+              foreground: "#070707",
             },
-            focus: "#F08C4B",
+            success: {
+              DEFAULT: "#34C38F",
+              foreground: "#070707",
+            },
+            focus: "#F1BF57",
           },
         },
       },

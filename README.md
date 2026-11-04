@@ -64,8 +64,8 @@ Si tú o tu agente de IA van a editar el código, mantengan estos estándares ap
 
 1. **Ubicación de las Piedras Àk**:
    * Las piedras están georreferenciadas estrictamente sobre los senderos oficiales de OpenStreetMap (Poás en Laguna Botos; Tenorio en Catarata y Teñideros; Tapantí en Oropéndola). No mover las coordenadas fuera de las líneas de los senderos.
-2. **Sincronización del Perfil de Elevación**:
-   * Los puntos `<circle cx={ak.x} cy={ak.y} />` en el gráfico de elevación SVG deben coincidir exactamente con la altura `y` de la curva del terreno de esa ruta.
+2. **Sin Elevación en los Àks**:
+   * Las piedras Àk no muestran altitud, pendiente ni perfil altimétrico. No volver a agregar estos datos.
 3. **Economía Tsirö Proporcional**:
    * Recolección: +10 a +25 Tsirö por piedra encontrada.
    * Cupones y Recompensas: 150 a 1200 Tsirö para canjear en comercios de la comunidad.

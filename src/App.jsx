@@ -1,4 +1,10 @@
-import React, { useState, useMemo, useEffect, useRef } from "react";
+import React, {
+  useCallback,
+  useState,
+  useMemo,
+  useEffect,
+  useRef,
+} from "react";
 import {
   Card,
   CardBody,
@@ -30,9 +36,6 @@ const ROUTES = [
     center: [10.1894, -84.2309],
     zoom: 16,
     trailsSummary: "2 senderos conectados (Cráter Principal y Laguna Botos)",
-    elevationProfile: "0,48 45,42 95,34 145,25 195,29 245,21 290,15 332,12 380,14",
-    elevationArea:
-      "M 0,56 L 0,48 L 45,42 L 95,34 L 145,25 L 195,29 L 245,21 L 290,15 L 332,12 L 380,14 L 380,56 Z",
     trailPath: [
       [10.18821, -84.23305],
       [10.18848, -84.2329],
@@ -66,14 +69,10 @@ const ROUTES = [
         name: "Caseta de Entrada",
         trail: "Sendero Cráter",
         km: "0,2 km",
-        altitude: "2.480 m",
-        grade: "3%",
         tsiro: 10,
         xp: 80,
         lat: 10.18821,
         lng: -84.23305,
-        x: 45,
-        y: 42,
       },
       {
         id: "ak-02",
@@ -81,14 +80,10 @@ const ROUTES = [
         name: "Mirador Cráter Principal",
         trail: "Sendero Cráter",
         km: "1,4 km",
-        altitude: "2.570 m",
-        grade: "6%",
         tsiro: 15,
         xp: 120,
         lat: 10.1902,
         lng: -84.2327,
-        x: 145,
-        y: 25,
       },
       {
         id: "ak-03",
@@ -96,14 +91,10 @@ const ROUTES = [
         name: "Bifurcación Bosque Nuboso",
         trail: "Sendero Laguna Botos",
         km: "2,9 km",
-        altitude: "2.590 m",
-        grade: "5%",
         tsiro: 10,
         xp: 100,
         lat: 10.18997,
         lng: -84.23095,
-        x: 245,
-        y: 21,
       },
       {
         id: "ak-04",
@@ -111,14 +102,10 @@ const ROUTES = [
         name: "Mirador Laguna Botos",
         trail: "Sendero Laguna Botos",
         km: "4,8 km",
-        altitude: "2.640 m",
-        grade: "8%",
         tsiro: 15,
         xp: 150,
         lat: 10.18914,
         lng: -84.22861,
-        x: 332,
-        y: 12,
       },
     ],
     guides: [
@@ -169,9 +156,6 @@ const ROUTES = [
     zoom: 14,
     trailsSummary:
       "Sendero Misterios del Tenorio (Catarata, Laguna Azul y Teñideros)",
-    elevationProfile: "0,48 35,44 72,38 135,32 196,24 255,18 318,12 380,15",
-    elevationArea:
-      "M 0,56 L 0,48 L 35,44 L 72,38 L 135,32 L 196,24 L 255,18 L 318,12 L 380,15 L 380,56 Z",
     trailPath: [
       [10.71564, -84.98726],
       [10.71467, -84.98761],
@@ -203,14 +187,10 @@ const ROUTES = [
         name: "Catarata Río Celeste",
         trail: "Sendero Misterios del Tenorio",
         km: "1,8 km",
-        altitude: "680 m",
-        grade: "11%",
         tsiro: 20,
         xp: 140,
         lat: 10.70486,
         lng: -84.99033,
-        x: 72,
-        y: 38,
       },
       {
         id: "ak-06",
@@ -218,14 +198,10 @@ const ROUTES = [
         name: "Mirador Laguna Azul",
         trail: "Sendero Misterios del Tenorio",
         km: "3,9 km",
-        altitude: "720 m",
-        grade: "7%",
         tsiro: 20,
         xp: 150,
         lat: 10.70244,
         lng: -84.99352,
-        x: 196,
-        y: 24,
       },
       {
         id: "ak-07",
@@ -233,14 +209,10 @@ const ROUTES = [
         name: "Los Teñideros",
         trail: "Sendero Misterios del Tenorio",
         km: "6,2 km",
-        altitude: "760 m",
-        grade: "9%",
         tsiro: 25,
         xp: 200,
         lat: 10.70057,
         lng: -84.99701,
-        x: 318,
-        y: 12,
       },
     ],
     guides: [
@@ -273,9 +245,6 @@ const ROUTES = [
     zoom: 16,
     trailsSummary:
       "Senderos Oropéndola, Arbolado y La Pava junto al río Grande de Orosi",
-    elevationProfile: "0,46 55,40 112,34 195,25 282,16 380,14",
-    elevationArea:
-      "M 0,56 L 0,46 L 55,40 L 112,34 L 195,25 L 282,16 L 380,14 L 380,56 Z",
     trailPath: [
       [9.7498, -83.78185],
       [9.75021, -83.78197],
@@ -300,14 +269,10 @@ const ROUTES = [
         name: "Inicio Sendero Oropéndola",
         trail: "Sendero Oropéndola",
         km: "1,5 km",
-        altitude: "1.280 m",
-        grade: "4%",
         tsiro: 20,
         xp: 130,
         lat: 9.7498,
         lng: -83.78185,
-        x: 112,
-        y: 34,
       },
       {
         id: "ak-09",
@@ -315,14 +280,10 @@ const ROUTES = [
         name: "Mirador Río Grande de Orosi",
         trail: "Sendero Oropéndola",
         km: "4,0 km",
-        altitude: "1.390 m",
-        grade: "6%",
         tsiro: 20,
         xp: 150,
         lat: 9.75126,
         lng: -83.78326,
-        x: 282,
-        y: 16,
       },
     ],
     guides: [],
@@ -389,7 +350,7 @@ const WEEKLY_KM = [
 // Píldora perfectamente centrada horizontal y verticalmente (reemplaza el Chip desalineado)
 function BadgePill({ children, tone = "secondary", className = "" }) {
   const toneClasses = {
-    secondary: "bg-secondary text-white",
+    secondary: "bg-secondary text-secondary-foreground",
     secondaryFlat: "bg-secondary/15 text-secondary border border-secondary/30",
     primary: "bg-primary text-primary-foreground",
     primaryFlat: "bg-primary/15 text-primary border border-primary/25",
@@ -409,65 +370,180 @@ function BadgePill({ children, tone = "secondary", className = "" }) {
   );
 }
 
-function RealParkLeafletMap({
+const COSTA_RICA_BOUNDS = [
+  [8.0, -85.95],
+  [11.25, -82.55],
+];
+
+const toRadians = (deg) => (deg * Math.PI) / 180;
+
+function distanceMeters(a, b) {
+  const dLat = toRadians(b[0] - a[0]);
+  const dLng = toRadians(b[1] - a[1]);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRadians(a[0])) *
+      Math.cos(toRadians(b[0])) *
+      Math.sin(dLng / 2) ** 2;
+  return 6371000 * 2 * Math.asin(Math.sqrt(h));
+}
+
+function bearingDegrees(a, b) {
+  const lat1 = toRadians(a[0]);
+  const lat2 = toRadians(b[0]);
+  const dLng = toRadians(b[1] - a[1]);
+  const y = Math.sin(dLng) * Math.cos(lat2);
+  const x =
+    Math.cos(lat1) * Math.sin(lat2) -
+    Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
+  return (Math.atan2(y, x) * 180) / Math.PI;
+}
+
+function nearestPathIndex(path, point) {
+  let best = 0;
+  let bestDistance = Infinity;
+  path.forEach((vertex, index) => {
+    const d = distanceMeters(vertex, point);
+    if (d < bestDistance) {
+      bestDistance = d;
+      best = index;
+    }
+  });
+  return best;
+}
+
+// Tramo del sendero entre la última piedra sellada y la siguiente pendiente
+function buildWalkPath(route, nextAk) {
+  const path = route.trailPath;
+  if (!nextAk) return [path[path.length - 1]];
+
+  const nextIndex = route.aks.findIndex((ak) => ak.id === nextAk.id);
+  const previousAk = route.aks[nextIndex - 1];
+  const start = previousAk
+    ? nearestPathIndex(path, [previousAk.lat, previousAk.lng])
+    : 0;
+  const end = nearestPathIndex(path, [nextAk.lat, nextAk.lng]);
+
+  const stretch =
+    start <= end
+      ? path.slice(start, end + 1)
+      : path.slice(end, start + 1).reverse();
+  return [...stretch, [nextAk.lat, nextAk.lng]];
+}
+
+function pointAlongWalk(walkPath, walked) {
+  let remainingToWalk = walked;
+  for (let i = 0; i < walkPath.length - 1; i += 1) {
+    const from = walkPath[i];
+    const to = walkPath[i + 1];
+    const length = distanceMeters(from, to);
+    if (length === 0) continue;
+    if (remainingToWalk <= length || i === walkPath.length - 2) {
+      const t = Math.min(1, remainingToWalk / length);
+      return {
+        position: [
+          from[0] + (to[0] - from[0]) * t,
+          from[1] + (to[1] - from[1]) * t,
+        ],
+        heading: bearingDegrees(from, to),
+      };
+    }
+    remainingToWalk -= length;
+  }
+  return { position: walkPath[walkPath.length - 1], heading: 0 };
+}
+
+function walkLength(walkPath) {
+  return walkPath.reduce(
+    (total, vertex, index) =>
+      index === 0 ? 0 : total + distanceMeters(walkPath[index - 1], vertex),
+    0
+  );
+}
+
+const MAP_ARROW_HTML = `<div class="nav-arrow-pulse"></div>
+  <div class="nav-arrow">
+    <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true">
+      <path d="M16 3 L27 28 L16 22 L5 28 Z" fill="#F5A114" stroke="#070707" stroke-width="2.5" stroke-linejoin="round" />
+    </svg>
+  </div>`;
+
+function createAkIcon(ak, isDone, isSelected) {
+  const background = isDone ? "#1E9467" : "#10201D";
+  const ring = isSelected
+    ? "box-shadow: 0 0 0 4px rgba(245, 161, 20, 0.7);"
+    : "box-shadow: 0 2px 5px rgba(0,0,0,0.35);";
+
+  return L.divIcon({
+    className: "ak-custom-pin",
+    html: `<div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;width:64px;height:36px;">
+      <div style="background:${background};color:#FFFFFF;border:2px solid #FFFFFF;${ring}border-radius:9999px;padding:2px 8px;font-size:11px;font-weight:800;line-height:1.1;white-space:nowrap;text-align:center;">${ak.code}</div>
+      <div style="width:8px;height:8px;border-radius:9999px;background:${background};border:2px solid #FFFFFF;margin-top:2px;"></div>
+    </div>`,
+    iconSize: [64, 36],
+    iconAnchor: [32, 34],
+  });
+}
+
+// Minimapa OpenStreetMap que sigue la flecha de dirección sobre el sendero
+function TrailMiniMap({
   route,
   scannedAkIds,
-  selectedMapAkId,
+  selectedAkId,
   onSelectAk,
+  position,
+  heading,
 }) {
-  const mapContainerRef = useRef(null);
-  const mapInstanceRef = useRef(null);
-  const markersLayerRef = useRef(null);
-  const prevRouteIdRef = useRef(null);
+  const containerRef = useRef(null);
+  const mapRef = useRef(null);
+  const layerRef = useRef(null);
+  const arrowRef = useRef(null);
+  const previousSelectedRef = useRef(selectedAkId);
+  const [following, setFollowing] = useState(true);
 
   useEffect(() => {
-    if (!mapContainerRef.current) return;
+    const map = L.map(containerRef.current, {
+      center: position,
+      zoom: Math.max(route.zoom, 16),
+      zoomControl: false,
+    });
+    map.attributionControl.setPrefix(false);
 
-    if (!mapInstanceRef.current) {
-      const map = L.map(mapContainerRef.current, {
-        center: route.center,
-        zoom: route.zoom,
-        zoomControl: false,
-        attributionControl: false,
-      });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18,
+      attribution: "© OpenStreetMap",
+    }).addTo(map);
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 18,
-      }).addTo(map);
+    layerRef.current = L.layerGroup().addTo(map);
+    arrowRef.current = L.marker(position, {
+      icon: L.divIcon({
+        className: "nav-arrow-pin",
+        html: MAP_ARROW_HTML,
+        iconSize: [44, 44],
+        iconAnchor: [22, 22],
+      }),
+      interactive: false,
+      zIndexOffset: 1000,
+    }).addTo(map);
 
-      L.control
-        .zoom({
-          position: "bottomright",
-        })
-        .addTo(map);
+    map.on("dragstart", () => setFollowing(false));
+    mapRef.current = map;
 
-      markersLayerRef.current = L.layerGroup().addTo(map);
-      mapInstanceRef.current = map;
-    }
+    const resizeObserver = new ResizeObserver(() => map.invalidateSize());
+    resizeObserver.observe(containerRef.current);
 
     return () => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
-      }
+      resizeObserver.disconnect();
+      map.remove();
+      mapRef.current = null;
     };
   }, []);
 
   useEffect(() => {
-    const map = mapInstanceRef.current;
-    const layer = markersLayerRef.current;
-    if (!map || !layer) return;
-
+    const layer = layerRef.current;
     layer.clearLayers();
 
-    // Polilínea real siguiendo todos los vértices GPS del sendero de OpenStreetMap
-    const latlngs =
-      route.trailPath && route.trailPath.length > 0
-        ? route.trailPath
-        : route.aks.map((ak) => [ak.lat, ak.lng]);
-
-    // Halo blanco debajo para que el sendero resalte con nitidez sobre el mapa real
-    L.polyline(latlngs, {
+    L.polyline(route.trailPath, {
       color: "#FFFFFF",
       weight: 8,
       opacity: 0.85,
@@ -475,82 +551,566 @@ function RealParkLeafletMap({
       lineJoin: "round",
     }).addTo(layer);
 
-    const polyline = L.polyline(latlngs, {
-      color: "#B04A12",
+    L.polyline(route.trailPath, {
+      color: "#E85B0B",
       weight: 4.5,
-      opacity: 1,
       dashArray: "7 5",
       lineCap: "round",
       lineJoin: "round",
     }).addTo(layer);
 
-    // Marcadores reales anclados exactamente sobre el sendero con punto de ubicación + etiqueta
     route.aks.forEach((ak) => {
-      const isDone = scannedAkIds.includes(ak.id);
-      const isSelected = selectedMapAkId === ak.id;
+      L.marker([ak.lat, ak.lng], {
+        icon: createAkIcon(
+          ak,
+          scannedAkIds.includes(ak.id),
+          selectedAkId === ak.id
+        ),
+      })
+        .on("click", () => onSelectAk(ak.id))
+        .addTo(layer);
+    });
+  }, [route, scannedAkIds, selectedAkId, onSelectAk]);
 
-      const bg = isDone ? "#B04A12" : "#163020";
-      const ring = isSelected
-        ? "box-shadow: 0 0 0 4px rgba(176, 74, 18, 0.45);"
-        : "box-shadow: 0 2px 5px rgba(0,0,0,0.35);";
+  useEffect(() => {
+    arrowRef.current.setLatLng(position);
+    const arrow = arrowRef.current.getElement()?.querySelector(".nav-arrow");
+    if (arrow) arrow.style.transform = `rotate(${heading}deg)`;
+    if (following) {
+      mapRef.current.panTo(position, { animate: true, duration: 0.4 });
+    }
+  }, [position, heading, following]);
 
-      const icon = L.divIcon({
-        className: "ak-custom-pin",
-        html: `<div style="
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: flex-end;
-          width: 64px;
-          height: 36px;
-        ">
-          <div style="
-            background: ${bg};
-            color: #FFFFFF;
-            border: 2px solid #FFFFFF;
-            ${ring}
-            border-radius: 9999px;
-            padding: 2px 8px;
-            font-size: 11px;
-            font-weight: 800;
-            line-height: 1.1;
-            white-space: nowrap;
-            text-align: center;
-          ">${ak.code}</div>
-          <div style="
-            width: 8px;
-            height: 8px;
-            border-radius: 9999px;
-            background: ${bg};
-            border: 2px solid #FFFFFF;
-            margin-top: 2px;
-          "></div>
-        </div>`,
-        iconSize: [64, 36],
-        iconAnchor: [32, 34],
-      });
+  // Tocar un Àk en la lista lleva el mapa hasta esa piedra
+  useEffect(() => {
+    if (previousSelectedRef.current === selectedAkId) return;
+    previousSelectedRef.current = selectedAkId;
+    const ak = route.aks.find((item) => item.id === selectedAkId);
+    if (!ak) return;
+    setFollowing(false);
+    mapRef.current.panTo([ak.lat, ak.lng]);
+  }, [route, selectedAkId]);
 
-      const marker = L.marker([ak.lat, ak.lng], { icon }).addTo(layer);
-      marker.on("click", () => {
-        onSelectAk(ak.id);
-      });
+  return (
+    <div className="relative w-full h-full">
+      <div
+        ref={containerRef}
+        className="absolute inset-0 z-0"
+        aria-label={`Mapa en tiempo real de ${route.name}`}
+      />
+      {!following && (
+        <button
+          type="button"
+          onClick={() => setFollowing(true)}
+          className="absolute z-10 bottom-3 left-1/2 -translate-x-1/2 min-h-[40px] px-4 rounded-full bg-black/75 text-white text-xs font-bold border border-white/25 backdrop-blur-md"
+        >
+          Volver a mi posición
+        </button>
+      )}
+    </div>
+  );
+}
+
+// Mapa general de Costa Rica con los parques nacionales disponibles
+function GeneralParksMap({ onOpenRoute }) {
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const map = L.map(containerRef.current, {
+      zoomControl: false,
+      minZoom: 6,
+    });
+    map.attributionControl.setPrefix(false);
+    map.fitBounds(COSTA_RICA_BOUNDS);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 18,
+      attribution: "© OpenStreetMap",
+    }).addTo(map);
+
+    ROUTES.forEach((route) => {
+      const label = route.name.replace(/^(Parque Nacional|P.N.) /, "");
+      L.marker(route.center, {
+        title: route.name,
+        icon: L.divIcon({
+          className: "ak-custom-pin",
+          html: `<div style="display:flex;flex-direction:column;align-items:center;width:150px;">
+            <div style="background:#10201D;color:#F1BF57;border:2px solid #F1BF57;border-radius:9999px;padding:4px 10px;font-size:12px;font-weight:700;line-height:1.1;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.4);">${label}</div>
+            <div style="width:12px;height:12px;border-radius:9999px;background:#F5A114;border:2px solid #FFFFFF;margin-top:3px;"></div>
+          </div>`,
+          iconSize: [150, 46],
+          iconAnchor: [75, 44],
+        }),
+      })
+        .on("click", () => onOpenRoute(route))
+        .addTo(map);
     });
 
-    // Encuadrar todo el sendero real dentro del mapa
-    if (prevRouteIdRef.current !== route.id && latlngs.length > 0) {
-      map.fitBounds(polyline.getBounds(), { padding: [36, 36], maxZoom: 16 });
-      prevRouteIdRef.current = route.id;
-    } else if (latlngs.length > 0) {
-      map.fitBounds(polyline.getBounds(), { padding: [36, 36], maxZoom: 16 });
-    }
-  }, [route, scannedAkIds, selectedMapAkId, onSelectAk]);
+    const resizeObserver = new ResizeObserver(() => map.invalidateSize());
+    resizeObserver.observe(containerRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+      map.remove();
+    };
+  }, [onOpenRoute]);
 
   return (
     <div
-      ref={mapContainerRef}
-      className="w-full h-60 z-0"
-      aria-label={`Mapa satelital y topográfico real de ${route.name}`}
+      ref={containerRef}
+      className="w-full h-full z-0"
+      aria-label="Mapa de parques nacionales de Costa Rica"
     />
+  );
+}
+
+function LogoMark({ className = "", decorative = false }) {
+  return (
+    <span
+      className={`logo-mark ${className}`}
+      {...(decorative
+        ? { "aria-hidden": true }
+        : { role: "img", "aria-label": "Akapp" })}
+    />
+  );
+}
+
+function NavIcon({ children, className = "w-6 h-6" }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      {children}
+    </svg>
+  );
+}
+
+function CostaRicaIcon(props) {
+  return (
+    <NavIcon {...props}>
+      <path
+        fill="currentColor"
+        fillOpacity="0.25"
+        d="M1.5 6.5 5 4.8l3 .9 3 2.1h2.6l3 2.9 2 2.6 3.9 2.2-1.1 3.1-2 2.2-1.9-2.5-2.5.4-2-2.4-3-2.1-2.4-.5-1 1.1.4-2.6-2.5-.5-2 .6-1.8-2.6z"
+      />
+    </NavIcon>
+  );
+}
+
+function HomeIcon(props) {
+  return (
+    <NavIcon {...props}>
+      <path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" />
+    </NavIcon>
+  );
+}
+
+function TicketIcon(props) {
+  return (
+    <NavIcon {...props}>
+      <path d="M3 9V6a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v3a3 3 0 0 0 0 6v3a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-3a3 3 0 0 0 0-6z" />
+      <path d="M14 5v2M14 11v2M14 17v2" />
+    </NavIcon>
+  );
+}
+
+function GearIcon(props) {
+  return (
+    <NavIcon {...props}>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+    </NavIcon>
+  );
+}
+
+function CameraIcon(props) {
+  return (
+    <NavIcon {...props}>
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
+      <circle cx="12" cy="13" r="4" />
+    </NavIcon>
+  );
+}
+
+function MicIcon(props) {
+  return (
+    <NavIcon {...props}>
+      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" />
+    </NavIcon>
+  );
+}
+
+function BackIcon(props) {
+  return (
+    <NavIcon {...props}>
+      <path d="M19 12H5M12 19l-7-7 7-7" />
+    </NavIcon>
+  );
+}
+
+function NavButton({ label, ariaLabel, active, onPress, children }) {
+  return (
+    <button
+      type="button"
+      onClick={onPress}
+      aria-label={ariaLabel || label}
+      aria-current={active ? "page" : undefined}
+      className={`min-h-[52px] rounded-full flex flex-col items-center justify-center gap-0.5 transition-colors ${
+        active
+          ? "text-secondary dark:text-primary"
+          : "text-default-500"
+      }`}
+    >
+      {children}
+      <span className="text-[10px] font-semibold leading-none">{label}</span>
+    </button>
+  );
+}
+
+function SettingToggle({ label, isOn, onChange }) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={isOn}
+      onClick={() => onChange(!isOn)}
+      className="min-h-[44px] w-full flex items-center justify-between gap-3 text-left"
+    >
+      <span className="text-sm font-semibold">{label}</span>
+      <span
+        className={`w-12 h-7 p-0.5 rounded-full flex shrink-0 transition-colors ${
+          isOn ? "bg-primary justify-end" : "bg-default-300 justify-start"
+        }`}
+      >
+        <span className="w-6 h-6 rounded-full bg-white shadow-sm" />
+      </span>
+    </button>
+  );
+}
+
+function ProfileBubble({ onPress, className = "" }) {
+  return (
+    <button
+      type="button"
+      onClick={onPress}
+      className={`w-11 h-11 rounded-full inline-flex items-center justify-center shrink-0 ${className}`}
+      aria-label="Abrir perfil de Esteban"
+    >
+      <Avatar
+        name="EM"
+        size="sm"
+        className="w-10 h-10 text-sm font-bold bg-primary text-primary-foreground ring-2 ring-background shadow-md"
+      />
+    </button>
+  );
+}
+
+// Modo sendero: 1/3 minimapa, 2/3 ciencia ciudadana y piedras Àk
+function TrailView({
+  route,
+  scannedAkIds,
+  selectedAkId,
+  onSelectAk,
+  onBack,
+  onOpenProfile,
+  onScanAk,
+  onArrivalChange,
+  reports,
+  onAddReport,
+  children,
+}) {
+  const nextAk = useMemo(
+    () => route.aks.find((ak) => !scannedAkIds.includes(ak.id)) || null,
+    [route, scannedAkIds]
+  );
+  const walkPath = useMemo(() => buildWalkPath(route, nextAk), [route, nextAk]);
+  const totalWalk = useMemo(() => walkLength(walkPath), [walkPath]);
+  const [walked, setWalked] = useState(0);
+  const { position, heading } = useMemo(
+    () => pointAlongWalk(walkPath, walked),
+    [walkPath, walked]
+  );
+  const remaining = Math.max(0, Math.round(totalWalk - walked));
+  const arrived = Boolean(nextAk) && remaining <= 25;
+
+  const [isRecording, setIsRecording] = useState(false);
+  const [notice, setNotice] = useState(null);
+  const photoInputRef = useRef(null);
+  const recorderRef = useRef(null);
+  const noticeTimerRef = useRef(null);
+
+  // Simulación de la caminata para la demo: la flecha avanza por el sendero real
+  useEffect(() => {
+    setWalked(0);
+    if (totalWalk === 0) return undefined;
+    const step = Math.max(5, totalWalk / 90);
+    const timer = setInterval(() => {
+      setWalked((previous) => {
+        const next = Math.min(totalWalk, previous + step);
+        if (next >= totalWalk) clearInterval(timer);
+        return next;
+      });
+    }, 400);
+    return () => clearInterval(timer);
+  }, [totalWalk]);
+
+  useEffect(() => {
+    onArrivalChange(arrived && nextAk ? nextAk.id : null);
+    return () => onArrivalChange(null);
+  }, [arrived, nextAk, onArrivalChange]);
+
+  useEffect(
+    () => () => {
+      clearTimeout(noticeTimerRef.current);
+      if (recorderRef.current) recorderRef.current.stop();
+    },
+    []
+  );
+
+  const showNotice = (text) => {
+    setNotice(text);
+    clearTimeout(noticeTimerRef.current);
+    noticeTimerRef.current = setTimeout(() => setNotice(null), 3200);
+  };
+
+  const saveReport = (type, url) => {
+    onAddReport({
+      id: `${type}-${Date.now()}`,
+      type,
+      url,
+      routeName: route.name,
+      lat: position[0],
+      lng: position[1],
+    });
+    showNotice(
+      `${type === "foto" ? "Foto guardada" : "Audio guardado"} en ${position[0].toFixed(
+        5
+      )}, ${position[1].toFixed(5)}`
+    );
+  };
+
+  const handlePhotoSelected = (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (file) saveReport("foto", URL.createObjectURL(file));
+  };
+
+  const toggleRecording = async () => {
+    if (recorderRef.current) {
+      recorderRef.current.stop();
+      return;
+    }
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      const chunks = [];
+      recorder.ondataavailable = (event) => chunks.push(event.data);
+      recorder.onstop = () => {
+        stream.getTracks().forEach((track) => track.stop());
+        recorderRef.current = null;
+        setIsRecording(false);
+        saveReport(
+          "audio",
+          URL.createObjectURL(new Blob(chunks, { type: recorder.mimeType }))
+        );
+      };
+      recorder.start();
+      recorderRef.current = recorder;
+      setIsRecording(true);
+    } catch {
+      showNotice("No se pudo usar el micrófono. Revisa los permisos.");
+    }
+  };
+
+  const routeReports = reports.filter((r) => r.routeName === route.name);
+
+  return (
+    <div className="fixed inset-y-0 inset-x-0 mx-auto w-full max-w-md z-20 bg-background flex flex-col">
+      {/* Tercio superior: minimapa en tiempo real */}
+      <div className="relative h-[33dvh] shrink-0 overflow-hidden">
+        <TrailMiniMap
+          route={route}
+          scannedAkIds={scannedAkIds}
+          selectedAkId={selectedAkId}
+          onSelectAk={onSelectAk}
+          position={position}
+          heading={heading}
+        />
+        <div className="absolute z-10 top-3 inset-x-3 flex items-center justify-between pointer-events-none">
+          <button
+            type="button"
+            onClick={onBack}
+            aria-label="Volver a rutas cercanas"
+            className="pointer-events-auto w-11 h-11 rounded-full bg-black/75 text-white border border-white/25 backdrop-blur-md inline-flex items-center justify-center"
+          >
+            <BackIcon className="w-5 h-5" />
+          </button>
+          <ProfileBubble onPress={onOpenProfile} className="pointer-events-auto" />
+        </div>
+      </div>
+
+      {/* Dos tercios inferiores: progreso, piedras Àk y guías */}
+      <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-3.5 pb-44 flex flex-col gap-3">
+        <div className="flex items-center justify-between gap-2">
+          <h1 className="font-serif text-lg leading-tight min-w-0">
+            {route.name}
+          </h1>
+          <BadgePill tone="secondary">+{route.totalTsiro} Tsirö</BadgePill>
+        </div>
+
+        <div
+          className={`p-3.5 rounded-2xl border ${
+            arrived
+              ? "border-secondary bg-secondary/10"
+              : "border-default-200 bg-content1"
+          }`}
+        >
+          {nextAk ? (
+            <>
+              <span className="text-xs font-semibold text-default-500 block">
+                {arrived ? "Llegaste a la piedra" : `Siguiente, a ${remaining} m`}
+              </span>
+              <strong className="text-sm font-bold block">
+                {nextAk.code} · {nextAk.name}
+              </strong>
+              {arrived && (
+                <span className="text-xs text-secondary font-semibold block mt-0.5">
+                  Toca la runa de abajo para escanear
+                </span>
+              )}
+            </>
+          ) : (
+            <strong className="text-sm font-bold block">
+              Sellaste todas las piedras de esta ruta
+            </strong>
+          )}
+        </div>
+
+        {notice && (
+          <div
+            role="status"
+            className="p-3 rounded-2xl bg-success/15 border border-success/30 text-xs font-semibold text-center"
+          >
+            {notice}
+          </div>
+        )}
+
+        <div className="flex flex-col gap-2">
+          {route.aks.map((ak) => {
+            const isDone = scannedAkIds.includes(ak.id);
+            const isSelected = selectedAkId === ak.id;
+
+            return (
+              <div
+                key={ak.id}
+                onClick={() => onSelectAk(ak.id)}
+                className={`p-3 rounded-2xl border flex items-center justify-between gap-2 cursor-pointer transition-colors ${
+                  isSelected
+                    ? "border-secondary bg-secondary/5"
+                    : "border-default-200 bg-content1"
+                }`}
+              >
+                <div className="min-w-0">
+                  <strong className="text-sm font-bold block truncate">
+                    {ak.code} · {ak.name}
+                  </strong>
+                  <span className="text-xs text-default-500 block tabular-nums">
+                    {ak.trail} · Km {ak.km} · +{ak.tsiro} Tsirö
+                  </span>
+                </div>
+                {isDone ? (
+                  <BadgePill tone="successFlat">Sellado</BadgePill>
+                ) : (
+                  <Button
+                    size="sm"
+                    radius="full"
+                    color="secondary"
+                    className="min-h-[40px] text-xs font-semibold px-4 shrink-0"
+                    onPress={() => onScanAk(ak)}
+                  >
+                    Escanear
+                  </Button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {routeReports.length > 0 && (
+          <div className="flex flex-col gap-2">
+            <h2 className="text-sm font-bold">Tus aportes al SINAC</h2>
+            {routeReports.map((report) => (
+              <div
+                key={report.id}
+                className="p-2.5 rounded-2xl border border-default-200 bg-content1 flex items-center gap-2.5"
+              >
+                {report.type === "foto" ? (
+                  <img
+                    src={report.url}
+                    alt="Foto georreferenciada"
+                    className="w-12 h-12 rounded-xl object-cover shrink-0"
+                  />
+                ) : (
+                  <audio
+                    src={report.url}
+                    controls
+                    className="h-10 min-w-0 flex-1"
+                  />
+                )}
+                <span className="text-xs text-default-500 tabular-nums shrink-0">
+                  {report.lat.toFixed(5)}, {report.lng.toFixed(5)}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {children}
+      </div>
+
+      {/* Accesos flotantes de ciencia ciudadana */}
+      <button
+        type="button"
+        onClick={toggleRecording}
+        aria-pressed={isRecording}
+        aria-label={isRecording ? "Detener grabación" : "Grabar audio o canto de aves"}
+        className={`absolute z-20 left-4 bottom-24 w-14 h-14 rounded-full inline-flex items-center justify-center shadow-lg border-2 ${
+          isRecording
+            ? "bg-danger text-white border-white record-pulse"
+            : "bg-content1 text-foreground border-default-300"
+        }`}
+      >
+        <MicIcon />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => photoInputRef.current?.click()}
+        aria-label="Tomar foto georreferenciada"
+        className="absolute z-20 right-4 bottom-24 w-14 h-14 rounded-full bg-content1 text-foreground border-2 border-default-300 inline-flex items-center justify-center shadow-lg"
+      >
+        <CameraIcon />
+      </button>
+      <input
+        ref={photoInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        onChange={handlePhotoSelected}
+        className="hidden"
+        aria-hidden="true"
+        tabIndex={-1}
+      />
+    </div>
   );
 }
 
@@ -576,7 +1136,8 @@ function SafariGuideIcon({ className = "w-5 h-5" }) {
 }
 
 export default function App() {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(true);
+  const [vibrateOnScan, setVibrateOnScan] = useState(true);
 
   // Saldo proporcional de Esteban (285 Tsirö acumulados tras varias caminatas)
   const [tsiro, setTsiro] = useState(285);
@@ -584,7 +1145,7 @@ export default function App() {
   const [totalKm, setTotalKm] = useState(42.6);
   const [scannedAkIds, setScannedAkIds] = useState(["ak-01", "ak-02"]);
 
-  // 4 pestañas principales separadas: "explorar" | "escanear" | "cupones" | "perfil"
+  // Vistas: "mapa" | "explorar" | "escanear" | "cupones" | "config" | "perfil"
   const [activeView, setActiveView] = useState("explorar");
 
   // Estado de Explorar Rutas y Detalle de Ruta
@@ -600,6 +1161,11 @@ export default function App() {
   // Estado de Escáner NFC
   const [scannerAkId, setScannerAkId] = useState("ak-03");
   const [scanState, setScanState] = useState("idle"); // "idle" | "scanning" | "done"
+  const [nearAkId, setNearAkId] = useState(null);
+  const scanTimerRef = useRef(null);
+
+  // Fotos y audios georreferenciados de ciencia ciudadana
+  const [reports, setReports] = useState([]);
 
   // Estado de Cupones Separados y Pase Perforado
   const [couponCategory, setCouponCategory] = useState("todos");
@@ -638,11 +1204,21 @@ export default function App() {
   const currentLevelXp = xp % 250;
   const levelProgress = Math.round((currentLevelXp / 250) * 100);
 
-  const toggleTheme = () => {
-    const next = !isDark;
-    setIsDark(next);
-    document.documentElement.classList.toggle("dark", next);
-    document.documentElement.classList.toggle("light", !next);
+  const isOnTrail = activeView === "explorar" && Boolean(openedRoute);
+
+  const scannerRouteProgress = useMemo(() => {
+    const route = ROUTES.find((r) => r.aks.some((a) => a.id === scannerAkId));
+    return {
+      done: route.aks.filter((a) => scannedAkIds.includes(a.id)).length,
+      total: route.aks.length,
+      routeName: route.name.replace(/^(Parque Nacional|P.N.) /, ""),
+    };
+  }, [scannerAkId, scannedAkIds]);
+
+  const setTheme = (dark) => {
+    setIsDark(dark);
+    document.documentElement.classList.toggle("dark", dark);
+    document.documentElement.classList.toggle("light", !dark);
   };
 
   // Búsqueda de rutas cercanas o asistente AX
@@ -701,11 +1277,28 @@ export default function App() {
   }, [routeQuery, difficultyFilter]);
 
   const openRouteDetail = (route) => {
+    const firstPending =
+      route.aks.find((a) => !scannedAkIds.includes(a.id)) || route.aks[0];
     setOpenedRouteId(route.id);
     setGuidesDropdownOpen(false);
-    if (route.aks.length > 0) {
-      setSelectedMapAkId(route.aks[0].id);
-    }
+    setSelectedMapAkId(firstPending.id);
+  };
+
+  // Se mantiene estable para que el mapa general no se vuelva a crear
+  const openRouteDetailRef = useRef(openRouteDetail);
+  openRouteDetailRef.current = openRouteDetail;
+  const handleOpenRouteFromMap = useCallback((route) => {
+    openRouteDetailRef.current(route);
+    setActiveView("explorar");
+  }, []);
+
+  const goToExplore = () => {
+    setOpenedRouteId(null);
+    setActiveView("explorar");
+  };
+
+  const handleAddReport = (report) => {
+    setReports((prev) => [report, ...prev]);
   };
 
   const handleSelectGuide = (routeId, guideId) => {
@@ -715,17 +1308,55 @@ export default function App() {
     }));
   };
 
-  const handleScanStone = () => {
+  useEffect(() => () => clearTimeout(scanTimerRef.current), []);
+
+  const startScan = (ak) => {
+    if (scanState === "scanning") return;
+    setScannerAkId(ak.id);
     setScanState("scanning");
-    setTimeout(() => {
-      setScanState("done");
-      setTsiro((prev) => prev + scannerAk.tsiro);
-      setXp((prev) => prev + scannerAk.xp);
+    if (vibrateOnScan) navigator.vibrate?.([40, 80, 40]);
+
+    scanTimerRef.current = setTimeout(() => {
+      setTsiro((prev) => prev + ak.tsiro);
+      setXp((prev) => prev + ak.xp);
       setTotalKm((prev) => Number((prev + 1.2).toFixed(1)));
-      if (!scannedAkIds.includes(scannerAk.id)) {
-        setScannedAkIds((prev) => [...prev, scannerAk.id]);
-      }
-    }, 1150);
+      setScannedAkIds((prev) => [...prev, ak.id]);
+      setScanState("done");
+      setActiveView("escanear");
+      if (vibrateOnScan) navigator.vibrate?.(120);
+    }, 2400);
+  };
+
+  // Botón central: escanea la siguiente piedra pendiente de la ruta abierta
+  const handleNfcPress = () => {
+    const isPending = (ak) => !scannedAkIds.includes(ak.id);
+    const target =
+      openedRoute?.aks.find(isPending) || allAks.find(isPending) || null;
+
+    if (target) {
+      startScan(target);
+      return;
+    }
+    setScanState("idle");
+    setActiveView("escanear");
+  };
+
+  const handleContinueAfterScan = () => {
+    setScanState("idle");
+    setActiveView("explorar");
+  };
+
+  const handleResetDemo = () => {
+    setTsiro(285);
+    setXp(1880);
+    setTotalKm(42.6);
+    setScannedAkIds(["ak-01", "ak-02"]);
+    setRedeemedIds([]);
+    setJustRedeemedCoupon(null);
+    setReports([]);
+    setScanState("idle");
+    setOpenedRouteId(null);
+    setActiveView("explorar");
   };
 
   const handleRedeemCoupon = (benefit) => {
@@ -764,54 +1395,33 @@ export default function App() {
 
   return (
     <div className="min-h-dvh w-full overflow-x-hidden bg-background text-foreground flex flex-col items-center">
-      <div className="w-full max-w-md min-h-dvh flex flex-col pb-28 px-4 pt-3">
+      <div className="w-full max-w-md min-h-dvh flex flex-col pb-32 px-4 pt-3">
         
-        {/* CABECERA ALINEADA AL CENTRO VERTICAL: Marca a la izquierda, Saldo Tsirö y Perfil a la derecha */}
-        <header className="flex items-center justify-between py-2 gap-2">
-          <button
-            type="button"
-            onClick={() => {
-              setOpenedRouteId(null);
-              setActiveView("explorar");
-            }}
-            className="font-serif text-2xl font-bold tracking-tight text-foreground min-h-[44px] px-1 inline-flex items-center gap-2"
-          >
-            <span className="leading-none">Akapp</span>
-            <span className="inline-flex items-center justify-center text-[11px] font-sans font-bold h-6 px-2.5 rounded-full bg-default-100 text-default-600 border border-default-200 leading-none">
-              CR
-            </span>
-          </button>
-
-          <div className="flex items-center gap-2">
-            <Button
-              size="sm"
-              variant="flat"
-              onPress={toggleTheme}
-              className="min-h-[44px] min-w-[44px] font-semibold text-xs px-3 rounded-full"
-              aria-label="Cambiar tema de color"
-            >
-              {isDark ? "Claro" : "Oscuro"}
-            </Button>
-
+        {/* CABECERA FIJA: logo a la izquierda, saldo Tsirö y avatar a la derecha */}
+        {!isOnTrail && (
+          <header className="sticky top-0 z-10 -mx-4 px-4 py-2 flex items-center justify-between gap-2 bg-background/90 backdrop-blur-md">
             <button
               type="button"
-              onClick={() => setActiveView("perfil")}
-              className="min-h-[44px] p-1.5 rounded-full bg-content1 border border-default-300 inline-flex items-center justify-center gap-2 shadow-sm"
-              aria-label="Abrir perfil de Esteban"
+              onClick={goToExplore}
+              aria-label="Ir a Explorar"
+              className="min-h-[44px] px-1 inline-flex items-center text-primary"
             >
-              <BadgePill tone="secondary">{tsiro} Tsirö</BadgePill>
-              <div className="text-right leading-tight hidden sm:block pr-0.5">
-                <span className="text-xs font-bold block">Esteban</span>
-                <span className="text-xs text-default-500 block">Nv. {level}</span>
-              </div>
-              <Avatar
-                name="EM"
-                size="sm"
-                className="w-7 h-7 text-xs font-bold bg-primary text-primary-foreground shrink-0"
-              />
+              <LogoMark className="h-8" />
             </button>
-          </div>
-        </header>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setActiveView("cupones")}
+                aria-label={`Saldo de ${tsiro} Tsirö, abrir Cupones`}
+                className="min-h-[44px] inline-flex items-center"
+              >
+                <BadgePill tone="secondary">{tsiro} Tsirö</BadgePill>
+              </button>
+              <ProfileBubble onPress={() => setActiveView("perfil")} />
+            </div>
+          </header>
+        )}
 
         {/* ========================================================= */}
         {/* VISTA 1: EXPLORAR (CON FOTOGRAFÍAS REALES DE LOS PARQUES) */}
@@ -844,7 +1454,7 @@ export default function App() {
                 classNames={{
                   inputWrapper:
                     "bg-content1 min-h-[48px] border-default-300 shadow-sm px-4",
-                  input: "text-sm",
+                  input: "text-sm !bg-transparent",
                 }}
               />
 
@@ -1067,219 +1677,21 @@ export default function App() {
         )}
 
         {/* ========================================================= */}
-        {/* SUB-VISTA EXPLORAR: MAPA REAL LEAFLET + HOJA DESLIZANTE   */}
+        {/* SUB-VISTA EXPLORAR: MODO SENDERO ESTILO WAZE               */}
         {/* ========================================================= */}
-        {activeView === "explorar" && openedRoute && (
-          <main className="flex flex-col gap-3.5 mt-1 flex-1">
-            
-            {/* Contenedor con Fotografía Miniatura, Controles y Mapa Geográfico Real (Leaflet) */}
-            <div className="w-full rounded-3xl bg-[#10231A] text-white border border-default-200 overflow-hidden shadow-md relative">
-              
-              {/* Cabecera sobre foto del parque */}
-              <div className="relative p-3.5 flex flex-col gap-2 overflow-hidden">
-                <img
-                  src={openedRoute.photo}
-                  alt={openedRoute.photoAlt}
-                  className="absolute inset-0 w-full h-full object-cover opacity-45"
-                />
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(to bottom, rgba(16, 35, 26, 0.72), rgba(16, 35, 26, 0.95))",
-                  }}
-                />
-
-                <div className="relative z-10 flex items-center justify-between gap-2">
-                  <Button
-                    size="sm"
-                    radius="full"
-                    variant="flat"
-                    className="min-h-[44px] font-semibold text-xs bg-black/60 text-white border border-white/20 backdrop-blur-md px-3.5"
-                    onPress={() => setOpenedRouteId(null)}
-                  >
-                    Volver a rutas cercanas
-                  </Button>
-                  <BadgePill tone="secondary">
-                    Hasta +{openedRoute.totalTsiro} Tsirö
-                  </BadgePill>
-                </div>
-
-                <div className="relative z-10 px-1 pt-0.5">
-                  <span className="text-xs text-white/80 block">
-                    Mapa topográfico y ubicación de piedras Àk
-                  </span>
-                  <h1 className="font-serif text-xl font-bold text-white">
-                    {openedRoute.name}
-                  </h1>
-                </div>
-              </div>
-
-              {/* Mapa Geográfico Interactivo Real (OpenStreetMap + Leaflet) con Coordenadas Encuadradas */}
-              <RealParkLeafletMap
-                route={openedRoute}
-                scannedAkIds={scannedAkIds}
-                selectedMapAkId={selectedMapAkId}
-                onSelectAk={(akId) => setSelectedMapAkId(akId)}
-              />
-            </div>
-
-            {/* Hoja Deslizante (Bottom Sheet Card) con Altimetría Rellena y Hitos */}
-            <Card
-              shadow="sm"
-              className="border border-default-200 bg-content1 rounded-3xl -mt-3 relative z-20"
-            >
-              <CardBody className="p-4 flex flex-col gap-3.5">
-                {/* Tirador visual estilo iOS Bottom Sheet */}
-                <div className="w-10 h-1.5 rounded-full bg-default-300 mx-auto" />
-
-                {/* Gráfico de Altimetría con Área Rellena */}
-                {selectedMapAk && (
-                  <div className="p-3.5 rounded-2xl bg-default-100 border border-default-200 flex flex-col gap-2">
-                    <div className="flex items-center justify-between text-xs gap-2">
-                      <span className="font-bold text-foreground truncate">
-                        Perfil de elevación · {selectedMapAk.code} ({selectedMapAk.name})
-                      </span>
-                      <span className="font-semibold text-secondary shrink-0 tabular-nums">
-                        {selectedMapAk.altitude} · {selectedMapAk.grade}
-                      </span>
-                    </div>
-
-                    <svg
-                      viewBox="0 0 380 56"
-                      className="w-full h-14 overflow-visible"
-                      aria-label="Gráfico de altimetría del sendero"
-                    >
-                      <defs>
-                        <linearGradient
-                          id="elevFill"
-                          x1="0"
-                          y1="0"
-                          x2="0"
-                          y2="1"
-                        >
-                          <stop
-                            offset="0%"
-                            stopColor="currentColor"
-                            stopOpacity="0.28"
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor="currentColor"
-                            stopOpacity="0.02"
-                          />
-                        </linearGradient>
-                      </defs>
-
-                      <path
-                        d={openedRoute.elevationArea}
-                        fill="url(#elevFill)"
-                        className="text-primary"
-                      />
-
-                      <polyline
-                        points={openedRoute.elevationProfile}
-                        fill="none"
-                        stroke="currentColor"
-                        className="text-primary"
-                        strokeWidth="2.5"
-                      />
-
-                      {openedRoute.aks.map((ak) => {
-                        const active = ak.id === selectedMapAk.id;
-                        return (
-                          <g
-                            key={ak.id}
-                            onClick={() => setSelectedMapAkId(ak.id)}
-                            className="cursor-pointer"
-                          >
-                            {active && (
-                              <line
-                                x1={ak.x}
-                                y1={2}
-                                x2={ak.x}
-                                y2={54}
-                                stroke="currentColor"
-                                className="text-secondary"
-                                strokeWidth="1.5"
-                                strokeDasharray="3 2"
-                              />
-                            )}
-                            <circle
-                              cx={ak.x}
-                              cy={ak.y}
-                              r={active ? "6" : "4.5"}
-                              className={
-                                active
-                                  ? "fill-secondary stroke-background stroke-2"
-                                  : "fill-background stroke-primary stroke-2"
-                              }
-                            />
-                          </g>
-                        );
-                      })}
-                    </svg>
-                  </div>
-                )}
-
-                {/* Lista de piedras Àk con filas limpias y alineación centrada */}
-                <div className="flex flex-col gap-2.5">
-                  {openedRoute.aks.map((ak) => {
-                    const isDone = scannedAkIds.includes(ak.id);
-                    const isSelected = selectedMapAkId === ak.id;
-
-                    return (
-                      <div
-                        key={ak.id}
-                        onClick={() => setSelectedMapAkId(ak.id)}
-                        className={`p-3.5 rounded-2xl border flex flex-col gap-2.5 cursor-pointer transition-colors ${
-                          isSelected
-                            ? "border-secondary bg-secondary/5"
-                            : "border-default-200 bg-default-50"
-                        }`}
-                      >
-                        <div className="flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-2 min-w-0">
-                            <BadgePill tone="secondaryFlat">
-                              {ak.code}
-                            </BadgePill>
-                            <strong className="text-sm font-bold text-foreground truncate">
-                              {ak.name}
-                            </strong>
-                          </div>
-                          <BadgePill tone="neutral">+{ak.tsiro} Tsirö</BadgePill>
-                        </div>
-
-                        <div className="flex items-center justify-between gap-2 pt-1 border-t border-default-200/70">
-                          <span className="text-xs text-default-500 tabular-nums">
-                            {ak.trail} · Km {ak.km} · Alt. {ak.altitude}
-                          </span>
-
-                          {isDone ? (
-                            <BadgePill tone="successFlat">Sellado</BadgePill>
-                          ) : (
-                            <Button
-                              size="sm"
-                              radius="full"
-                              color="secondary"
-                              className="min-h-[40px] text-xs font-semibold px-4"
-                              onPress={() => {
-                                setScannerAkId(ak.id);
-                                setScanState("idle");
-                                setActiveView("escanear");
-                              }}
-                            >
-                              Escanear
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </CardBody>
-            </Card>
-
+        {isOnTrail && (
+          <TrailView
+            route={openedRoute}
+            scannedAkIds={scannedAkIds}
+            selectedAkId={selectedMapAkId}
+            onSelectAk={setSelectedMapAkId}
+            onBack={() => setOpenedRouteId(null)}
+            onOpenProfile={() => setActiveView("perfil")}
+            onScanAk={startScan}
+            onArrivalChange={setNearAkId}
+            reports={reports}
+            onAddReport={handleAddReport}
+          >
             {/* Botón Desplegable Opcional de Guías Locales con Icono de Sombrero Safari */}
             <div className="flex flex-col gap-2.5">
               <button
@@ -1452,171 +1864,181 @@ export default function App() {
                 </Card>
               )}
             </div>
+          </TrailView>
+        )}
+
+        {/* ========================================================= */}
+        {/* VISTA: MAPA GENERAL DE PARQUES NACIONALES                 */}
+        {/* ========================================================= */}
+        {activeView === "mapa" && (
+          <main className="flex flex-col gap-3 mt-1 flex-1">
+            <div className="px-1">
+              <h1 className="font-serif text-lg">Mapa de Costa Rica</h1>
+              <span className="text-xs text-default-500 block">
+                Toca un parque para abrir sus senderos
+              </span>
+            </div>
+            <div className="h-[46dvh] rounded-3xl overflow-hidden border border-default-200 shadow-md">
+              <GeneralParksMap onOpenRoute={handleOpenRouteFromMap} />
+            </div>
+            <div className="flex flex-col gap-2">
+              {ROUTES.map((route) => (
+                <button
+                  key={route.id}
+                  type="button"
+                  onClick={() => handleOpenRouteFromMap(route)}
+                  className="min-h-[60px] p-2.5 rounded-2xl border border-default-200 bg-content1 flex items-center gap-3 text-left"
+                >
+                  <img
+                    src={route.photo}
+                    alt={route.photoAlt}
+                    className="w-12 h-12 rounded-xl object-cover shrink-0"
+                  />
+                  <span className="min-w-0">
+                    <strong className="text-sm font-bold block truncate">
+                      {route.name}
+                    </strong>
+                    <span className="text-xs text-default-500 block truncate">
+                      {route.region}
+                    </span>
+                  </span>
+                </button>
+              ))}
+            </div>
           </main>
         )}
 
         {/* ========================================================= */}
-        {/* VISTA 2: ESCANEAR PIEDRA ÀK (CUNA DE ROCA TÁCTIL + NFC)   */}
+        {/* VISTA: RESULTADO DEL ESCANEO NFC DE LA PIEDRA ÀK          */}
         {/* ========================================================= */}
         {activeView === "escanear" && (
           <main className="flex flex-col gap-4 mt-2 flex-1">
-            <div className="grid grid-cols-2 gap-1.5">
-              {allAks.slice(0, 4).map((stone) => (
-                <Button
-                  key={stone.id}
-                  size="sm"
-                  radius="full"
-                  variant={scannerAkId === stone.id ? "solid" : "bordered"}
-                  color={scannerAkId === stone.id ? "primary" : "default"}
-                  className="min-h-[44px] text-xs font-semibold px-2.5 truncate"
-                  onPress={() => {
-                    setScannerAkId(stone.id);
-                    setScanState("idle");
-                  }}
-                >
-                  {stone.code} · +{stone.tsiro} Tsirö
-                </Button>
-              ))}
-            </div>
-
-            <Card
-              shadow="sm"
-              className="border border-default-200 bg-content1 rounded-3xl"
-            >
-              <CardBody className="p-6 flex flex-col items-center text-center gap-4">
-                <div className="flex flex-col items-center gap-0.5">
-                  <span className="text-xs font-semibold text-default-500">
-                    {scannerAk.trail} · Km {scannerAk.km}
+            {scanState === "done" ? (
+              <Card
+                shadow="sm"
+                className="border border-default-200 bg-content1 rounded-3xl"
+              >
+                <CardBody className="p-6 flex flex-col items-center text-center gap-4">
+                  <span className="text-xs font-semibold tracking-wider text-default-500">
+                    PIEDRA {scannerRouteProgress.done} DE{" "}
+                    {scannerRouteProgress.total}
                   </span>
-                  <h1 className="font-serif text-xl font-bold">
-                    {scannerAk.code}: {scannerAk.name}
-                  </h1>
-                </div>
-
-                {/* Cavidad Tallada en Roca Volcánica y Glifo Rúnico con Anillos Concéntricos */}
-                <div className="w-48 h-48 rounded-full bg-default-100 border-2 border-default-300 flex items-center justify-center relative shadow-inner">
-                  <div className="w-36 h-36 rounded-full border border-dashed border-default-300 flex items-center justify-center">
-                    <svg
-                      viewBox="0 0 120 120"
-                      className={`w-28 h-28 fill-none stroke-[3.5] transition-colors ${
-                        scanState === "scanning" || scanState === "done"
-                          ? "stroke-secondary"
-                          : "stroke-default-400"
-                      }`}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      role="img"
-                      aria-label="Runa de piedra Àk"
-                    >
-                      <polygon
-                        className={scanState === "scanning" ? "rune-animate" : ""}
-                        points="38,10 82,10 110,38 110,82 82,110 38,110 10,82 10,38"
-                      />
-                      <polyline
-                        className={scanState === "scanning" ? "rune-animate" : ""}
-                        points="60,22 60,98"
-                      />
-                      <polyline
-                        className={scanState === "scanning" ? "rune-animate" : ""}
-                        points="32,52 60,26 88,52"
-                      />
-                      <polyline
-                        className={scanState === "scanning" ? "rune-animate" : ""}
-                        points="36,78 60,56 84,78"
-                      />
-                    </svg>
-                  </div>
-                </div>
-
-                {scanState === "idle" && (
-                  <>
-                    <div className="flex items-center justify-center gap-2">
-                      <BadgePill tone="secondaryFlat">
-                        +{scannerAk.tsiro} Tsirö
-                      </BadgePill>
-                      <BadgePill tone="primaryFlat">
-                        +{scannerAk.xp} XP
-                      </BadgePill>
-                    </div>
-                    <p className="text-xs text-default-500 max-w-xs text-center">
-                      Coloca tu celular en la hendidura física de la piedra para leer el chip NFC pasivo sin conexión.
+                  <LogoMark className="w-40 text-primary logo-glow" />
+                  <div>
+                    <h1 className="font-serif text-2xl">Àk escaneada</h1>
+                    <p className="text-xs text-default-500 mt-1">
+                      {scannerAk.code} · {scannerAk.name} · {scannerAk.trail}
                     </p>
+                  </div>
+
+                  <div className="flex items-center justify-center gap-2">
+                    <BadgePill tone="secondaryFlat">
+                      +{scannerAk.tsiro} Tsirö
+                    </BadgePill>
+                    <BadgePill tone="primaryFlat">+{scannerAk.xp} XP</BadgePill>
+                  </div>
+
+                  {scannerRouteProgress.done === scannerRouteProgress.total && (
+                    <div className="w-full p-3 rounded-2xl bg-primary/10 border border-primary/30">
+                      <span className="text-xs font-semibold text-default-500 block">
+                        NUEVA INSIGNIA
+                      </span>
+                      <strong className="text-sm font-bold">
+                        Guardián de {scannerRouteProgress.routeName}
+                      </strong>
+                    </div>
+                  )}
+
+                  <div className="w-full grid grid-cols-2 gap-2 mt-1">
                     <Button
                       radius="full"
-                      color="secondary"
-                      className="min-h-[48px] w-full font-bold text-sm"
-                      onPress={handleScanStone}
+                      variant="flat"
+                      className="min-h-[48px] font-semibold text-xs"
+                      onPress={() => setActiveView("cupones")}
                     >
-                      Acercar celular al Àk (NFC)
+                      Ver premios ({tsiro} Tsirö)
                     </Button>
-                  </>
-                )}
-
-                {scanState === "scanning" && (
-                  <p className="text-sm font-semibold text-secondary py-2 text-center">
-                    Cargando runa del hito...
-                  </p>
-                )}
-
-                {scanState === "done" && (
-                  <div className="w-full flex flex-col gap-3 pt-1">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-serif text-lg font-bold text-secondary">
-                        Àk escaneada
-                      </span>
-                      <div className="flex items-center gap-1.5">
-                        <BadgePill tone="secondaryFlat">
-                          +{scannerAk.tsiro} Tsirö
-                        </BadgePill>
-                        <BadgePill tone="primaryFlat">
-                          +{scannerAk.xp} XP
-                        </BadgePill>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-2 text-xs text-center tabular-nums">
-                      <div className="p-2.5 rounded-2xl bg-default-100 flex flex-col items-center justify-center">
-                        <span className="text-default-500">Altitud</span>
-                        <strong className="text-sm mt-0.5">
-                          {scannerAk.altitude}
-                        </strong>
-                      </div>
-                      <div className="p-2.5 rounded-2xl bg-default-100 flex flex-col items-center justify-center">
-                        <span className="text-default-500">Kilómetro</span>
-                        <strong className="text-sm mt-0.5">
-                          {scannerAk.km}
-                        </strong>
-                      </div>
-                      <div className="p-2.5 rounded-2xl bg-default-100 flex flex-col items-center justify-center">
-                        <span className="text-default-500">Pendiente</span>
-                        <strong className="text-sm mt-0.5">
-                          {scannerAk.grade}
-                        </strong>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2 mt-1">
-                      <Button
-                        radius="full"
-                        variant="flat"
-                        className="min-h-[48px] font-semibold text-xs"
-                        onPress={() => setActiveView("explorar")}
-                      >
-                        Ver mapa de ruta
-                      </Button>
-                      <Button
-                        radius="full"
-                        color="primary"
-                        className="min-h-[48px] font-semibold text-xs"
-                        onPress={() => setActiveView("cupones")}
-                      >
-                        Ir a Cupones ({tsiro} Tsirö)
-                      </Button>
-                    </div>
+                    <Button
+                      radius="full"
+                      color="primary"
+                      className="min-h-[48px] font-semibold text-xs"
+                      onPress={handleContinueAfterScan}
+                    >
+                      Seguir la ruta
+                    </Button>
                   </div>
-                )}
+                </CardBody>
+              </Card>
+            ) : (
+              <Card
+                shadow="none"
+                className="border border-default-200 bg-content1 rounded-3xl"
+              >
+                <CardBody className="p-6 flex flex-col items-center text-center gap-3">
+                  <h1 className="font-serif text-xl">
+                    Sellaste todas las piedras Àk
+                  </h1>
+                  <p className="text-xs text-default-500">
+                    Ya tienes los {scannedAkIds.length} hitos disponibles. Usa tus Tsirö en Cupones.
+                  </p>
+                  <Button
+                    radius="full"
+                    color="primary"
+                    className="min-h-[48px] w-full font-semibold text-xs"
+                    onPress={() => setActiveView("cupones")}
+                  >
+                    Ir a Cupones
+                  </Button>
+                </CardBody>
+              </Card>
+            )}
+          </main>
+        )}
+
+        {/* ========================================================= */}
+        {/* VISTA: CONFIGURACIÓN                                      */}
+        {/* ========================================================= */}
+        {activeView === "config" && (
+          <main className="flex flex-col gap-4 mt-2 flex-1">
+            <h1 className="font-serif text-xl px-1">Configuración</h1>
+
+            <Card
+              shadow="none"
+              className="border border-default-200 bg-content1 rounded-3xl"
+            >
+              <CardBody className="p-4 flex flex-col gap-4">
+                <SettingToggle
+                  label="Modo noche"
+                  isOn={isDark}
+                  onChange={setTheme}
+                />
+                <Divider />
+                <SettingToggle
+                  label="Vibrar al escanear"
+                  isOn={vibrateOnScan}
+                  onChange={setVibrateOnScan}
+                />
               </CardBody>
             </Card>
+
+            <div className="flex flex-col gap-2">
+              <Button
+                radius="full"
+                variant="flat"
+                className="min-h-[48px] font-semibold text-sm"
+                onPress={() => setActiveView("perfil")}
+              >
+                Ver mi perfil
+              </Button>
+              <Button
+                radius="full"
+                variant="light"
+                className="min-h-[48px] font-semibold text-sm"
+                onPress={handleResetDemo}
+              >
+                Reiniciar demo
+              </Button>
+            </div>
           </main>
         )}
 
@@ -1889,7 +2311,7 @@ export default function App() {
                             radius="full"
                             variant="flat"
                             className="min-h-[44px] font-semibold text-xs px-4 shrink-0"
-                            onPress={() => setActiveView("escanear")}
+                            onPress={handleNfcPress}
                           >
                             Escanear Àk
                           </Button>
@@ -2057,52 +2479,83 @@ export default function App() {
         )}
       </div>
 
-      {/* DOCK FLOTANTE TIPO CÁPSULA PERFECTAMENTE CENTRADO */}
+      {/* ANIMACIÓN MÍSTICA DE ESCANEO NFC */}
+      {scanState === "scanning" && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="fixed inset-0 z-50 bg-[#070707] text-[#D6DBB3] flex flex-col items-center justify-center gap-10 px-6 text-center overflow-hidden"
+        >
+          <div className="relative w-72 h-72 flex items-center justify-center">
+            <span className="nfc-ring" />
+            <span className="nfc-ring nfc-ring-2" />
+            <span className="nfc-ring nfc-ring-3" />
+            <LogoMark className="w-48 logo-awaken" />
+          </div>
+          <div>
+            <p className="font-serif text-xl">Leyendo el Àk...</p>
+            <p className="text-xs opacity-75 mt-1">
+              {scannerAk.code} · {scannerAk.name}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* BARRA INFERIOR FIJA: 5 ACCESOS CON LA RUNA AL CENTRO */}
       <nav
         aria-label="Navegación principal"
         className="fixed bottom-3 inset-x-0 z-30 px-3 pointer-events-none"
       >
-        <div className="max-w-md mx-auto pointer-events-auto bg-content1/95 backdrop-blur-md border border-default-300 shadow-lg rounded-full p-1.5 grid grid-cols-4 gap-1">
-          <Button
-            size="sm"
-            radius="full"
-            variant={activeView === "explorar" ? "solid" : "light"}
-            color={activeView === "explorar" ? "primary" : "default"}
-            className="min-h-[44px] font-semibold text-xs px-1 flex items-center justify-center text-center"
-            onPress={() => setActiveView("explorar")}
+        <div className="max-w-md mx-auto pointer-events-auto h-16 bg-content1/95 backdrop-blur-md border border-default-300 shadow-lg rounded-full px-1.5 grid grid-cols-5 items-center">
+          <NavButton
+            label="Mapa"
+            ariaLabel="Mapa general de parques"
+            active={activeView === "mapa"}
+            onPress={() => {
+              setOpenedRouteId(null);
+              setActiveView("mapa");
+            }}
           >
-            Explorar
-          </Button>
-          <Button
-            size="sm"
-            radius="full"
-            variant={activeView === "escanear" ? "solid" : "flat"}
-            color="secondary"
-            className="min-h-[44px] font-semibold text-xs px-1 flex items-center justify-center text-center"
-            onPress={() => setActiveView("escanear")}
+            <CostaRicaIcon />
+          </NavButton>
+
+          <NavButton
+            label="Explorar"
+            active={activeView === "explorar"}
+            onPress={goToExplore}
           >
-            Escanear Àk
-          </Button>
-          <Button
-            size="sm"
-            radius="full"
-            variant={activeView === "cupones" ? "solid" : "light"}
-            color={activeView === "cupones" ? "primary" : "default"}
-            className="min-h-[44px] font-semibold text-xs px-1 flex items-center justify-center text-center"
+            <HomeIcon />
+          </NavButton>
+
+          <div className="flex items-center justify-center">
+            <button
+              type="button"
+              onClick={handleNfcPress}
+              aria-label="Escanear piedra Àk por NFC"
+              className={`w-[72px] h-[72px] -mt-7 rounded-full bg-primary text-primary-foreground border-4 border-background shadow-xl inline-flex items-center justify-center transition-transform active:scale-95 ${
+                nearAkId ? "nfc-call" : ""
+              }`}
+            >
+              <LogoMark className="w-[52px]" decorative />
+            </button>
+          </div>
+
+          <NavButton
+            label="Cupones"
+            active={activeView === "cupones"}
             onPress={() => setActiveView("cupones")}
           >
-            Cupones
-          </Button>
-          <Button
-            size="sm"
-            radius="full"
-            variant={activeView === "perfil" ? "solid" : "light"}
-            color={activeView === "perfil" ? "primary" : "default"}
-            className="min-h-[44px] font-semibold text-xs px-1 flex items-center justify-center text-center"
-            onPress={() => setActiveView("perfil")}
+            <TicketIcon />
+          </NavButton>
+
+          <NavButton
+            label="Ajustes"
+            ariaLabel="Configuración"
+            active={activeView === "config"}
+            onPress={() => setActiveView("config")}
           >
-            Perfil
-          </Button>
+            <GearIcon />
+          </NavButton>
         </div>
       </nav>
     </div>
