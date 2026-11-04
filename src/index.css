@@ -349,7 +349,7 @@ button[data-pressed="true"] {
   overflow: hidden;
 }
 
-.fauna-avatar svg {
+.fauna-avatar img {
   display: block;
   width: 100%;
   height: 100%;
@@ -368,12 +368,6 @@ button[data-pressed="true"] {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
-.fauna-avatar svg g,
-.fauna-avatar svg path {
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
 @keyframes faunaSway {
   0%,
   100% {
@@ -381,12 +375,6 @@ button[data-pressed="true"] {
   }
   50% {
     transform: rotate(5deg);
-  }
-}
-
-@keyframes faunaFlap {
-  to {
-    transform: rotate(-24deg);
   }
 }
 
@@ -414,43 +402,21 @@ button[data-pressed="true"] {
   }
 }
 
-@keyframes faunaSpout {
-  0%,
-  35%,
-  100% {
-    opacity: 0;
-    transform: translateY(3px);
-  }
-  60% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.fauna-avatar .fa-head {
+.fauna-perezoso {
   transform-origin: 50% 100%;
   animation: faunaSway 3.6s ease-in-out infinite;
 }
 
-.fauna-avatar .fa-bob {
+.fauna-colibri {
   animation: faunaBob 1.2s ease-in-out infinite;
 }
 
-.fauna-avatar .fa-wing {
-  transform-origin: 100% 100%;
-  animation: faunaFlap 0.16s ease-in-out infinite alternate;
-}
-
-.fauna-avatar .fa-hop {
+.fauna-yiguirro {
   animation: faunaHop 1.8s ease-out infinite;
 }
 
-.fauna-avatar .fa-float {
+.fauna-ballena {
   animation: faunaBob 2.8s ease-in-out infinite;
-}
-
-.fauna-avatar .fa-spout {
-  animation: faunaSpout 2.8s ease-out infinite;
 }
 
 @keyframes viewFade {
@@ -474,7 +440,7 @@ button[data-pressed="true"] {
     display: none;
   }
 
-  .fauna-avatar svg * {
+  .fauna-avatar img {
     animation: none !important;
   }
 

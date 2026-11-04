@@ -462,64 +462,12 @@ function walkLength(walkPath) {
   );
 }
 
-// Ilustraciones de fauna de Costa Rica. Las animan las clases fa-* de index.css
+// Ilustraciones PNG de fauna de Costa Rica. Las animan las clases fauna-* de index.css
 const FAUNA_AVATARS = [
-  {
-    id: "perezoso",
-    name: "Perezoso",
-    svg: `<svg viewBox="0 0 48 48" aria-hidden="true"><g class="fa-head">
-      <circle cx="24" cy="25" r="17" fill="#A98B68"/>
-      <ellipse cx="24" cy="27" rx="13.5" ry="11.5" fill="#EBDDC3"/>
-      <path d="M11 24c3-5 9-5 11-1 .8 1.6-.4 3-2 3.6-3 1.1-7 1.2-9-2.6z" fill="#5A4433"/>
-      <path d="M37 24c-3-5-9-5-11-1-.8 1.6.4 3 2 3.6 3 1.1 7 1.2 9-2.6z" fill="#5A4433"/>
-      <circle cx="17" cy="24" r="2" fill="#1C1510"/>
-      <circle cx="31" cy="24" r="2" fill="#1C1510"/>
-      <ellipse cx="24" cy="29" rx="3" ry="2.1" fill="#3A2A1E"/>
-      <path d="M19 33c2.8 2.4 7.2 2.4 10 0" fill="none" stroke="#3A2A1E" stroke-width="1.6" stroke-linecap="round"/>
-    </g></svg>`,
-  },
-  {
-    id: "colibri",
-    name: "Colibrí",
-    svg: `<svg viewBox="0 0 48 48" aria-hidden="true"><g class="fa-bob">
-      <path d="M16 30 6 38l6 1-3 5 10-8z" fill="#1F6F4E"/>
-      <ellipse cx="22" cy="25" rx="10" ry="7.5" transform="rotate(-25 22 25)" fill="#2E9E6B"/>
-      <path d="M17 31c5 1 11-1 13-6-1 6-7 11-13 6z" fill="#E9F2DC"/>
-      <circle cx="30" cy="18" r="6" fill="#2E9E6B"/>
-      <path d="m35 16.5 11-2.5-10.5 5z" fill="#2B2B2B"/>
-      <path d="M31 22c2 0 3.5-.8 4.5-2 0 3-2 5-4.5 5z" fill="#C93B57"/>
-      <circle cx="32" cy="17" r="1.4" fill="#111111"/>
-      <path class="fa-wing" d="M21 22C16 12 9 8 4 8c2 7 8 15 17 17z" fill="#7FD1A8"/>
-    </g></svg>`,
-  },
-  {
-    id: "yiguirro",
-    name: "Yigüirro",
-    svg: `<svg viewBox="0 0 48 48" aria-hidden="true"><g class="fa-hop">
-      <path d="M20 38v6M27 38v6" stroke="#6B4F33" stroke-width="1.8" stroke-linecap="round"/>
-      <path d="M12 27 2 31l3 3.5L15 33z" fill="#7F6242"/>
-      <ellipse cx="22" cy="28" rx="13" ry="10" fill="#A67F56"/>
-      <path d="M14 34c5 5 15 5 20-2-1-4-4-6-7-6-2 4-7 7-13 8z" fill="#D9BE96"/>
-      <circle cx="32" cy="18" r="8" fill="#A67F56"/>
-      <path d="m39 16 7 2.5-7 2.5z" fill="#C9A227"/>
-      <circle cx="34" cy="16.5" r="2.2" fill="#B5612B"/>
-      <circle cx="34" cy="16.5" r="1.2" fill="#1A120B"/>
-      <path d="M12 26c5-4 13-4 16 0-3 5-10 7-16 3z" fill="#8B6A45"/>
-    </g></svg>`,
-  },
-  {
-    id: "ballena",
-    name: "Ballena",
-    svg: `<svg viewBox="0 0 48 48" aria-hidden="true">
-      <path class="fa-spout" d="M17 13c0-3-2-4-3-6M17 13c0-3 2-4 3-6M17 13V6" fill="none" stroke="#7FB2C4" stroke-width="1.8" stroke-linecap="round"/>
-      <g class="fa-float">
-        <path d="M4 28c0-9 8-14 17-14 10 0 15 6 19 10l5-5c1 5 0 9-4 12-5 6-12 9-21 9C11 40 4 36 4 28z" fill="#4C6B7A"/>
-        <path d="M4.5 30c4 5 14 6 24 3-3 4-6 6-12 6-7 0-12-3-12-9z" fill="#DCE7E9"/>
-        <circle cx="12" cy="25" r="1.6" fill="#111111"/>
-        <path d="m21 31 6 7-9-2z" fill="#3A5561"/>
-      </g>
-    </svg>`,
-  },
+  { id: "perezoso", name: "Perezoso", src: "/avatars/perezoso.png" },
+  { id: "colibri", name: "Colibrí", src: "/avatars/colibri.png" },
+  { id: "yiguirro", name: "Yigüirro", src: "/avatars/yiguirro.png" },
+  { id: "ballena", name: "Ballena", src: "/avatars/ballena.png" },
 ];
 
 function findFaunaAvatar(id) {
@@ -528,10 +476,9 @@ function findFaunaAvatar(id) {
 
 function FaunaAvatar({ avatar, className = "" }) {
   return (
-    <span
-      className={`fauna-avatar ${className}`}
-      dangerouslySetInnerHTML={{ __html: avatar.svg }}
-    />
+    <span className={`fauna-avatar ${className}`}>
+      <img src={avatar.src} alt="" className={`fauna-${avatar.id}`} />
+    </span>
   );
 }
 
@@ -543,7 +490,7 @@ function navMarkerHtml(avatar) {
       <path d="M32 1 42 14H22Z" fill="#0F5C46" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round" />
     </svg>
   </div>
-  <div class="nav-avatar fauna-avatar">${avatar.svg}</div>`;
+  <div class="nav-avatar fauna-avatar"><img src="${avatar.src}" alt="" class="fauna-${avatar.id}" /></div>`;
 }
 
 function createAkIcon(ak, isDone, isSelected) {
