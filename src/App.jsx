@@ -462,12 +462,89 @@ function walkLength(walkPath) {
   );
 }
 
-const MAP_ARROW_HTML = `<div class="nav-arrow-pulse"></div>
+// Ilustraciones de fauna de Costa Rica. Las animan las clases fa-* de index.css
+const FAUNA_AVATARS = [
+  {
+    id: "perezoso",
+    name: "Perezoso",
+    svg: `<svg viewBox="0 0 48 48" aria-hidden="true"><g class="fa-head">
+      <circle cx="24" cy="25" r="17" fill="#A98B68"/>
+      <ellipse cx="24" cy="27" rx="13.5" ry="11.5" fill="#EBDDC3"/>
+      <path d="M11 24c3-5 9-5 11-1 .8 1.6-.4 3-2 3.6-3 1.1-7 1.2-9-2.6z" fill="#5A4433"/>
+      <path d="M37 24c-3-5-9-5-11-1-.8 1.6.4 3 2 3.6 3 1.1 7 1.2 9-2.6z" fill="#5A4433"/>
+      <circle cx="17" cy="24" r="2" fill="#1C1510"/>
+      <circle cx="31" cy="24" r="2" fill="#1C1510"/>
+      <ellipse cx="24" cy="29" rx="3" ry="2.1" fill="#3A2A1E"/>
+      <path d="M19 33c2.8 2.4 7.2 2.4 10 0" fill="none" stroke="#3A2A1E" stroke-width="1.6" stroke-linecap="round"/>
+    </g></svg>`,
+  },
+  {
+    id: "colibri",
+    name: "Colibrí",
+    svg: `<svg viewBox="0 0 48 48" aria-hidden="true"><g class="fa-bob">
+      <path d="M16 30 6 38l6 1-3 5 10-8z" fill="#1F6F4E"/>
+      <ellipse cx="22" cy="25" rx="10" ry="7.5" transform="rotate(-25 22 25)" fill="#2E9E6B"/>
+      <path d="M17 31c5 1 11-1 13-6-1 6-7 11-13 6z" fill="#E9F2DC"/>
+      <circle cx="30" cy="18" r="6" fill="#2E9E6B"/>
+      <path d="m35 16.5 11-2.5-10.5 5z" fill="#2B2B2B"/>
+      <path d="M31 22c2 0 3.5-.8 4.5-2 0 3-2 5-4.5 5z" fill="#C93B57"/>
+      <circle cx="32" cy="17" r="1.4" fill="#111111"/>
+      <path class="fa-wing" d="M21 22C16 12 9 8 4 8c2 7 8 15 17 17z" fill="#7FD1A8"/>
+    </g></svg>`,
+  },
+  {
+    id: "yiguirro",
+    name: "Yigüirro",
+    svg: `<svg viewBox="0 0 48 48" aria-hidden="true"><g class="fa-hop">
+      <path d="M20 38v6M27 38v6" stroke="#6B4F33" stroke-width="1.8" stroke-linecap="round"/>
+      <path d="M12 27 2 31l3 3.5L15 33z" fill="#7F6242"/>
+      <ellipse cx="22" cy="28" rx="13" ry="10" fill="#A67F56"/>
+      <path d="M14 34c5 5 15 5 20-2-1-4-4-6-7-6-2 4-7 7-13 8z" fill="#D9BE96"/>
+      <circle cx="32" cy="18" r="8" fill="#A67F56"/>
+      <path d="m39 16 7 2.5-7 2.5z" fill="#C9A227"/>
+      <circle cx="34" cy="16.5" r="2.2" fill="#B5612B"/>
+      <circle cx="34" cy="16.5" r="1.2" fill="#1A120B"/>
+      <path d="M12 26c5-4 13-4 16 0-3 5-10 7-16 3z" fill="#8B6A45"/>
+    </g></svg>`,
+  },
+  {
+    id: "ballena",
+    name: "Ballena",
+    svg: `<svg viewBox="0 0 48 48" aria-hidden="true">
+      <path class="fa-spout" d="M17 13c0-3-2-4-3-6M17 13c0-3 2-4 3-6M17 13V6" fill="none" stroke="#7FB2C4" stroke-width="1.8" stroke-linecap="round"/>
+      <g class="fa-float">
+        <path d="M4 28c0-9 8-14 17-14 10 0 15 6 19 10l5-5c1 5 0 9-4 12-5 6-12 9-21 9C11 40 4 36 4 28z" fill="#4C6B7A"/>
+        <path d="M4.5 30c4 5 14 6 24 3-3 4-6 6-12 6-7 0-12-3-12-9z" fill="#DCE7E9"/>
+        <circle cx="12" cy="25" r="1.6" fill="#111111"/>
+        <path d="m21 31 6 7-9-2z" fill="#3A5561"/>
+      </g>
+    </svg>`,
+  },
+];
+
+function findFaunaAvatar(id) {
+  return FAUNA_AVATARS.find((avatar) => avatar.id === id) || FAUNA_AVATARS[0];
+}
+
+function FaunaAvatar({ avatar, className = "" }) {
+  return (
+    <span
+      className={`fauna-avatar ${className}`}
+      dangerouslySetInnerHTML={{ __html: avatar.svg }}
+    />
+  );
+}
+
+// El avatar queda derecho y solo la punta de direccion gira con el recorrido
+function navMarkerHtml(avatar) {
+  return `<div class="nav-arrow-pulse"></div>
   <div class="nav-arrow">
-    <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true">
-      <path d="M16 3 L27 28 L16 22 L5 28 Z" fill="#0F5C46" stroke="#FFFFFF" stroke-width="2.5" stroke-linejoin="round" />
+    <svg viewBox="0 0 64 64" width="64" height="64" aria-hidden="true">
+      <path d="M32 1 42 14H22Z" fill="#0F5C46" stroke="#FFFFFF" stroke-width="2" stroke-linejoin="round" />
     </svg>
-  </div>`;
+  </div>
+  <div class="nav-avatar fauna-avatar">${avatar.svg}</div>`;
+}
 
 function createAkIcon(ak, isDone, isSelected) {
   const background = isDone ? "#0F7A5A" : "#0E2A22";
@@ -494,6 +571,7 @@ function TrailMiniMap({
   onSelectAk,
   position,
   heading,
+  avatar,
 }) {
   const containerRef = useRef(null);
   const mapRef = useRef(null);
@@ -519,9 +597,9 @@ function TrailMiniMap({
     arrowRef.current = L.marker(position, {
       icon: L.divIcon({
         className: "nav-arrow-pin",
-        html: MAP_ARROW_HTML,
-        iconSize: [44, 44],
-        iconAnchor: [22, 22],
+        html: navMarkerHtml(avatar),
+        iconSize: [64, 64],
+        iconAnchor: [32, 32],
       }),
       interactive: false,
       zIndexOffset: 1000,
@@ -1258,16 +1336,17 @@ function ScanResultModal({
   );
 }
 
-function ProfileBubble({ onPress, className = "" }) {
+function ProfileBubble({ profile, onPress, className = "" }) {
   return (
     <button
       type="button"
       onClick={onPress}
       className={`w-11 h-11 rounded-full inline-flex items-center justify-center shrink-0 ${className}`}
-      aria-label="Abrir perfil de Esteban"
+      aria-label={`Abrir perfil de ${profile.name}`}
     >
       <Avatar
-        name="EM"
+        name={profile.name}
+        src={profile.photo || undefined}
         size="sm"
         className="w-10 h-10 text-sm font-semibold bg-primary text-primary-foreground ring-2 ring-background shadow-md"
       />
@@ -1275,7 +1354,161 @@ function ProfileBubble({ onPress, className = "" }) {
   );
 }
 
-// Modo sendero: 1/3 minimapa, 2/3 ciencia ciudadana y piedras Àk
+function EditProfileSheet({ profile, onSave, onClose }) {
+  const [draft, setDraft] = useState(profile);
+  const photoInputRef = useRef(null);
+  const hasName = draft.name.trim().length > 0;
+
+  useEffect(() => {
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [onClose]);
+
+  const handlePhotoSelected = (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (file) {
+      setDraft((current) => ({ ...current, photo: URL.createObjectURL(file) }));
+    }
+  };
+
+  return (
+    <MotionConfig reducedMotion="user">
+      <motion.div
+        className="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) onClose();
+        }}
+      >
+        <motion.div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="editProfileTitle"
+          className="w-full max-w-md max-h-[90dvh] overflow-y-auto bg-content1 text-foreground rounded-3xl shadow-xl p-5 flex flex-col gap-5"
+          initial={{ y: "100%" }}
+          animate={{ y: 0 }}
+          exit={{ y: "100%", transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] } }}
+          transition={{ type: "spring", bounce: 0.22, duration: 0.5 }}
+        >
+          <h2 id="editProfileTitle" className="font-display text-xl">
+            Editar perfil
+          </h2>
+
+          <div className="flex items-center gap-3.5">
+            <Avatar
+              name={draft.name}
+              src={draft.photo || undefined}
+              className="w-16 h-16 text-lg font-semibold bg-primary text-primary-foreground shrink-0"
+            />
+            <Button
+              radius="full"
+              className="min-h-[44px] px-5 text-sm font-medium bg-default-100 text-foreground"
+              onPress={() => photoInputRef.current?.click()}
+            >
+              Cambiar foto
+            </Button>
+            <input
+              ref={photoInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoSelected}
+              className="hidden"
+              aria-hidden="true"
+              tabIndex={-1}
+            />
+          </div>
+
+          <label className="flex flex-col gap-1.5">
+            <span className="text-sm font-semibold">Nombre de usuario</span>
+            <input
+              type="text"
+              value={draft.name}
+              onChange={(event) =>
+                setDraft((current) => ({ ...current, name: event.target.value }))
+              }
+              placeholder="Tu nombre"
+              className="min-h-[48px] px-4 rounded-2xl bg-default-100 text-base text-foreground outline-none focus:ring-2 focus:ring-primary"
+            />
+          </label>
+
+          <div className="flex flex-col gap-2">
+            <h3 id="navAvatarLabel" className="text-sm font-semibold">
+              Avatar de navegación
+            </h3>
+            <div
+              role="radiogroup"
+              aria-labelledby="navAvatarLabel"
+              className="grid grid-cols-4 gap-2"
+            >
+              {FAUNA_AVATARS.map((avatar) => {
+                const isSelected = draft.avatarId === avatar.id;
+                return (
+                  <button
+                    key={avatar.id}
+                    type="button"
+                    role="radio"
+                    aria-checked={isSelected}
+                    onClick={() =>
+                      setDraft((current) => ({
+                        ...current,
+                        avatarId: avatar.id,
+                      }))
+                    }
+                    className={`p-2 rounded-2xl border-2 flex flex-col items-center gap-1.5 ${
+                      isSelected
+                        ? "border-primary bg-primary/10"
+                        : "border-transparent bg-default-100"
+                    }`}
+                  >
+                    <FaunaAvatar
+                      avatar={avatar}
+                      className="fauna-disc w-14 h-14 rounded-full"
+                    />
+                    <span className="text-xs font-medium">{avatar.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+            <p className="text-xs text-default-500">
+              Es el icono que te representa en el mapa cuando inicias una ruta.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              radius="full"
+              className="min-h-[48px] text-sm font-medium bg-default-100 text-foreground"
+              onPress={onClose}
+            >
+              Cancelar
+            </Button>
+            <Button
+              radius="full"
+              color="primary"
+              className="min-h-[48px] text-sm font-semibold disabled:opacity-50"
+              isDisabled={!hasName}
+              onPress={() => {
+                onSave({ ...draft, name: draft.name.trim() });
+                onClose();
+              }}
+            >
+              Guardar
+            </Button>
+          </div>
+        </motion.div>
+      </motion.div>
+    </MotionConfig>
+  );
+}
+
+// Modo sendero: mapa a pantalla completa con camara y microfono
 function TrailView({
   route,
   scannedAkIds,
@@ -1283,6 +1516,7 @@ function TrailView({
   onSelectAk,
   onArrivalChange,
   onAddReport,
+  avatar,
 }) {
   const nextAk = useMemo(
     () => route.aks.find((ak) => !scannedAkIds.includes(ak.id)) || null,
@@ -1397,6 +1631,7 @@ function TrailView({
         onSelectAk={onSelectAk}
         position={position}
         heading={heading}
+        avatar={avatar}
       />
 
       {notice && (
@@ -1484,6 +1719,13 @@ export default function App() {
   // Estado de Explorar Rutas y Detalle de Ruta
   const [routeQuery, setRouteQuery] = useState("");
   const [navigatingRouteId, setNavigatingRouteId] = useState(null);
+  const [profile, setProfile] = useState({
+    name: "Esteban Morales",
+    photo: null,
+    avatarId: FAUNA_AVATARS[0].id,
+  });
+  const [isEditingProfile, setIsEditingProfile] = useState(false);
+  const closeProfileEditor = useCallback(() => setIsEditingProfile(false), []);
   const [nfcBurst, setNfcBurst] = useState(0);
   const [axLoading, setAxLoading] = useState(false);
   const [axSuggestion, setAxSuggestion] = useState(null);
@@ -1801,6 +2043,7 @@ export default function App() {
             </button>
 
             <ProfileBubble
+              profile={profile}
               onPress={() => setActiveView("perfil")}
               className="justify-self-end"
             />
@@ -2290,6 +2533,7 @@ export default function App() {
             selectedAkId={selectedMapAkId}
             onSelectAk={setSelectedMapAkId}
             onArrivalChange={setNearAkId}
+            avatar={findFaunaAvatar(profile.avatarId)}
             onAddReport={handleAddReport}
           />
         )}
@@ -2674,14 +2918,15 @@ export default function App() {
               <CardBody className="p-4 gap-4">
                 <div className="flex items-center gap-3.5">
                   <Avatar
-                    name="EM"
+                    name={profile.name}
+                    src={profile.photo || undefined}
                     size="lg"
                     className="w-14 h-14 text-lg font-semibold bg-primary text-primary-foreground shrink-0"
                   />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
                       <h1 className="text-base font-semibold truncate">
-                        Esteban Morales
+                        {profile.name}
                       </h1>
                       <BadgePill tone="secondaryFlat">{tsiro} pts</BadgePill>
                     </div>
@@ -2690,6 +2935,14 @@ export default function App() {
                     </p>
                   </div>
                 </div>
+
+                <Button
+                  radius="full"
+                  className="w-full min-h-[44px] text-sm font-medium bg-primary/10 text-primary"
+                  onPress={() => setIsEditingProfile(true)}
+                >
+                  Editar perfil
+                </Button>
 
                 <div className="flex flex-col gap-1.5">
                   <div className="flex justify-between text-xs font-medium text-default-600 tabular-nums">
@@ -2834,6 +3087,17 @@ export default function App() {
             balance={tsiro}
             onBackToMap={handleResultBackToMap}
             onKeepExploring={handleResultKeepExploring}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isEditingProfile && (
+          <EditProfileSheet
+            key="edit-profile"
+            profile={profile}
+            onSave={setProfile}
+            onClose={closeProfileEditor}
           />
         )}
       </AnimatePresence>
