@@ -157,6 +157,49 @@ body {
   animation: recordPulse 1s ease-in-out infinite;
 }
 
+.park-dot-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.park-dot {
+  width: 16px;
+  height: 16px;
+  border: 2.5px solid #ffffff;
+  border-radius: 9999px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease-out;
+}
+
+.park-dot-pin.is-selected .park-dot {
+  transform: scale(1.5);
+  box-shadow:
+    0 1px 5px rgba(0, 0, 0, 0.35),
+    0 0 0 6px rgba(29, 140, 240, 0.22);
+}
+
+/* OpenStreetMap en tonos suaves para que solo resalten los parques */
+.park-map {
+  background: #eef0ef;
+}
+
+.park-map .leaflet-tile-pane {
+  filter: grayscale(0.9) brightness(1.06) contrast(0.82);
+}
+
+.dark .park-map {
+  background: #111310;
+}
+
+.dark .park-map .leaflet-tile-pane {
+  filter: grayscale(1) invert(1) brightness(0.72) contrast(1.05);
+}
+
+.park-map .leaflet-bottom {
+  bottom: 84px;
+}
+
 .nav-arrow-pin {
   position: relative;
 }

@@ -611,38 +611,71 @@ function TrailMiniMap({
   );
 }
 
-// Mapa general de Costa Rica con los parques nacionales disponibles
+const PARK_DOT_BLUE = "#1D8CF0";
+
+// Red de parques del directorio de comercios aliados. Coordenadas aproximadas
+const PARK_NETWORK = [
+  { id: "poas", name: "Parque Nacional Volcán Poás", area: "Alajuela", position: [10.1894, -84.2309], routeId: "poas" },
+  { id: "tenorio", name: "Parque Nacional Volcán Tenorio", area: "Alajuela", position: [10.7082, -84.9918], routeId: "tenorio" },
+  { id: "tapanti", name: "Parque Nacional Tapantí", area: "Cartago", position: [9.7505, -83.7826], routeId: "tapanti" },
+  { id: "irazu", name: "Parque Nacional Volcán Irazú", area: "Cartago", position: [9.979, -83.852] },
+  { id: "arenal", name: "Parque Nacional Volcán Arenal", area: "Alajuela", position: [10.463, -84.703] },
+  { id: "manuel-antonio", name: "Parque Nacional Manuel Antonio", area: "Puntarenas", position: [9.392, -84.137] },
+  { id: "rincon", name: "Parque Nacional Rincón de la Vieja", area: "Guanacaste", position: [10.83, -85.324] },
+  { id: "chirripo", name: "Parque Nacional Chirripó", area: "San José", position: [9.484, -83.489] },
+  { id: "ballena", name: "Parque Nacional Marino Ballena", area: "Puntarenas", position: [9.138, -83.737] },
+  { id: "cahuita", name: "Parque Nacional Cahuita", area: "Limón", position: [9.737, -82.817] },
+  { id: "tortuguero", name: "Parque Nacional Tortuguero", area: "Limón", position: [10.543, -83.502] },
+  { id: "corcovado", name: "Parque Nacional Corcovado", area: "Puntarenas", position: [8.541, -83.571] },
+  { id: "braulio", name: "Parque Nacional Braulio Carrillo", area: "Heredia", position: [10.165, -83.953] },
+];
+
+// Mapa general a pantalla completa con la red de parques como puntos interactivos
 function GeneralParksMap({ onOpenRoute }) {
   const containerRef = useRef(null);
+  const dotsRef = useRef({});
+  const [selectedParkId, setSelectedParkId] = useState(null);
+
+  const selectedPark =
+    PARK_NETWORK.find((park) => park.id === selectedParkId) || null;
+  const selectedRoute = selectedPark?.routeId
+    ? ROUTES.find((route) => route.id === selectedPark.routeId)
+    : null;
 
   useEffect(() => {
     const map = L.map(containerRef.current, {
       zoomControl: false,
-      minZoom: 6,
+      zoomSnap: 0.25,
     });
     map.attributionControl.setPrefix(false);
-    map.fitBounds(COSTA_RICA_BOUNDS);
+    map.fitBounds(COSTA_RICA_BOUNDS, {
+      paddingTopLeft: [8, 64],
+      paddingBottomRight: [8, 88],
+    });
+    map.setMinZoom(map.getZoom() - 0.5);
+    map.setMaxBounds(L.latLngBounds(COSTA_RICA_BOUNDS).pad(0.6));
+    map.on("click", () => setSelectedParkId(null));
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 18,
       attribution: "© OpenStreetMap",
     }).addTo(map);
 
-    ROUTES.forEach((route) => {
-      const label = route.name.replace(/^(Parque Nacional|P.N.) /, "");
-      L.marker(route.center, {
-        title: route.name,
+    PARK_NETWORK.forEach((park) => {
+      dotsRef.current[park.id] = L.marker(park.position, {
+        title: park.name,
+        alt: park.name,
         icon: L.divIcon({
-          className: "ak-custom-pin",
-          html: `<div style="display:flex;flex-direction:column;align-items:center;width:150px;">
-            <div style="background:#FFFFFF;color:#0E2A22;border:1px solid rgba(14,42,34,0.18);border-radius:9999px;padding:4px 10px;font-size:12px;font-weight:600;line-height:1.1;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.4);">${label}</div>
-            <div style="width:12px;height:12px;border-radius:9999px;background:#0F5C46;border:2px solid #FFFFFF;margin-top:3px;"></div>
-          </div>`,
-          iconSize: [150, 46],
-          iconAnchor: [75, 44],
+          className: "park-dot-pin",
+          html: `<span class="park-dot" style="background:${PARK_DOT_BLUE}"></span>`,
+          iconSize: [44, 44],
+          iconAnchor: [22, 22],
         }),
       })
-        .on("click", () => onOpenRoute(route))
+        .on("click", () => {
+          setSelectedParkId(park.id);
+          map.panTo(park.position);
+        })
         .addTo(map);
     });
 
@@ -653,14 +686,55 @@ function GeneralParksMap({ onOpenRoute }) {
       resizeObserver.disconnect();
       map.remove();
     };
-  }, [onOpenRoute]);
+  }, []);
+
+  useEffect(() => {
+    PARK_NETWORK.forEach((park) => {
+      dotsRef.current[park.id]
+        .getElement()
+        ?.classList.toggle("is-selected", park.id === selectedParkId);
+    });
+  }, [selectedParkId]);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full h-full z-0"
-      aria-label="Mapa de parques nacionales de Costa Rica"
-    />
+    <div className="absolute inset-0">
+      <div
+        ref={containerRef}
+        className="park-map absolute inset-0 z-0"
+        aria-label="Mapa de parques nacionales de Costa Rica"
+      />
+
+      {selectedPark && (
+        <div className="absolute z-10 inset-x-0 bottom-24 px-4 pointer-events-none">
+          <div
+            role="status"
+            className="scan-result-card pointer-events-auto max-w-md mx-auto p-4 rounded-2xl bg-content1/95 backdrop-blur-md shadow-lg flex items-center justify-between gap-3"
+          >
+            <div className="min-w-0">
+              <strong className="text-sm font-semibold block truncate">
+                {selectedPark.name}
+              </strong>
+              <span className="text-xs text-default-500 block">
+                {selectedRoute
+                  ? selectedPark.area
+                  : `${selectedPark.area} · Senderos próximamente`}
+              </span>
+            </div>
+            {selectedRoute && (
+              <Button
+                size="sm"
+                radius="full"
+                color="primary"
+                className="min-h-[40px] text-xs font-medium px-4 shrink-0"
+                onPress={() => onOpenRoute(selectedRoute)}
+              >
+                Ver senderos
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -1577,6 +1651,9 @@ export default function App() {
   const levelProgress = Math.round((currentLevelXp / 250) * 100);
 
   const isOnTrail = activeView === "explorar" && Boolean(openedRoute);
+  const isMapView = activeView === "mapa";
+  const mapGlassClass =
+    "px-3.5 rounded-full bg-content1/85 backdrop-blur-md shadow-sm";
 
   const scannerRouteProgress = useMemo(() => {
     const route = ROUTES.find((r) => r.aks.some((a) => a.id === scannerAkId));
@@ -1795,12 +1872,18 @@ export default function App() {
         
         {/* CABECERA FIJA: puntos a la izquierda, logo al centro y avatar a la derecha */}
         {!isOnTrail && (
-          <header className="sticky top-0 z-10 -mx-4 px-4 py-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2 bg-background/90 backdrop-blur-md">
+          <header
+            className={`sticky top-0 z-10 -mx-4 px-4 py-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2 ${
+              isMapView ? "" : "bg-background/90 backdrop-blur-md"
+            }`}
+          >
             <button
               type="button"
               onClick={() => setActiveView("cupones")}
               aria-label={`Saldo de ${tsiro} puntos, abrir Cupones`}
-              className="min-h-[44px] justify-self-start inline-flex items-center gap-1.5 text-sm font-semibold tabular-nums"
+              className={`min-h-[44px] justify-self-start inline-flex items-center gap-1.5 text-sm font-semibold tabular-nums ${
+                isMapView ? mapGlassClass : ""
+              }`}
             >
               <PointsIcon className="w-5 h-5 text-primary" />
               <span>{tsiro.toLocaleString("en-US")} pts</span>
@@ -1810,7 +1893,9 @@ export default function App() {
               type="button"
               onClick={goToExplore}
               aria-label="Ir a Explorar"
-              className="min-h-[44px] inline-flex items-center justify-center text-primary"
+              className={`min-h-[44px] inline-flex items-center justify-center text-primary ${
+                isMapView ? mapGlassClass : ""
+              }`}
             >
               <LogoMark className="h-10" decorative />
             </button>
@@ -2270,40 +2355,8 @@ export default function App() {
         {/* VISTA: MAPA GENERAL DE PARQUES NACIONALES                 */}
         {/* ========================================================= */}
         {activeView === "mapa" && (
-          <main className="flex flex-col gap-3 mt-1 flex-1">
-            <div className="px-1">
-              <h1 className="font-display text-lg">Mapa de Costa Rica</h1>
-              <span className="text-xs text-default-500 block">
-                Toca un parque para abrir sus senderos
-              </span>
-            </div>
-            <div className="h-[46dvh] rounded-3xl overflow-hidden border border-default-200 shadow-md">
-              <GeneralParksMap onOpenRoute={handleOpenRouteFromMap} />
-            </div>
-            <div className="flex flex-col gap-2">
-              {ROUTES.map((route) => (
-                <button
-                  key={route.id}
-                  type="button"
-                  onClick={() => handleOpenRouteFromMap(route)}
-                  className="min-h-[60px] p-2.5 rounded-2xl border border-default-200 bg-content1 flex items-center gap-3 text-left"
-                >
-                  <img
-                    src={route.photo}
-                    alt={route.photoAlt}
-                    className="w-12 h-12 rounded-xl object-cover shrink-0"
-                  />
-                  <span className="min-w-0">
-                    <strong className="text-sm font-semibold block truncate">
-                      {route.name}
-                    </strong>
-                    <span className="text-xs text-default-500 block truncate">
-                      {route.region}
-                    </span>
-                  </span>
-                </button>
-              ))}
-            </div>
+          <main className="fixed inset-0 z-0">
+            <GeneralParksMap onOpenRoute={handleOpenRouteFromMap} />
           </main>
         )}
 
