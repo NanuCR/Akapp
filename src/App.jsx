@@ -748,6 +748,15 @@ function MicIcon(props) {
   );
 }
 
+function PointsIcon(props) {
+  return (
+    <NavIcon {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7.5l1.4 2.9 3.1.4-2.3 2.2.6 3.1-2.8-1.5-2.8 1.5.6-3.1-2.3-2.2 3.1-.4z" />
+    </NavIcon>
+  );
+}
+
 function BackIcon(props) {
   return (
     <NavIcon {...props}>
@@ -1395,29 +1404,32 @@ export default function App() {
     <div className="min-h-dvh w-full overflow-x-hidden bg-background text-foreground flex flex-col items-center">
       <div className="w-full max-w-md min-h-dvh flex flex-col pb-32 px-4 pt-3">
         
-        {/* CABECERA FIJA: logo a la izquierda, saldo Tsirö y avatar a la derecha */}
+        {/* CABECERA FIJA: puntos a la izquierda, logo al centro y avatar a la derecha */}
         {!isOnTrail && (
-          <header className="sticky top-0 z-10 -mx-4 px-4 py-2 flex items-center justify-between gap-2 bg-background/90 backdrop-blur-md">
+          <header className="sticky top-0 z-10 -mx-4 px-4 py-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2 bg-background/90 backdrop-blur-md">
+            <button
+              type="button"
+              onClick={() => setActiveView("cupones")}
+              aria-label={`Saldo de ${tsiro} puntos, abrir Cupones`}
+              className="min-h-[44px] justify-self-start inline-flex items-center gap-1.5 text-sm font-semibold tabular-nums"
+            >
+              <PointsIcon className="w-5 h-5 text-primary" />
+              <span>{tsiro.toLocaleString("en-US")} pts</span>
+            </button>
+
             <button
               type="button"
               onClick={goToExplore}
               aria-label="Ir a Explorar"
-              className="min-h-[44px] px-1 inline-flex items-center text-primary"
+              className="min-h-[44px] inline-flex items-center justify-center text-primary"
             >
-              <LogoMark className="h-8" />
+              <LogoMark className="h-10" decorative />
             </button>
 
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={() => setActiveView("cupones")}
-                aria-label={`Saldo de ${tsiro} Tsirö, abrir Cupones`}
-                className="min-h-[44px] inline-flex items-center"
-              >
-                <BadgePill tone="secondary">{tsiro} Tsirö</BadgePill>
-              </button>
-              <ProfileBubble onPress={() => setActiveView("perfil")} />
-            </div>
+            <ProfileBubble
+              onPress={() => setActiveView("perfil")}
+              className="justify-self-end"
+            />
           </header>
         )}
 
