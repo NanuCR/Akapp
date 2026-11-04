@@ -361,7 +361,7 @@ function BadgePill({ children, tone = "secondary", className = "" }) {
 
   return (
     <span
-      className={`inline-flex items-center justify-center text-center leading-none font-bold text-xs px-3 h-7 rounded-full whitespace-nowrap shrink-0 select-none ${
+      className={`inline-flex items-center justify-center text-center leading-none font-semibold text-xs px-3 h-7 rounded-full whitespace-nowrap shrink-0 select-none ${
         toneClasses[tone] || toneClasses.neutral
       } ${className}`}
     >
@@ -464,20 +464,20 @@ function walkLength(walkPath) {
 const MAP_ARROW_HTML = `<div class="nav-arrow-pulse"></div>
   <div class="nav-arrow">
     <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true">
-      <path d="M16 3 L27 28 L16 22 L5 28 Z" fill="#F5A114" stroke="#070707" stroke-width="2.5" stroke-linejoin="round" />
+      <path d="M16 3 L27 28 L16 22 L5 28 Z" fill="#22D3EE" stroke="#06231A" stroke-width="2.5" stroke-linejoin="round" />
     </svg>
   </div>`;
 
 function createAkIcon(ak, isDone, isSelected) {
-  const background = isDone ? "#1E9467" : "#10201D";
+  const background = isDone ? "#0F7A5A" : "#0E2A22";
   const ring = isSelected
-    ? "box-shadow: 0 0 0 4px rgba(245, 161, 20, 0.7);"
+    ? "box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.75);"
     : "box-shadow: 0 2px 5px rgba(0,0,0,0.35);";
 
   return L.divIcon({
     className: "ak-custom-pin",
     html: `<div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;width:64px;height:36px;">
-      <div style="background:${background};color:#FFFFFF;border:2px solid #FFFFFF;${ring}border-radius:9999px;padding:2px 8px;font-size:11px;font-weight:800;line-height:1.1;white-space:nowrap;text-align:center;">${ak.code}</div>
+      <div style="background:${background};color:#FFFFFF;border:2px solid #FFFFFF;${ring}border-radius:9999px;padding:2px 8px;font-size:11px;font-weight:600;line-height:1.1;white-space:nowrap;text-align:center;">${ak.code}</div>
       <div style="width:8px;height:8px;border-radius:9999px;background:${background};border:2px solid #FFFFFF;margin-top:2px;"></div>
     </div>`,
     iconSize: [64, 36],
@@ -552,7 +552,7 @@ function TrailMiniMap({
     }).addTo(layer);
 
     L.polyline(route.trailPath, {
-      color: "#E85B0B",
+      color: "#0E7490",
       weight: 4.5,
       dashArray: "7 5",
       lineCap: "round",
@@ -602,7 +602,7 @@ function TrailMiniMap({
         <button
           type="button"
           onClick={() => setFollowing(true)}
-          className="absolute z-10 bottom-3 left-1/2 -translate-x-1/2 min-h-[40px] px-4 rounded-full bg-black/75 text-white text-xs font-bold border border-white/25 backdrop-blur-md"
+          className="absolute z-10 bottom-3 left-1/2 -translate-x-1/2 min-h-[40px] px-4 rounded-full bg-black/75 text-white text-xs font-semibold border border-white/25 backdrop-blur-md"
         >
           Volver a mi posición
         </button>
@@ -635,8 +635,8 @@ function GeneralParksMap({ onOpenRoute }) {
         icon: L.divIcon({
           className: "ak-custom-pin",
           html: `<div style="display:flex;flex-direction:column;align-items:center;width:150px;">
-            <div style="background:#10201D;color:#F1BF57;border:2px solid #F1BF57;border-radius:9999px;padding:4px 10px;font-size:12px;font-weight:700;line-height:1.1;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.4);">${label}</div>
-            <div style="width:12px;height:12px;border-radius:9999px;background:#F5A114;border:2px solid #FFFFFF;margin-top:3px;"></div>
+            <div style="background:#FFFFFF;color:#0E2A22;border:1px solid rgba(14,42,34,0.18);border-radius:9999px;padding:4px 10px;font-size:12px;font-weight:600;line-height:1.1;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,0.4);">${label}</div>
+            <div style="width:12px;height:12px;border-radius:9999px;background:#0E7490;border:2px solid #FFFFFF;margin-top:3px;"></div>
           </div>`,
           iconSize: [150, 46],
           iconAnchor: [75, 44],
@@ -764,13 +764,11 @@ function NavButton({ label, ariaLabel, active, onPress, children }) {
       aria-label={ariaLabel || label}
       aria-current={active ? "page" : undefined}
       className={`min-h-[52px] rounded-full flex flex-col items-center justify-center gap-0.5 transition-colors ${
-        active
-          ? "text-secondary dark:text-primary"
-          : "text-default-500"
+        active ? "text-secondary" : "text-default-500"
       }`}
     >
       {children}
-      <span className="text-[10px] font-semibold leading-none">{label}</span>
+      <span className="text-[10px] font-medium leading-none">{label}</span>
     </button>
   );
 }
@@ -784,7 +782,7 @@ function SettingToggle({ label, isOn, onChange }) {
       onClick={() => onChange(!isOn)}
       className="min-h-[44px] w-full flex items-center justify-between gap-3 text-left"
     >
-      <span className="text-sm font-semibold">{label}</span>
+      <span className="text-sm font-medium">{label}</span>
       <span
         className={`w-12 h-7 p-0.5 rounded-full flex shrink-0 transition-colors ${
           isOn ? "bg-primary justify-end" : "bg-default-300 justify-start"
@@ -807,7 +805,7 @@ function ProfileBubble({ onPress, className = "" }) {
       <Avatar
         name="EM"
         size="sm"
-        className="w-10 h-10 text-sm font-bold bg-primary text-primary-foreground ring-2 ring-background shadow-md"
+        className="w-10 h-10 text-sm font-semibold bg-primary text-primary-foreground ring-2 ring-background shadow-md"
       />
     </button>
   );
@@ -961,7 +959,7 @@ function TrailView({
       {/* Dos tercios inferiores: progreso, piedras Àk y guías */}
       <div className="flex-1 min-h-0 overflow-y-auto px-4 pt-3.5 pb-44 flex flex-col gap-3">
         <div className="flex items-center justify-between gap-2">
-          <h1 className="font-serif text-lg leading-tight min-w-0">
+          <h1 className="font-display text-lg leading-tight min-w-0">
             {route.name}
           </h1>
           <BadgePill tone="secondary">+{route.totalTsiro} Tsirö</BadgePill>
@@ -976,20 +974,20 @@ function TrailView({
         >
           {nextAk ? (
             <>
-              <span className="text-xs font-semibold text-default-500 block">
+              <span className="text-xs font-medium text-default-500 block">
                 {arrived ? "Llegaste a la piedra" : `Siguiente, a ${remaining} m`}
               </span>
-              <strong className="text-sm font-bold block">
+              <strong className="text-sm font-semibold block">
                 {nextAk.code} · {nextAk.name}
               </strong>
               {arrived && (
-                <span className="text-xs text-secondary font-semibold block mt-0.5">
+                <span className="text-xs text-secondary font-medium block mt-0.5">
                   Toca la runa de abajo para escanear
                 </span>
               )}
             </>
           ) : (
-            <strong className="text-sm font-bold block">
+            <strong className="text-sm font-semibold block">
               Sellaste todas las piedras de esta ruta
             </strong>
           )}
@@ -998,7 +996,7 @@ function TrailView({
         {notice && (
           <div
             role="status"
-            className="p-3 rounded-2xl bg-success/15 border border-success/30 text-xs font-semibold text-center"
+            className="p-3 rounded-2xl bg-success/15 border border-success/30 text-xs font-medium text-center"
           >
             {notice}
           </div>
@@ -1020,7 +1018,7 @@ function TrailView({
                 }`}
               >
                 <div className="min-w-0">
-                  <strong className="text-sm font-bold block truncate">
+                  <strong className="text-sm font-semibold block truncate">
                     {ak.code} · {ak.name}
                   </strong>
                   <span className="text-xs text-default-500 block tabular-nums">
@@ -1034,7 +1032,7 @@ function TrailView({
                     size="sm"
                     radius="full"
                     color="secondary"
-                    className="min-h-[40px] text-xs font-semibold px-4 shrink-0"
+                    className="min-h-[40px] text-xs font-medium px-4 shrink-0"
                     onPress={() => onScanAk(ak)}
                   >
                     Escanear
@@ -1047,7 +1045,7 @@ function TrailView({
 
         {routeReports.length > 0 && (
           <div className="flex flex-col gap-2">
-            <h2 className="text-sm font-bold">Tus aportes al SINAC</h2>
+            <h2 className="text-sm font-semibold">Tus aportes al SINAC</h2>
             {routeReports.map((report) => (
               <div
                 key={report.id}
@@ -1136,7 +1134,7 @@ function SafariGuideIcon({ className = "w-5 h-5" }) {
 }
 
 export default function App() {
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
   const [vibrateOnScan, setVibrateOnScan] = useState(true);
 
   // Saldo proporcional de Esteban (285 Tsirö acumulados tras varias caminatas)
@@ -1445,7 +1443,7 @@ export default function App() {
                     <button
                       type="button"
                       onClick={() => handleRouteSearch("")}
-                      className="text-xs font-semibold text-default-500 px-2 py-1 rounded-full hover:bg-default-100"
+                      className="text-xs font-medium text-default-500 px-2 py-1 rounded-full hover:bg-default-100"
                     >
                       Limpiar
                     </button>
@@ -1465,7 +1463,7 @@ export default function App() {
                   radius="full"
                   variant={difficultyFilter === "todas" ? "solid" : "flat"}
                   color={difficultyFilter === "todas" ? "primary" : "default"}
-                  className="min-h-[44px] text-xs font-semibold px-3"
+                  className="min-h-[44px] text-xs font-medium px-3"
                   onPress={() => setDifficultyFilter("todas")}
                 >
                   Cerca de mí (3)
@@ -1475,7 +1473,7 @@ export default function App() {
                   radius="full"
                   variant={difficultyFilter === "con-guia" ? "solid" : "flat"}
                   color={difficultyFilter === "con-guia" ? "primary" : "default"}
-                  className="min-h-[44px] text-xs font-semibold px-3"
+                  className="min-h-[44px] text-xs font-medium px-3"
                   onPress={() => setDifficultyFilter("con-guia")}
                 >
                   Con guía hoy
@@ -1493,7 +1491,7 @@ export default function App() {
               {axSuggestion && (
                 <Card shadow="sm" className="border border-secondary/40 bg-content1 rounded-2xl">
                   <CardBody className="gap-1.5 py-3.5 px-4">
-                    <span className="text-xs font-bold text-secondary">
+                    <span className="text-xs font-semibold text-secondary">
                       {axSuggestion.title}
                     </span>
                     <p className="text-xs text-default-600 leading-relaxed">
@@ -1505,7 +1503,7 @@ export default function App() {
                       size="sm"
                       radius="full"
                       color="secondary"
-                      className="min-h-[44px] w-full font-semibold"
+                      className="min-h-[44px] w-full font-medium"
                       onPress={() => {
                         const r = ROUTES.find((x) => x.id === axSuggestion.routeId);
                         if (r) openRouteDetail(r);
@@ -1521,7 +1519,7 @@ export default function App() {
             {/* Banner de estado Offline y Clima perfectamente alineado */}
             <div className="flex items-center justify-between gap-2 px-1">
               <div className="min-w-0">
-                <h1 className="font-serif text-lg font-bold tracking-tight">
+                <h1 className="font-display text-lg tracking-tight">
                   Rutas cerca de ti
                 </h1>
                 <span className="text-xs text-default-500 block">
@@ -1534,14 +1532,14 @@ export default function App() {
             {filteredRoutes.length === 0 && (
               <Card shadow="none" className="border border-default-200 bg-content1 rounded-2xl">
                 <CardBody className="py-7 px-4 text-center flex flex-col items-center gap-3">
-                  <p className="text-sm font-semibold">
+                  <p className="text-sm font-medium">
                     No encontramos rutas con ese filtro
                   </p>
                   <Button
                     size="sm"
                     radius="full"
                     variant="flat"
-                    className="min-h-[44px] font-semibold px-4"
+                    className="min-h-[44px] font-medium px-4"
                     onPress={() => {
                       setDifficultyFilter("todas");
                       handleRouteSearch("");
@@ -1603,7 +1601,7 @@ export default function App() {
                         <span className="text-xs font-medium text-white/85 block">
                           {route.region}
                         </span>
-                        <h2 className="font-serif text-lg font-bold leading-snug">
+                        <h2 className="font-display text-lg leading-snug">
                           {route.name}
                         </h2>
                       </div>
@@ -1620,7 +1618,7 @@ export default function App() {
                           <span className="text-[11px] text-default-500">
                             Distancia
                           </span>
-                          <strong className="font-bold mt-0.5">
+                          <strong className="font-semibold mt-0.5">
                             {route.distance}
                           </strong>
                         </div>
@@ -1628,7 +1626,7 @@ export default function App() {
                           <span className="text-[11px] text-default-500">
                             Desnivel
                           </span>
-                          <strong className="font-bold mt-0.5">
+                          <strong className="font-semibold mt-0.5">
                             {route.elevation}
                           </strong>
                         </div>
@@ -1636,7 +1634,7 @@ export default function App() {
                           <span className="text-[11px] text-default-500">
                             Hitos Àk
                           </span>
-                          <strong className="font-bold mt-0.5">
+                          <strong className="font-semibold mt-0.5">
                             {completedInRoute}/{route.aks.length}
                           </strong>
                         </div>
@@ -1644,7 +1642,7 @@ export default function App() {
                           <span className="text-[11px] text-default-500">
                             Guías hoy
                           </span>
-                          <strong className="font-bold mt-0.5">
+                          <strong className="font-semibold mt-0.5">
                             {availableGuidesCount > 0
                               ? `${availableGuidesCount} disp.`
                               : "Libre"}
@@ -1663,7 +1661,7 @@ export default function App() {
                         size="sm"
                         radius="full"
                         color="primary"
-                        className="min-h-[44px] font-semibold text-xs px-4"
+                        className="min-h-[44px] font-medium text-xs px-4"
                         onPress={() => openRouteDetail(route)}
                       >
                         Ver senderos y Àk
@@ -1706,7 +1704,7 @@ export default function App() {
                     <SafariGuideIcon className="w-6 h-6" />
                   </div>
                   <div className="min-w-0">
-                    <span className="text-sm font-bold text-foreground block">
+                    <span className="text-sm font-semibold text-foreground block">
                       {selectedGuideForOpenedRoute
                         ? `Guía: ${selectedGuideForOpenedRoute.name}`
                         : "Guías locales (opcional)"}
@@ -1758,7 +1756,7 @@ export default function App() {
                   <CardBody className="p-4 flex flex-col gap-3">
                     <div className="flex items-center justify-between gap-2">
                       <div>
-                        <h2 className="text-sm font-bold">
+                        <h2 className="text-sm font-semibold">
                           Guías locales en esta ruta
                         </h2>
                         <span className="text-xs text-default-500">
@@ -1795,10 +1793,10 @@ export default function App() {
                                   <Avatar
                                     name={guide.initials}
                                     size="sm"
-                                    className="w-10 h-10 text-xs font-bold bg-primary text-primary-foreground shrink-0"
+                                    className="w-10 h-10 text-xs font-semibold bg-primary text-primary-foreground shrink-0"
                                   />
                                   <div>
-                                    <p className="text-sm font-bold">
+                                    <p className="text-sm font-semibold">
                                       {guide.name}
                                     </p>
                                     <p className="text-xs text-default-500">
@@ -1806,7 +1804,7 @@ export default function App() {
                                     </p>
                                   </div>
                                 </div>
-                                <span className="text-xs font-bold text-secondary shrink-0">
+                                <span className="text-xs font-semibold text-secondary shrink-0">
                                   {guide.rate}
                                 </span>
                               </div>
@@ -1821,7 +1819,7 @@ export default function App() {
                                     radius="full"
                                     color={isSelected ? "secondary" : "primary"}
                                     variant={isSelected ? "solid" : "flat"}
-                                    className="min-h-[44px] font-semibold text-xs px-3.5"
+                                    className="min-h-[44px] font-medium text-xs px-3.5"
                                     onPress={() =>
                                       handleSelectGuide(
                                         openedRoute.id,
@@ -1852,7 +1850,7 @@ export default function App() {
                           <span className="text-xs opacity-80 block">
                             Salida reservada con guía certificado
                           </span>
-                          <strong className="text-xs font-bold">
+                          <strong className="text-xs font-semibold">
                             {selectedGuideForOpenedRoute.name} ·{" "}
                             {selectedGuideForOpenedRoute.rate}
                           </strong>
@@ -1873,7 +1871,7 @@ export default function App() {
         {activeView === "mapa" && (
           <main className="flex flex-col gap-3 mt-1 flex-1">
             <div className="px-1">
-              <h1 className="font-serif text-lg">Mapa de Costa Rica</h1>
+              <h1 className="font-display text-lg">Mapa de Costa Rica</h1>
               <span className="text-xs text-default-500 block">
                 Toca un parque para abrir sus senderos
               </span>
@@ -1895,7 +1893,7 @@ export default function App() {
                     className="w-12 h-12 rounded-xl object-cover shrink-0"
                   />
                   <span className="min-w-0">
-                    <strong className="text-sm font-bold block truncate">
+                    <strong className="text-sm font-semibold block truncate">
                       {route.name}
                     </strong>
                     <span className="text-xs text-default-500 block truncate">
@@ -1919,13 +1917,13 @@ export default function App() {
                 className="border border-default-200 bg-content1 rounded-3xl"
               >
                 <CardBody className="p-6 flex flex-col items-center text-center gap-4">
-                  <span className="text-xs font-semibold tracking-wider text-default-500">
+                  <span className="text-xs font-medium tracking-wider text-default-500">
                     PIEDRA {scannerRouteProgress.done} DE{" "}
                     {scannerRouteProgress.total}
                   </span>
                   <LogoMark className="w-40 text-primary logo-glow" />
                   <div>
-                    <h1 className="font-serif text-2xl">Àk escaneada</h1>
+                    <h1 className="font-display text-2xl">Àk escaneada</h1>
                     <p className="text-xs text-default-500 mt-1">
                       {scannerAk.code} · {scannerAk.name} · {scannerAk.trail}
                     </p>
@@ -1940,10 +1938,10 @@ export default function App() {
 
                   {scannerRouteProgress.done === scannerRouteProgress.total && (
                     <div className="w-full p-3 rounded-2xl bg-primary/10 border border-primary/30">
-                      <span className="text-xs font-semibold text-default-500 block">
+                      <span className="text-xs font-medium text-default-500 block">
                         NUEVA INSIGNIA
                       </span>
-                      <strong className="text-sm font-bold">
+                      <strong className="text-sm font-semibold">
                         Guardián de {scannerRouteProgress.routeName}
                       </strong>
                     </div>
@@ -1953,7 +1951,7 @@ export default function App() {
                     <Button
                       radius="full"
                       variant="flat"
-                      className="min-h-[48px] font-semibold text-xs"
+                      className="min-h-[48px] font-medium text-xs"
                       onPress={() => setActiveView("cupones")}
                     >
                       Ver premios ({tsiro} Tsirö)
@@ -1961,7 +1959,7 @@ export default function App() {
                     <Button
                       radius="full"
                       color="primary"
-                      className="min-h-[48px] font-semibold text-xs"
+                      className="min-h-[48px] font-medium text-xs"
                       onPress={handleContinueAfterScan}
                     >
                       Seguir la ruta
@@ -1975,7 +1973,7 @@ export default function App() {
                 className="border border-default-200 bg-content1 rounded-3xl"
               >
                 <CardBody className="p-6 flex flex-col items-center text-center gap-3">
-                  <h1 className="font-serif text-xl">
+                  <h1 className="font-display text-xl">
                     Sellaste todas las piedras Àk
                   </h1>
                   <p className="text-xs text-default-500">
@@ -1984,7 +1982,7 @@ export default function App() {
                   <Button
                     radius="full"
                     color="primary"
-                    className="min-h-[48px] w-full font-semibold text-xs"
+                    className="min-h-[48px] w-full font-medium text-xs"
                     onPress={() => setActiveView("cupones")}
                   >
                     Ir a Cupones
@@ -2000,7 +1998,7 @@ export default function App() {
         {/* ========================================================= */}
         {activeView === "config" && (
           <main className="flex flex-col gap-4 mt-2 flex-1">
-            <h1 className="font-serif text-xl px-1">Configuración</h1>
+            <h1 className="font-display text-xl px-1">Configuración</h1>
 
             <Card
               shadow="none"
@@ -2025,7 +2023,7 @@ export default function App() {
               <Button
                 radius="full"
                 variant="flat"
-                className="min-h-[48px] font-semibold text-sm"
+                className="min-h-[48px] font-medium text-sm"
                 onPress={() => setActiveView("perfil")}
               >
                 Ver mi perfil
@@ -2033,7 +2031,7 @@ export default function App() {
               <Button
                 radius="full"
                 variant="light"
-                className="min-h-[48px] font-semibold text-sm"
+                className="min-h-[48px] font-medium text-sm"
                 onPress={handleResetDemo}
               >
                 Reiniciar demo
@@ -2051,11 +2049,11 @@ export default function App() {
             {/* Tarjeta Héroe de Billetera Tsirö perfectamente alineada */}
             <div className="p-4 rounded-3xl bg-primary text-primary-foreground flex items-center justify-between gap-3 shadow-sm">
               <div>
-                <h1 className="text-xs font-semibold opacity-90">
+                <h1 className="text-xs font-medium opacity-90">
                   Cupones canjeables
                 </h1>
                 <div className="flex items-baseline gap-2 mt-0.5">
-                  <strong className="font-serif text-2xl font-bold tabular-nums leading-none">
+                  <strong className="font-display text-2xl tabular-nums leading-none">
                     {tsiro} Tsirö
                   </strong>
                   <span className="text-xs opacity-80">disponibles</span>
@@ -2074,14 +2072,14 @@ export default function App() {
 
                 <div className="p-4 flex flex-col gap-2.5">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-bold uppercase text-secondary">
+                    <span className="text-xs font-semibold uppercase text-secondary">
                       Pase activo para mostrar en caja
                     </span>
                     <Button
                       size="sm"
                       radius="full"
                       variant="light"
-                      className="min-h-[40px] text-xs font-semibold"
+                      className="min-h-[40px] text-xs font-medium"
                       onPress={() => setJustRedeemedCoupon(null)}
                     >
                       Ocultar
@@ -2089,7 +2087,7 @@ export default function App() {
                   </div>
 
                   <div>
-                    <p className="text-sm font-bold">{justRedeemedCoupon.title}</p>
+                    <p className="text-sm font-semibold">{justRedeemedCoupon.title}</p>
                     <p className="text-xs text-default-500">
                       {justRedeemedCoupon.place}
                     </p>
@@ -2100,7 +2098,7 @@ export default function App() {
                   <div className="p-3.5 rounded-2xl bg-default-100 border border-dashed border-secondary flex flex-col items-center justify-center gap-2 text-center">
                     <div
                       id="activeVoucherCodeBanner"
-                      className="font-mono text-lg font-bold tracking-widest text-foreground"
+                      className="font-mono text-lg font-semibold tracking-widest text-foreground"
                     >
                       {justRedeemedCoupon.code}
                     </div>
@@ -2144,7 +2142,7 @@ export default function App() {
                     radius="full"
                     variant="flat"
                     color="secondary"
-                    className="min-h-[44px] font-semibold text-xs"
+                    className="min-h-[44px] font-medium text-xs"
                     onPress={() => handleCopyVoucherCode(justRedeemedCoupon.code)}
                   >
                     {copiedCode === justRedeemedCoupon.code
@@ -2179,7 +2177,7 @@ export default function App() {
                     role="tab"
                     aria-selected={active}
                     onClick={() => setCouponCategory(tab.key)}
-                    className={`min-h-[40px] px-1 rounded-xl text-[11px] font-bold flex items-center justify-center text-center whitespace-nowrap transition-colors ${
+                    className={`min-h-[40px] px-1 rounded-xl text-[11px] font-semibold flex items-center justify-center text-center whitespace-nowrap transition-colors ${
                       active
                         ? "bg-primary text-primary-foreground shadow-sm"
                         : "text-default-600 hover:bg-default-100"
@@ -2194,14 +2192,14 @@ export default function App() {
             {filteredCoupons.length === 0 && (
               <Card shadow="none" className="border border-default-200 bg-content1 rounded-2xl">
                 <CardBody className="py-7 px-4 text-center flex flex-col items-center gap-3">
-                  <p className="text-sm font-semibold">
+                  <p className="text-sm font-medium">
                     Aún no has reclamado ningún cupón
                   </p>
                   <Button
                     size="sm"
                     radius="full"
                     variant="flat"
-                    className="min-h-[44px] font-semibold px-4"
+                    className="min-h-[44px] font-medium px-4"
                     onPress={() => setCouponCategory("todos")}
                   >
                     Ver cupones disponibles
@@ -2229,7 +2227,7 @@ export default function App() {
                   >
                     <CardBody className="p-4 flex flex-col gap-2.5">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-[11px] font-bold tracking-wider uppercase text-secondary">
+                        <span className="text-[11px] font-semibold tracking-wider uppercase text-secondary">
                           {item.tag} · {item.discountBadge}
                         </span>
                         <BadgePill
@@ -2244,7 +2242,7 @@ export default function App() {
                       </div>
 
                       <div>
-                        <h2 className="text-sm font-bold leading-snug">
+                        <h2 className="text-sm font-semibold leading-snug">
                           {item.title}
                         </h2>
                         <p className="text-xs text-default-500 mt-0.5">
@@ -2254,10 +2252,10 @@ export default function App() {
 
                       {isRedeemed && (
                         <div className="p-3 rounded-2xl bg-default-100 border border-dashed border-secondary flex items-center justify-between gap-2">
-                          <span className="text-xs font-semibold text-default-600">
+                          <span className="text-xs font-medium text-default-600">
                             Tu código de canje:
                           </span>
-                          <strong className="font-mono text-sm font-bold tracking-wider text-secondary">
+                          <strong className="font-mono text-sm font-semibold tracking-wider text-secondary">
                             {item.code}
                           </strong>
                         </div>
@@ -2290,7 +2288,7 @@ export default function App() {
                             radius="full"
                             variant="flat"
                             color="secondary"
-                            className="min-h-[44px] font-semibold text-xs px-4 shrink-0"
+                            className="min-h-[44px] font-medium text-xs px-4 shrink-0"
                             onPress={() => setJustRedeemedCoupon(item)}
                           >
                             Mostrar en grande
@@ -2300,7 +2298,7 @@ export default function App() {
                             size="sm"
                             radius="full"
                             color="primary"
-                            className="min-h-[44px] font-semibold text-xs px-4 shrink-0"
+                            className="min-h-[44px] font-medium text-xs px-4 shrink-0"
                             onPress={() => handleRedeemCoupon(item)}
                           >
                             Canjear ahora
@@ -2310,7 +2308,7 @@ export default function App() {
                             size="sm"
                             radius="full"
                             variant="flat"
-                            className="min-h-[44px] font-semibold text-xs px-4 shrink-0"
+                            className="min-h-[44px] font-medium text-xs px-4 shrink-0"
                             onPress={handleNfcPress}
                           >
                             Escanear Àk
@@ -2339,11 +2337,11 @@ export default function App() {
                   <Avatar
                     name="EM"
                     size="lg"
-                    className="w-14 h-14 text-lg font-bold bg-primary text-primary-foreground shrink-0"
+                    className="w-14 h-14 text-lg font-semibold bg-primary text-primary-foreground shrink-0"
                   />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <h1 className="text-base font-bold truncate">
+                      <h1 className="text-base font-semibold truncate">
                         Esteban Morales
                       </h1>
                       <BadgePill tone="secondaryFlat">{tsiro} Tsirö</BadgePill>
@@ -2373,19 +2371,19 @@ export default function App() {
                 <div className="grid grid-cols-3 gap-2 text-center pt-1 tabular-nums">
                   <div className="p-2.5 rounded-2xl bg-default-100 flex flex-col items-center justify-center">
                     <span className="text-xs text-default-500">Distancia</span>
-                    <strong className="text-sm font-bold mt-0.5">
+                    <strong className="text-sm font-semibold mt-0.5">
                       {totalKm} km
                     </strong>
                   </div>
                   <div className="p-2.5 rounded-2xl bg-default-100 flex flex-col items-center justify-center">
                     <span className="text-xs text-default-500">Piedras Àk</span>
-                    <strong className="text-sm font-bold mt-0.5">
+                    <strong className="text-sm font-semibold mt-0.5">
                       {scannedAkIds.length}
                     </strong>
                   </div>
                   <div className="p-2.5 rounded-2xl bg-default-100 flex flex-col items-center justify-center">
                     <span className="text-xs text-default-500">Cupones</span>
-                    <strong className="text-sm font-bold mt-0.5">
+                    <strong className="text-sm font-semibold mt-0.5">
                       {redeemedIds.length}
                     </strong>
                   </div>
@@ -2400,7 +2398,7 @@ export default function App() {
             >
               <CardBody className="p-4 flex flex-col gap-3">
                 <div className="flex items-center justify-between gap-2">
-                  <h2 className="text-sm font-bold">
+                  <h2 className="text-sm font-semibold">
                     Actividad semanal en senderos
                   </h2>
                   <BadgePill tone="secondaryFlat">33,1 km</BadgePill>
@@ -2439,12 +2437,12 @@ export default function App() {
             >
               <CardBody className="p-4 flex flex-col gap-2.5">
                 <div className="flex items-center justify-between gap-2">
-                  <h2 className="text-sm font-bold">Mis códigos reclamados</h2>
+                  <h2 className="text-sm font-semibold">Mis códigos reclamados</h2>
                   <Button
                     size="sm"
                     radius="full"
                     variant="light"
-                    className="min-h-[40px] text-xs font-semibold"
+                    className="min-h-[40px] text-xs font-medium"
                     onPress={() => setActiveView("cupones")}
                   >
                     Ir a Cupones
@@ -2462,12 +2460,12 @@ export default function App() {
                       className="p-3 rounded-2xl bg-default-100 flex items-center justify-between gap-2"
                     >
                       <div className="min-w-0">
-                        <p className="text-xs font-bold truncate">{c.title}</p>
+                        <p className="text-xs font-semibold truncate">{c.title}</p>
                         <span className="text-xs text-default-500 block truncate">
                           {c.place}
                         </span>
                       </div>
-                      <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-content1 border border-secondary text-secondary shrink-0">
+                      <span className="font-mono text-xs font-semibold px-2.5 py-1 rounded-lg bg-content1 border border-secondary text-secondary shrink-0">
                         {c.code}
                       </span>
                     </div>
@@ -2484,7 +2482,7 @@ export default function App() {
         <div
           role="status"
           aria-live="polite"
-          className="fixed inset-0 z-50 bg-[#070707] text-[#D6DBB3] flex flex-col items-center justify-center gap-10 px-6 text-center overflow-hidden"
+          className="fixed inset-0 z-50 bg-[#04140F] text-[#E6F0EB] flex flex-col items-center justify-center gap-10 px-6 text-center overflow-hidden"
         >
           <div className="relative w-72 h-72 flex items-center justify-center">
             <span className="nfc-ring" />
@@ -2493,7 +2491,7 @@ export default function App() {
             <LogoMark className="w-48 logo-awaken" />
           </div>
           <div>
-            <p className="font-serif text-xl">Leyendo el Àk...</p>
+            <p className="font-display text-xl">Leyendo el Àk...</p>
             <p className="text-xs opacity-75 mt-1">
               {scannerAk.code} · {scannerAk.name}
             </p>
@@ -2532,7 +2530,7 @@ export default function App() {
               type="button"
               onClick={handleNfcPress}
               aria-label="Escanear piedra Àk por NFC"
-              className={`w-[72px] h-[72px] -mt-7 rounded-full bg-primary text-primary-foreground border-4 border-background shadow-xl inline-flex items-center justify-center transition-transform active:scale-95 ${
+              className={`w-[72px] h-[72px] -mt-7 rounded-full bg-secondary text-secondary-foreground border-4 border-background shadow-xl inline-flex items-center justify-center transition-transform active:scale-95 ${
                 nearAkId ? "nfc-call" : ""
               }`}
             >

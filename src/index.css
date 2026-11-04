@@ -2,9 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Marcellus solo tiene un peso: evita la negrita sintetica */
-.font-serif {
-  font-weight: 400;
+/* Titulos finos con el ajuste optico de la tipografia de sistema */
+.font-display {
+  font-weight: 300;
+  letter-spacing: -0.022em;
+}
+
+body {
+  text-rendering: optimizeLegibility;
 }
 
 .logo-mark {
@@ -19,17 +24,17 @@
 @keyframes logoAwaken {
   0%,
   35% {
-    background-color: #34363b;
+    background-color: #1D3A31;
     filter: none;
   }
   65% {
-    background-color: #f1bf57;
-    filter: drop-shadow(0 0 12px rgba(255, 226, 160, 0.95))
-      drop-shadow(0 0 26px rgba(245, 161, 20, 0.75));
+    background-color: #67E8F9;
+    filter: drop-shadow(0 0 12px rgba(207, 250, 254, 0.95))
+      drop-shadow(0 0 26px rgba(34, 211, 238, 0.75));
   }
   100% {
-    background-color: #f1bf57;
-    filter: drop-shadow(0 0 6px rgba(245, 161, 20, 0.5));
+    background-color: #67E8F9;
+    filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.5));
   }
 }
 
@@ -38,7 +43,7 @@
 }
 
 .logo-glow {
-  filter: drop-shadow(0 0 8px rgba(245, 161, 20, 0.55));
+  filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.55));
 }
 
 @keyframes nfcRing {
@@ -58,7 +63,7 @@
 .nfc-ring {
   position: absolute;
   inset: 0;
-  border: 2px solid #f1bf57;
+  border: 2px solid #67E8F9;
   border-radius: 9999px;
   animation: nfcRing 1.8s ease-out infinite;
 }
@@ -75,10 +80,10 @@
 @keyframes nfcCall {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(245, 161, 20, 0.7);
+    box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.7);
   }
   50% {
-    box-shadow: 0 0 0 14px rgba(245, 161, 20, 0);
+    box-shadow: 0 0 0 14px rgba(34, 211, 238, 0);
   }
 }
 
@@ -111,7 +116,7 @@
   position: absolute;
   inset: 0;
   border-radius: 9999px;
-  background: rgba(245, 161, 20, 0.28);
+  background: rgba(34, 211, 238, 0.28);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -124,6 +129,6 @@
   }
 
   .logo-awaken {
-    background-color: #f1bf57;
+    background-color: #67E8F9;
   }
 }

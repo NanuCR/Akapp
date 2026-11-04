@@ -10,9 +10,16 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Outfit"', 'system-ui', 'sans-serif'],
-        serif: ['"Marcellus"', 'Georgia', 'serif']
-      }
+        sans: [
+          "-apple-system",
+          "BlinkMacSystemFont",
+          '"SF Pro Display"',
+          '"SF Pro Text"',
+          '"Inter"',
+          "system-ui",
+          "sans-serif",
+        ],
+      },
     },
   },
   darkMode: "class",
@@ -21,44 +28,44 @@ export default {
       themes: {
         light: {
           colors: {
-            background: "#EDE8DC",
-            foreground: "#1E2624",
+            background: "#F8FAF9",
+            foreground: "#0E2A22",
             content1: "#FFFFFF",
-            content2: "#F6F2E9",
+            content2: "#EEF3F1",
             primary: {
-              DEFAULT: "#C98A12",
-              foreground: "#070707",
+              DEFAULT: "#0F5C46",
+              foreground: "#FFFFFF",
             },
             secondary: {
-              DEFAULT: "#D2500A",
+              DEFAULT: "#0E7490",
               foreground: "#FFFFFF",
             },
             success: {
-              DEFAULT: "#1E9467",
+              DEFAULT: "#0F7A5A",
               foreground: "#FFFFFF",
             },
-            focus: "#D2500A",
+            focus: "#0E7490",
           },
         },
         dark: {
           colors: {
-            background: "#070707",
-            foreground: "#D6DBB3",
-            content1: "#10201D",
-            content2: "#152F2A",
+            background: "#07140F",
+            foreground: "#E6F0EB",
+            content1: "#0F211A",
+            content2: "#163026",
             primary: {
-              DEFAULT: "#F1BF57",
-              foreground: "#070707",
+              DEFAULT: "#4FD1A5",
+              foreground: "#06231A",
             },
             secondary: {
-              DEFAULT: "#F5A114",
-              foreground: "#070707",
+              DEFAULT: "#38D6E8",
+              foreground: "#04242A",
             },
             success: {
-              DEFAULT: "#34C38F",
-              foreground: "#070707",
+              DEFAULT: "#4ADE9B",
+              foreground: "#06231A",
             },
-            focus: "#F1BF57",
+            focus: "#38D6E8",
           },
         },
       },
