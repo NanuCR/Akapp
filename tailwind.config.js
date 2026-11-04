@@ -9,6 +9,13 @@ export default {
   ],
   theme: {
     extend: {
+      // Sombras dispersas estilo iOS
+      boxShadow: {
+        sm: "0 1px 2px rgba(14, 42, 34, 0.04), 0 4px 14px rgba(14, 42, 34, 0.05)",
+        md: "0 2px 4px rgba(14, 42, 34, 0.04), 0 8px 22px rgba(14, 42, 34, 0.07)",
+        lg: "0 4px 8px rgba(14, 42, 34, 0.04), 0 14px 34px rgba(14, 42, 34, 0.09)",
+        xl: "0 6px 12px rgba(14, 42, 34, 0.05), 0 22px 48px rgba(14, 42, 34, 0.11)",
+      },
       fontFamily: {
         sans: [
           "-apple-system",
@@ -25,6 +32,13 @@ export default {
   darkMode: "class",
   plugins: [
     heroui({
+      layout: {
+        boxShadow: {
+          small: "0 1px 2px rgba(14, 42, 34, 0.04), 0 4px 14px rgba(14, 42, 34, 0.05)",
+          medium: "0 2px 4px rgba(14, 42, 34, 0.04), 0 8px 22px rgba(14, 42, 34, 0.07)",
+          large: "0 4px 8px rgba(14, 42, 34, 0.04), 0 14px 34px rgba(14, 42, 34, 0.09)",
+        },
+      },
       themes: {
         light: {
           colors: {

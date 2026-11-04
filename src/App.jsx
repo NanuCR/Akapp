@@ -15,6 +15,7 @@ import {
   Progress,
   Divider,
 } from "@heroui/react";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -877,6 +878,9 @@ function SettingToggle({ label, isOn, onChange }) {
   );
 }
 
+const TAB_ORDER = ["mapa", "explorar", "escanear", "cupones", "config", "perfil"];
+const NFC_SPARK_ANGLES = [0, 45, 90, 135, 180, 225, 270, 315];
+
 const STONE_READ_MS = 3400;
 const STONE_FILL_SECONDS = 2.6;
 const STONE_SIZE = { width: 680, height: 1440, centerX: 340, centerY: 584, reach: 820 };
@@ -1165,12 +1169,23 @@ function ScanResultModal({
   const isRouteComplete = progress.done === progress.total;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-4">
-      <div
+    <MotionConfig reducedMotion="user">
+    <motion.div
+      className="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25, ease: "easeOut" }}
+    >
+      <motion.div
         role="dialog"
         aria-modal="true"
         aria-labelledby="scanResultTitle"
-        className="scan-result-card w-full max-w-md bg-content1 text-foreground rounded-3xl shadow-xl p-6 flex flex-col gap-5"
+        className="w-full max-w-md bg-content1 text-foreground rounded-3xl shadow-xl p-6 flex flex-col gap-5"
+        initial={{ y: "100%" }}
+        animate={{ y: 0 }}
+        exit={{ y: "100%", transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] } }}
+        transition={{ type: "spring", bounce: 0.22, duration: 0.5 }}
       >
         <div className="flex flex-col items-center text-center gap-3">
           <div className="w-16 h-16 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
@@ -1237,8 +1252,9 @@ function ScanResultModal({
             Seguir explorando
           </Button>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
+    </MotionConfig>
   );
 }
 
@@ -1379,7 +1395,7 @@ function TrailView({
   const routeReports = reports.filter((r) => r.routeName === route.name);
 
   return (
-    <div className="fixed inset-y-0 inset-x-0 mx-auto w-full max-w-md z-20 bg-background flex flex-col">
+    <div className="sheet-rise fixed inset-y-0 inset-x-0 mx-auto w-full max-w-md z-20 bg-background flex flex-col">
       {/* Tercio superior: minimapa en tiempo real */}
       <div className="relative h-[33dvh] shrink-0 overflow-hidden">
         <TrailMiniMap
@@ -1595,6 +1611,7 @@ export default function App() {
   // Estado de Explorar Rutas y Detalle de Ruta
   const [routeQuery, setRouteQuery] = useState("");
   const [navigatingRouteId, setNavigatingRouteId] = useState(null);
+  const [nfcBurst, setNfcBurst] = useState(0);
   const [axLoading, setAxLoading] = useState(false);
   const [axSuggestion, setAxSuggestion] = useState(null);
   const [openedRouteId, setOpenedRouteId] = useState(null);
@@ -1653,6 +1670,17 @@ export default function App() {
     Boolean(openedRoute) &&
     navigatingRouteId === openedRoute.id;
   const isMapView = activeView === "mapa";
+  const tabMotionRef = useRef({ view: activeView, direction: 1 });
+  if (tabMotionRef.current.view !== activeView) {
+    tabMotionRef.current = {
+      view: activeView,
+      direction:
+        TAB_ORDER.indexOf(activeView) <
+        TAB_ORDER.indexOf(tabMotionRef.current.view)
+          ? -1
+          : 1,
+    };
+  }
   const mapGlassClass =
     "px-3.5 rounded-full bg-content1/85 backdrop-blur-md shadow-sm";
 
@@ -1864,14 +1892,17 @@ export default function App() {
   );
 
   return (
-    <div className="min-h-dvh w-full overflow-x-hidden bg-background text-foreground flex flex-col items-center">
+    <div
+      className="min-h-dvh w-full overflow-x-clip bg-background text-foreground flex flex-col items-center"
+      style={{ "--tab-direction": tabMotionRef.current.direction }}
+    >
       <div className="w-full max-w-md min-h-dvh flex flex-col pb-32 px-4 pt-3">
         
         {/* CABECERA FIJA: puntos a la izquierda, logo al centro y avatar a la derecha */}
         {!isOnTrail && (
           <header
             className={`sticky top-0 z-10 -mx-4 px-4 py-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2 ${
-              isMapView ? "" : "bg-background/90 backdrop-blur-md"
+              isMapView ? "" : "glass-bar"
             }`}
           >
             <button
@@ -1908,7 +1939,7 @@ export default function App() {
         {/* VISTA 1: EXPLORAR (CON FOTOGRAFÍAS REALES DE LOS PARQUES) */}
         {/* ========================================================= */}
         {activeView === "explorar" && !openedRoute && (
-          <main className="flex flex-col gap-4 mt-1 flex-1">
+          <main className="tab-view flex flex-col gap-4 mt-1 flex-1">
             
             {/* Barra de búsqueda flotante estilo cápsula */}
             <div className="flex flex-col gap-2.5">
@@ -2082,7 +2113,8 @@ export default function App() {
         {/* SUB-VISTA EXPLORAR: DETALLE DEL PARQUE ANTES DE LA RUTA    */}
         {/* ========================================================= */}
         {activeView === "explorar" && openedRoute && !isOnTrail && (
-          <main className="flex flex-col gap-5 mt-1 flex-1 pb-16">
+          <>
+          <main className="sheet-rise flex flex-col gap-5 mt-1 flex-1 pb-16">
             <div className="relative h-56 rounded-3xl overflow-hidden bg-default-200">
               <img
                 src={openedRoute.photo}
@@ -2360,7 +2392,9 @@ export default function App() {
               )}
             </div>
 
-            <div className="fixed inset-x-0 bottom-[116px] z-20 px-4 pointer-events-none">
+          </main>
+
+            <div className="cta-rise fixed inset-x-0 bottom-[116px] z-20 px-4 pointer-events-none">
               <div className="max-w-md mx-auto pointer-events-auto">
                 <Button
                   radius="full"
@@ -2372,7 +2406,7 @@ export default function App() {
                 </Button>
               </div>
             </div>
-          </main>
+          </>
         )}
 
         {/* ========================================================= */}
@@ -2397,7 +2431,7 @@ export default function App() {
         {/* VISTA: MAPA GENERAL DE PARQUES NACIONALES                 */}
         {/* ========================================================= */}
         {activeView === "mapa" && (
-          <main className="fixed inset-0 z-0">
+          <main className="tab-view fixed inset-0 z-0">
             <GeneralParksMap onOpenRoute={handleOpenRouteFromMap} />
           </main>
         )}
@@ -2406,7 +2440,7 @@ export default function App() {
         {/* VISTA: TODAS LAS PIEDRAS ÀK SELLADAS                      */}
         {/* ========================================================= */}
         {activeView === "escanear" && (
-          <main className="flex flex-col gap-4 mt-2 flex-1">
+          <main className="tab-view flex flex-col gap-4 mt-2 flex-1">
             <Card
               shadow="none"
               className="border border-default-200 bg-content1 rounded-3xl"
@@ -2435,7 +2469,7 @@ export default function App() {
         {/* VISTA: CONFIGURACIÓN                                      */}
         {/* ========================================================= */}
         {activeView === "config" && (
-          <main className="flex flex-col gap-4 mt-2 flex-1">
+          <main className="tab-view flex flex-col gap-4 mt-2 flex-1">
             <h1 className="font-display text-xl px-1">Configuración</h1>
 
             <Card
@@ -2482,7 +2516,7 @@ export default function App() {
         {/* VISTA 3: BILLETERA DE CUPONES CON BOLETOS PERFORADOS      */}
         {/* ========================================================= */}
         {activeView === "cupones" && (
-          <main className="flex flex-col gap-4 mt-2 flex-1">
+          <main className="tab-view flex flex-col gap-4 mt-2 flex-1">
             
             {/* Tarjeta Héroe de Billetera Tsirö perfectamente alineada */}
             <div className="p-4 rounded-3xl bg-primary text-primary-foreground flex items-center justify-between gap-3 shadow-sm">
@@ -2765,7 +2799,7 @@ export default function App() {
         {/* VISTA 4: PERFIL BENTO DE EXPLORADOR                       */}
         {/* ========================================================= */}
         {activeView === "perfil" && (
-          <main className="flex flex-col gap-4 mt-2 flex-1">
+          <main className="tab-view flex flex-col gap-4 mt-2 flex-1">
             <Card
               shadow="sm"
               className="border border-default-200 bg-content1 rounded-3xl"
@@ -2924,22 +2958,25 @@ export default function App() {
         />
       )}
 
-      {scanState === "done" && (
-        <ScanResultModal
-          ak={scannerAk}
-          progress={scannerRouteProgress}
-          balance={tsiro}
-          onBackToMap={handleResultBackToMap}
-          onKeepExploring={handleResultKeepExploring}
-        />
-      )}
+      <AnimatePresence>
+        {scanState === "done" && (
+          <ScanResultModal
+            key="scan-result"
+            ak={scannerAk}
+            progress={scannerRouteProgress}
+            balance={tsiro}
+            onBackToMap={handleResultBackToMap}
+            onKeepExploring={handleResultKeepExploring}
+          />
+        )}
+      </AnimatePresence>
 
       {/* BARRA INFERIOR FIJA: 5 ACCESOS CON LA RUNA AL CENTRO */}
       <nav
         aria-label="Navegación principal"
         className="fixed bottom-3 inset-x-0 z-30 px-3 pointer-events-none"
       >
-        <div className="max-w-md mx-auto pointer-events-auto h-16 bg-content1/95 backdrop-blur-md border border-default-300 shadow-lg rounded-full px-1.5 grid grid-cols-5 items-center">
+        <div className="max-w-md mx-auto pointer-events-auto h-16 glass-bar border-x border-b border-black/5 dark:border-white/10 shadow-lg rounded-full px-1.5 grid grid-cols-5 items-center">
           <NavButton
             label="Mapa"
             ariaLabel="Mapa general de parques"
@@ -2964,12 +3001,20 @@ export default function App() {
             <button
               type="button"
               onClick={handleNfcPress}
+              onPointerDown={() => setNfcBurst((count) => count + 1)}
               aria-label="Escanear piedra Àk por NFC"
               className={`w-[72px] h-[72px] -mt-7 rounded-full bg-secondary text-secondary-foreground border-4 border-background shadow-xl inline-flex items-center justify-center nfc-button ${
                 nearAkId ? "nfc-call" : ""
               }`}
             >
               <span className="rune-mark w-11 h-11" aria-hidden="true" />
+              {nfcBurst > 0 && (
+                <span key={nfcBurst} className="nfc-sparks" aria-hidden="true">
+                  {NFC_SPARK_ANGLES.map((angle) => (
+                    <i key={angle} style={{ "--spark-angle": `${angle}deg` }} />
+                  ))}
+                </span>
+              )}
             </button>
           </div>
 

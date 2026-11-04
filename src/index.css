@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Tokens de movimiento de transitions.dev */
+:root {
+  --duration-quick: 150ms;
+  --duration-fast: 250ms;
+  --duration-very-slow: 500ms;
+  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.36, 0.64, 1);
+  --page-slide-distance: 16px;
+  --nfc-glow: 20, 112, 79;
+}
+
+.dark {
+  --nfc-glow: 143, 166, 90;
+}
+
 /* Titulos finos con el ajuste optico de la tipografia de sistema */
 .font-display {
   font-weight: 300;
@@ -12,6 +27,78 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Micro-presion estilo iOS en todos los botones. Usa la propiedad scale para
+   convivir con los transform de posicion; el !important unifica los de HeroUI */
+button:not(.nfc-button) {
+  transition-property: scale, transform, color, background-color, border-color,
+    box-shadow, opacity !important;
+  transition-duration: var(--duration-quick) !important;
+  transition-timing-function: ease-out !important;
+}
+
+button:not(.nfc-button):not(:disabled):active,
+button[data-pressed="true"]:not(.nfc-button) {
+  scale: 0.95;
+}
+
+button[data-pressed="true"] {
+  transform: none !important;
+}
+
+/* Cambio de pestana con leve desplazamiento segun la direccion */
+@keyframes tabSlideIn {
+  from {
+    opacity: 0;
+    transform: translate3d(
+      calc(var(--tab-direction, 1) * var(--page-slide-distance)),
+      0,
+      0
+    );
+  }
+}
+
+.tab-view {
+  animation: tabSlideIn var(--duration-fast) var(--ease-smooth-out);
+}
+
+/* Hoja elastica para pre-ruta y navegacion */
+@keyframes sheetRise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 56px, 0);
+  }
+}
+
+.sheet-rise {
+  animation: sheetRise var(--duration-very-slow) var(--ease-bounce);
+}
+
+.cta-rise {
+  animation: sheetRise var(--duration-very-slow) var(--ease-bounce) 80ms backwards;
+}
+
+/* Cristal de la cabecera y la barra inferior */
+.glass-bar {
+  background: rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  backdrop-filter: blur(12px) saturate(180%);
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.dark .glass-bar {
+  background: rgba(21, 24, 15, 0.7);
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass-bar,
+  .dark .glass-bar {
+    background: hsl(var(--heroui-content1));
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
 .rune-mark {
   display: block;
   background-color: currentColor;
@@ -19,8 +106,54 @@ body {
   mask: url("/runa-akapp.svg") center / contain no-repeat;
 }
 
+/* Resplandor ambiental del boton central en reposo */
+@keyframes nfcAmbient {
+  0%,
+  100% {
+    box-shadow: 0 0 10px 1px rgba(var(--nfc-glow), 0.25);
+  }
+  50% {
+    box-shadow: 0 0 22px 6px rgba(var(--nfc-glow), 0.5);
+  }
+}
+
+.nfc-button:not(.nfc-call):not(:active) {
+  animation: nfcAmbient 3.2s ease-in-out infinite;
+}
+
+/* Particulas que salen de la runa al presionar */
+@keyframes nfcSpark {
+  0% {
+    opacity: 1;
+    transform: rotate(var(--spark-angle)) translateY(-30px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--spark-angle)) translateY(-58px) scale(0.3);
+  }
+}
+
+.nfc-sparks {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  pointer-events: none;
+}
+
+.nfc-sparks i {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px;
+  border-radius: 9999px;
+  background: rgb(var(--nfc-glow));
+  opacity: 0;
+  animation: nfcSpark var(--duration-very-slow) var(--ease-smooth-out);
+}
+
 /* Brillo verde del boton central al presionarlo */
 .nfc-button {
+  position: relative;
   transition:
     transform 0.15s ease-out,
     box-shadow 0.2s ease-out;
@@ -218,7 +351,27 @@ body {
   background: rgba(143, 166, 90, 0.28);
 }
 
+@keyframes viewFade {
+  from {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .tab-view,
+  .sheet-rise,
+  .cta-rise {
+    animation: viewFade var(--duration-quick) ease-out;
+  }
+
+  .nfc-button:not(.nfc-call):not(:active) {
+    animation: none;
+  }
+
+  .nfc-sparks {
+    display: none;
+  }
+
   .logo-awaken,
   .proximity-wave,
   .proximity-lock,
