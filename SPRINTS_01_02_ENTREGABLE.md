@@ -21,7 +21,7 @@
 2. **La Fricción**: Viven una experiencia de recorrido pasiva y desconectada: caminan dos horas por el sendero, toman fotos en el mirador y se marchan de inmediato sin interactuar con la cultura del lugar ni consumir en el comercio vecino.
 3. **La Consecuencia**: Se profundiza el "turismo de enclave", donde más del 85% del gasto del visitante no llega a las comunidades rurales que custodian las áreas protegidas, mientras los guardaparques lidian con visitantes que abandonan los senderos oficiales buscando novedades.
 4. **La Oportunidad**: El visitante contemporáneo busca experiencias interactivas y turismo con propósito; incentivar el respeto a los senderos oficiales mediante dinámicas digitales genera un puente directo de consumo hacia los pueblos vecinos.
-5. **La Propuesta (Akapp)**: Una aplicación móvil offline-first que convierte el sendero oficial en una búsqueda de **Piedras Àk** geolocalizadas, premiando cada tramo con **Tsirö** (granos de cacao ancestrales) canjeables exclusivamente en sodas, cafeterías, posadas y guías locales acreditados.
+5. **La Propuesta (Akapp)**: Una aplicación móvil offline-first que convierte el sendero oficial en una búsqueda de **Piedras Àk** geolocalizadas, premiando cada tramo con **puntos** (granos de cacao ancestrales) canjeables exclusivamente en sodas, cafeterías, posadas y guías locales acreditados.
 6. **La Transformación**: El caminante disfruta de una aventura enriquecida y cultural; el parque protege sus ecosistemas canalizando el flujo de visitantes; y los comercios rurales reciben una derrama económica directa y medible.
 
 ---
@@ -37,7 +37,7 @@
 
 ## 3. ¿Qué ganan los Negocios Locales (Sodas, Posadas y Guías Comunitarios)?
 
-* **Tráfico de clientes con alta intención de consumo**: Los turistas salen del sendero con saldo acumulado en Tsirö que solo pueden canjear en los comercios aliados alrededor del parque.
+* **Tráfico de clientes con alta intención de consumo**: Los turistas salen del sendero con saldo acumulado en puntos que solo pueden canjear en los comercios aliados alrededor del parque.
 * **Cero costo de adquisición de clientes (CAC)**: El comercio no paga comisiones adelantadas a intermediarios; solo valida un beneficio marginal (ej. 10% de descuento o café de cortesía) a cambio de clientes nuevos sentados a la mesa.
 * **Visibilidad digital georreferenciada**: Pequeñas sodas tradicionales y posadas familiares quedan destacadas en el mapa interactivo de Akapp.
 * **Formalización de Guías Locales Certificados**: Directorio directo con guías acreditados por el ICT, fortaleciendo el empleo local calificado y combatiendo la informalidad.
@@ -58,7 +58,7 @@
 ## 1. Flujo Principal (User Journey)
 1. **Llegada y Preparación (Off-grid)**: El usuario abre Akapp, consulta la ruta del parque y verifica el perfil de elevación, dificultad, clima y estado offline.
 2. **Caminata en Sendero**: El mapa interactivo muestra la posición en la ruta oficial. A medida que avanza, encuentra marcadores de las **Piedras Àk**.
-3. **Escaneo del Àk**: Al aproximarse al hito, pulsa "Escanear Àk". Se despliega la animación de revelado de luz líquida, vibración háptica y acumulación de **Tsirö**.
+3. **Escaneo del Àk**: Al aproximarse al hito, pulsa "Escanear Àk". Se despliega la animación de revelado de luz líquida, vibración háptica y acumulación de **puntos**.
 4. **Ficha de Ciencia Ciudadana**: Opcionalmente registra avistamientos de fauna (danta, quetzal, perezoso), fotografía del lugar o muestra acústica para el SINAC.
 5. **Canje en la Comunidad**: Al finalizar la caminata, acude a una de las sodas aliadas y canjea su cupón digital mostrando el código en caja.
 

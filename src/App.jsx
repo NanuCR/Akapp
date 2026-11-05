@@ -34,7 +34,7 @@ const ROUTES = [
     distance: "4,8 km",
     elevation: "+260 m",
     duration: "1h 45m",
-    totalTsiro: 50,
+    totalPoints: 50,
     center: [10.1894, -84.2309],
     zoom: 16,
     trailsSummary: "2 senderos conectados (Cráter Principal y Laguna Botos)",
@@ -71,7 +71,7 @@ const ROUTES = [
         name: "Caseta de Entrada",
         trail: "Sendero Cráter",
         km: "0,2 km",
-        tsiro: 10,
+        points: 10,
         xp: 80,
         lat: 10.18821,
         lng: -84.23305,
@@ -82,7 +82,7 @@ const ROUTES = [
         name: "Mirador Cráter Principal",
         trail: "Sendero Cráter",
         km: "1,4 km",
-        tsiro: 15,
+        points: 15,
         xp: 120,
         lat: 10.1902,
         lng: -84.2327,
@@ -93,7 +93,7 @@ const ROUTES = [
         name: "Bifurcación Bosque Nuboso",
         trail: "Sendero Laguna Botos",
         km: "2,9 km",
-        tsiro: 10,
+        points: 10,
         xp: 100,
         lat: 10.18997,
         lng: -84.23095,
@@ -104,7 +104,7 @@ const ROUTES = [
         name: "Mirador Laguna Botos",
         trail: "Sendero Laguna Botos",
         km: "4,8 km",
-        tsiro: 15,
+        points: 15,
         xp: 150,
         lat: 10.18914,
         lng: -84.22861,
@@ -153,7 +153,7 @@ const ROUTES = [
     distance: "6,2 km",
     elevation: "+380 m",
     duration: "2h 30m",
-    totalTsiro: 65,
+    totalPoints: 65,
     center: [10.7082, -84.9918],
     zoom: 14,
     trailsSummary:
@@ -189,7 +189,7 @@ const ROUTES = [
         name: "Catarata Río Celeste",
         trail: "Sendero Misterios del Tenorio",
         km: "1,8 km",
-        tsiro: 20,
+        points: 20,
         xp: 140,
         lat: 10.70486,
         lng: -84.99033,
@@ -200,7 +200,7 @@ const ROUTES = [
         name: "Mirador Laguna Azul",
         trail: "Sendero Misterios del Tenorio",
         km: "3,9 km",
-        tsiro: 20,
+        points: 20,
         xp: 150,
         lat: 10.70244,
         lng: -84.99352,
@@ -211,7 +211,7 @@ const ROUTES = [
         name: "Los Teñideros",
         trail: "Sendero Misterios del Tenorio",
         km: "6,2 km",
-        tsiro: 25,
+        points: 25,
         xp: 200,
         lat: 10.70057,
         lng: -84.99701,
@@ -242,7 +242,7 @@ const ROUTES = [
     distance: "4,0 km",
     elevation: "+190 m",
     duration: "1h 30m",
-    totalTsiro: 40,
+    totalPoints: 40,
     center: [9.7505, -83.7826],
     zoom: 16,
     trailsSummary:
@@ -271,7 +271,7 @@ const ROUTES = [
         name: "Inicio Sendero Oropéndola",
         trail: "Sendero Oropéndola",
         km: "1,5 km",
-        tsiro: 20,
+        points: 20,
         xp: 130,
         lat: 9.7498,
         lng: -83.78185,
@@ -282,7 +282,7 @@ const ROUTES = [
         name: "Mirador Río Grande de Orosi",
         trail: "Sendero Oropéndola",
         km: "4,0 km",
-        tsiro: 20,
+        points: 20,
         xp: 150,
         lat: 9.75126,
         lng: -83.78326,
@@ -1355,7 +1355,7 @@ function SettingToggle({ label, isOn, onChange }) {
   );
 }
 
-function AkStonesCarouselHub({ routeId, aks, totalTsiro, scannedAkIds }) {
+function AkStonesCarouselHub({ routeId, aks, totalPoints, scannedAkIds }) {
   const trackRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -1400,7 +1400,7 @@ function AkStonesCarouselHub({ routeId, aks, totalTsiro, scannedAkIds }) {
           </span>
         </div>
         <span className="text-xs text-default-500">
-          Hasta +{totalTsiro} pts
+          Hasta +{totalPoints} pts
         </span>
       </div>
 
@@ -1471,7 +1471,7 @@ function AkStonesCarouselHub({ routeId, aks, totalTsiro, scannedAkIds }) {
                 {ak.trail} · {ak.km}
               </span>
               <span className="text-xs text-default-500 tabular-nums">
-                +{ak.tsiro} pts · +{ak.xp} XP · {ak.lat.toFixed(4)},{" "}
+                +{ak.points} pts · +{ak.xp} XP · {ak.lat.toFixed(4)},{" "}
                 {ak.lng.toFixed(4)}
               </span>
             </div>
@@ -1885,7 +1885,7 @@ function ScanResultModal({ ak, progress, balance, onBackToMap }) {
         <div className="p-4 rounded-2xl bg-default-100 flex flex-col gap-2.5">
           <p className="text-center">
             <strong className="font-display text-4xl tabular-nums">
-              +{ak.tsiro}
+              +{ak.points}
             </strong>
             <span className="text-sm text-default-500 block mt-1">
               puntos añadidos a tu saldo
@@ -2295,7 +2295,7 @@ export default function App() {
   const [vibrateOnScan, setVibrateOnScan] = useState(true);
 
   // Saldo proporcional de Esteban (285 puntos acumulados tras varias caminatas)
-  const [tsiro, setTsiro] = useState(285);
+  const [points, setPoints] = useState(285);
   const [xp, setXp] = useState(1880);
   const [totalKm, setTotalKm] = useState(42.6);
   const [scannedAkIds, setScannedAkIds] = useState(["ak-01", "ak-02"]);
@@ -2495,7 +2495,7 @@ export default function App() {
   useEffect(() => () => clearTimeout(scanTimerRef.current), []);
 
   const finishScan = (ak) => {
-    setTsiro((prev) => prev + ak.tsiro);
+    setPoints((prev) => prev + ak.points);
     setXp((prev) => prev + ak.xp);
     setTotalKm((prev) => Number((prev + 1.2).toFixed(1)));
     setScannedAkIds((prev) => [...prev, ak.id]);
@@ -2551,7 +2551,7 @@ export default function App() {
 
 
   const handleResetDemo = () => {
-    setTsiro(285);
+    setPoints(285);
     setXp(1880);
     setTotalKm(42.6);
     setScannedAkIds(["ak-01", "ak-02"]);
@@ -2567,8 +2567,8 @@ export default function App() {
       setJustRedeemedCoupon(benefit);
       return;
     }
-    if (tsiro < benefit.cost) return;
-    setTsiro((prev) => prev - benefit.cost);
+    if (points < benefit.cost) return;
+    setPoints((prev) => prev - benefit.cost);
     setRedeemedIds((prev) => [...prev, benefit.id]);
     setJustRedeemedCoupon(benefit);
   };
@@ -2622,13 +2622,13 @@ export default function App() {
             <button
               type="button"
               onClick={() => setActiveView("cupones")}
-              aria-label={`Saldo de ${tsiro} puntos, abrir Cupones`}
+              aria-label={`Saldo de ${points} puntos, abrir Cupones`}
               className={`min-h-[44px] justify-self-start inline-flex items-center gap-1.5 text-sm font-semibold tabular-nums ${
                 isMapView ? mapGlassClass : ""
               }`}
             >
               <PointsIcon className="w-5 h-5 text-primary" />
-              <span>{tsiro.toLocaleString("en-US")} pts</span>
+              <span>{points.toLocaleString("en-US")} pts</span>
             </button>
 
             <button
@@ -2788,7 +2788,7 @@ export default function App() {
                           {route.condition} · ★ {route.rating}
                         </BadgePill>
                         <BadgePill tone="secondary">
-                          +{route.totalTsiro} pts
+                          +{route.totalPoints} pts
                         </BadgePill>
                       </div>
 
@@ -2905,7 +2905,7 @@ export default function App() {
             <AkStonesCarouselHub
               routeId={openedRoute.id}
               aks={openedRoute.aks}
-              totalTsiro={openedRoute.totalTsiro}
+              totalPoints={openedRoute.totalPoints}
               scannedAkIds={scannedAkIds}
             />
 
@@ -3282,7 +3282,7 @@ export default function App() {
                   {BENEFITS.length} establecimientos verificados cerca de parques
                 </span>
               </div>
-              <BadgePill tone="secondary">{tsiro} pts disponibles</BadgePill>
+              <BadgePill tone="secondary">{points} pts disponibles</BadgePill>
             </div>
 
             {/* BOLETO PERFORADO ACTIVO PARA CAJA */}
@@ -3407,10 +3407,10 @@ export default function App() {
             <div className="flex flex-col gap-4">
               {filteredCoupons.map((item) => {
                 const isRedeemed = redeemedIds.includes(item.id);
-                const canAfford = tsiro >= item.cost;
+                const canAfford = points >= item.cost;
                 const pct = Math.min(
                   100,
-                  Math.round((tsiro / item.cost) * 100)
+                  Math.round((points / item.cost) * 100)
                 );
 
                 return (
@@ -3480,8 +3480,8 @@ export default function App() {
                             ? "Cupón activo · Disponible sin conexión"
                             : canAfford
                             ? `${item.requirement} · Costo: ${item.cost} pts`
-                            : `Tienes ${tsiro}/${item.cost} pts (faltan ${
-                                item.cost - tsiro
+                            : `Tienes ${points}/${item.cost} pts (faltan ${
+                                item.cost - points
                               } pts)`}
                         </span>
                       </div>
@@ -3566,7 +3566,7 @@ export default function App() {
                       <h1 className="text-base font-semibold truncate">
                         {profile.name}
                       </h1>
-                      <BadgePill tone="secondaryFlat">{tsiro} pts</BadgePill>
+                      <BadgePill tone="secondaryFlat">{points} pts</BadgePill>
                     </div>
                     <p className="text-xs text-default-500 mt-0.5">
                       Rango: Baqueano de Montaña · Nivel {level}
@@ -3830,7 +3830,7 @@ export default function App() {
             key="scan-result"
             ak={scannerAk}
             progress={scannerRouteProgress}
-            balance={tsiro}
+            balance={points}
             onBackToMap={handleResultBackToMap}
           />
         )}
