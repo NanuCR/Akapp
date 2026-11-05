@@ -19,7 +19,6 @@ import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { PETROGLYPHS } from "./petroglyphs";
-import { createNaturalEarthTileLayer } from "./naturalEarthMap";
 
 const ROUTES = [
   {
@@ -1043,7 +1042,7 @@ function GeneralParksMap({ onOpenRoute, onOpenMerchant }) {
       setSelectedMerchantId(null);
     });
 
-    createNaturalEarthTileLayer({
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 18,
       attribution: "© OpenStreetMap",
     }).addTo(map);
