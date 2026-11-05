@@ -2823,7 +2823,7 @@ function OnboardingModal({ onClose }) {
           {/* Casilla No volver a mostrar */}
           <label className="min-h-[44px] px-3 py-2 rounded-2xl bg-default-100/80 flex items-center justify-between gap-3 cursor-pointer select-none">
             <span className="text-xs font-medium text-default-700">
-              No volver a mostrar al iniciar
+              No volver a mostrar
             </span>
             <input
               type="checkbox"
@@ -2981,14 +2981,8 @@ export default function App() {
   const [justRedeemedCoupon, setJustRedeemedCoupon] = useState(null);
   const [copiedCode, setCopiedCode] = useState(null);
 
-  // Estado de Tutorial Onboarding (gestionado con localStorage) y Fallback de Waze
-  const [isOnboardingOpen, setIsOnboardingOpen] = useState(() => {
-    try {
-      return window.localStorage.getItem(ONBOARDING_STORAGE_KEY) !== "true";
-    } catch {
-      return true;
-    }
-  });
+  // Estado de Tutorial Onboarding (se muestra siempre al cargar/refrescar la página para la presentación) y Fallback de Waze
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(true);
   const [wazeFallbackTarget, setWazeFallbackTarget] = useState(null);
 
   const handleNavigateWithWaze = useCallback((targetPark) => {
@@ -4380,13 +4374,22 @@ export default function App() {
                   </div>
                 </div>
 
-                <Button
-                  radius="full"
-                  className="w-full min-h-[44px] text-sm font-medium bg-primary/10 text-primary"
-                  onPress={() => setIsEditingProfile(true)}
-                >
-                  Editar perfil
-                </Button>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button
+                    radius="full"
+                    className="w-full min-h-[44px] text-sm font-medium bg-primary/10 text-primary"
+                    onPress={() => setIsEditingProfile(true)}
+                  >
+                    Editar perfil
+                  </Button>
+                  <Button
+                    radius="full"
+                    className="w-full min-h-[44px] text-sm font-medium bg-secondary/15 text-secondary"
+                    onPress={() => setIsOnboardingOpen(true)}
+                  >
+                    Ver tutorial
+                  </Button>
+                </div>
 
                 <div className="flex flex-col gap-1.5">
                   <div className="flex justify-between text-xs font-medium text-default-600 tabular-nums">
