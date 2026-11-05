@@ -294,49 +294,400 @@ const ROUTES = [
 const BENEFITS = [
   {
     id: "b1",
+    storeName: "Restaurante El Descanso",
+    parkName: "P.N. Volcán Poás",
+    region: "Alajuela / Poás",
+    businessType: "Restaurante típico",
+    location: "Poasito, 1 km antes de la entrada al Parque",
+    position: [10.1725, -84.2368],
     category: "gastronomia",
-    tag: "CAFETERÍA DE MONTAÑA",
-    discountBadge: "10% DCTO",
-    title: "10% de descuento en café chorreado y repostería",
-    place: "Soda Doña María · Sector Volcán Poás",
-    requirement: "Equivale a ~10 hitos escaneados",
+    tag: "RESTAURANTE TÍPICO",
+    discountBadge: "15% DCTO",
+    title: "15% de descuento en almuerzo típico a la leña o casado montañero",
+    place: "Restaurante El Descanso · Poasito, 1 km antes de la entrada al Parque",
+    requirement: "Presentar código al ordenar en mesa",
     cost: 150,
-    code: "AKAPP-CAFE-10",
+    code: "AKAPP-DESCANSO-15",
+    photo: "/merchants/descanso.jpg",
+    logoInitials: "ED",
+    logoBg: "#7C2D12",
+    logoGlyph: "flame",
   },
   {
     id: "b2",
+    storeName: "Restaurante y Cafetería Origen Poás",
+    parkName: "P.N. Volcán Poás",
+    region: "Alajuela / Alajuela",
+    businessType: "Cafetería de especialidad",
+    location: "50 m norte del cruce de Fraijanes",
+    position: [10.1412, -84.1945],
     category: "gastronomia",
-    tag: "COCINA LOCAL",
+    tag: "CAFETERÍA DE ESPECIALIDAD",
     discountBadge: "15% DCTO",
-    title: "15% de descuento en almuerzo tradicional",
-    place: "Restaurante El Trillo · Fraijanes",
-    requirement: "Equivale a ~20 hitos escaneados",
-    cost: 300,
-    code: "AKAPP-ALMUERZO-15",
+    title: "15% de descuento en café chorreado de altura y repostería artesanal",
+    place: "Restaurante y Cafetería Origen Poás · 50 m norte del cruce de Fraijanes",
+    requirement: "Válido en barra de especialidad y mesa",
+    cost: 120,
+    code: "AKAPP-ORIGEN-15",
+    photo: "/merchants/origen_poas.jpg",
+    logoInitials: "OP",
+    logoBg: "#451A03",
+    logoGlyph: "coffee",
   },
   {
     id: "b3",
-    category: "guias",
-    tag: "GUÍAS CERTIFICADOS",
+    storeName: "Soda y Cabinas El Parque",
+    parkName: "P.N. Volcán Tenorio",
+    region: "Alajuela / Guatuso",
+    businessType: "Soda y cabinas",
+    location: "Frente a entrada principal del Parque Nacional",
+    position: [10.7038, -84.9912],
+    category: "gastronomia",
+    tag: "SODA Y CABINAS",
     discountBadge: "15% DCTO",
-    title: "15% de descuento en tarifa de guía certificado",
-    place: "Asociación de Guías Locales · Poás y Tenorio",
-    requirement: "Aplicable al reservar guía en ruta",
-    cost: 450,
-    code: "AKAPP-GUIA-15",
+    title: "15% de descuento en casado tradicional o estadía en cabinas",
+    place: "Soda y Cabinas El Parque · Frente a entrada de P.N. Volcán Tenorio",
+    requirement: "A pasos del sendero Río Celeste",
+    cost: 140,
+    code: "AKAPP-ELPARQUE-15",
+    photo: "/merchants/soda_el_parque.jpg",
+    logoInitials: "EP",
+    logoBg: "#0F766E",
+    logoGlyph: "leaf",
   },
   {
     id: "b4",
+    storeName: "Cataratas Bijagua Lodge",
+    parkName: "P.N. Volcán Tenorio",
+    region: "Alajuela / Upala",
+    businessType: "Lodge y restaurante",
+    location: "Bijagua de Upala, faldas volcán Miravalles",
+    position: [10.7315, -85.0568],
     category: "hospedaje",
-    tag: "ECO-LODGE",
+    tag: "LODGE Y RESTAURANTE",
     discountBadge: "20% DCTO",
-    title: "20% en estadía de fin de semana (2 noches)",
-    place: "Posada Río Agrio · Bajos del Toro",
-    requirement: "Recompensa de temporada (80 hitos)",
-    cost: 1200,
-    code: "AKAPP-POSADA-20",
+    title: "20% de descuento en hospedaje de montaña o restaurante del lodge",
+    place: "Cataratas Bijagua Lodge · Bijagua de Upala, faldas volcán Miravalles",
+    requirement: "Válido en reserva directa con código",
+    cost: 320,
+    code: "AKAPP-BIJAGUA-20",
+    photo: "/merchants/bijagua_lodge.jpg",
+    logoInitials: "CB",
+    logoBg: "#115E59",
+    logoGlyph: "mountain",
+  },
+  {
+    id: "b5",
+    storeName: "Hacienda Orosí",
+    parkName: "P.N. Tapantí",
+    region: "Cartago / Paraíso",
+    businessType: "Restaurante y termales",
+    location: "Río Macho, carretera hacia Tapantí",
+    position: [9.7892, -83.8425],
+    category: "gastronomia",
+    tag: "RESTAURANTE Y TERMALES",
+    discountBadge: "15% DCTO",
+    title: "15% de descuento en aguas termales minerales y almuerzo de hacienda",
+    place: "Hacienda Orosí · Río Macho, carretera hacia Tapantí",
+    requirement: "Ideal al salir del sendero en Tapantí",
+    cost: 240,
+    code: "AKAPP-OROSI-15",
+    photo: "/merchants/hacienda_orosi.jpg",
+    logoInitials: "HO",
+    logoBg: "#9A3412",
+    logoGlyph: "waves",
+  },
+  {
+    id: "b6",
+    storeName: "Soda Guayabo",
+    parkName: "P.N. Tapantí",
+    region: "Cartago / Paraíso",
+    businessType: "Soda tradicional",
+    location: "Orosí centro, Cartago",
+    position: [9.7975, -83.8548],
+    category: "gastronomia",
+    tag: "SODA TRADICIONAL",
+    discountBadge: "10% DCTO",
+    title: "10% de descuento en desayuno típico u olla de carne casera",
+    place: "Soda Guayabo · Orosí centro, Cartago",
+    requirement: "Cocina criolla tradicional",
+    cost: 110,
+    code: "AKAPP-GUAYABO-10",
+    photo: "/merchants/soda_guayabo.jpg",
+    logoInitials: "SG",
+    logoBg: "#854D0E",
+    logoGlyph: "bowl",
+  },
+  {
+    id: "b7",
+    storeName: "Soda Hermanos Segura",
+    parkName: "P.N. Volcán Irazú",
+    region: "Cartago / Oreamuno",
+    businessType: "Soda típica",
+    location: "Ruta 219 camino al Volcán Irazú, Loyola",
+    position: [9.9285, -83.8682],
+    category: "gastronomia",
+    tag: "SODA TÍPICA",
+    discountBadge: "15% DCTO",
+    title: "15% de descuento en tortilla con queso, aguadulce y almuerzo",
+    place: "Soda Hermanos Segura · Ruta 219 camino al Volcán Irazú, Loyola",
+    requirement: "Parada tradicional en ruta al cráter",
+    cost: 130,
+    code: "AKAPP-SEGURA-15",
+    photo: "/merchants/hermanos_segura.jpg",
+    logoInitials: "HS",
+    logoBg: "#991B1B",
+    logoGlyph: "flame",
+  },
+  {
+    id: "b8",
+    storeName: "GrandPas Hotel & Restaurante",
+    parkName: "P.N. Volcán Irazú",
+    region: "Cartago / Oreamuno",
+    businessType: "Restaurante y hotel",
+    location: "Cot de Oreamuno, ruta al Volcán Irazú",
+    position: [9.8964, -83.8732],
+    category: "hospedaje",
+    tag: "RESTAURANTE Y HOTEL",
+    discountBadge: "15% DCTO",
+    title: "15% de descuento en restaurante familiar o tarifa de habitación",
+    place: "GrandPas Hotel & Restaurante · Cot de Oreamuno, ruta al Volcán Irazú",
+    requirement: "Válido en restaurante y estadía",
+    cost: 260,
+    code: "AKAPP-GRANDPAS-15",
+    photo: "/merchants/grandpas_hotel.jpg",
+    logoInitials: "GP",
+    logoBg: "#1E3A8A",
+    logoGlyph: "lodge",
+  },
+  {
+    id: "b9",
+    storeName: "Restaurante Que Rico Arenal",
+    parkName: "P.N. Volcán Arenal",
+    region: "Alajuela / San Carlos",
+    businessType: "Restaurante y hotel",
+    location: "Ruta hacia Parque Nacional, La Fortuna",
+    position: [10.4708, -84.6585],
+    category: "gastronomia",
+    tag: "RESTAURANTE Y HOTEL",
+    discountBadge: "15% DCTO",
+    title: "15% de descuento en platos a la parrilla, horno de leña y bebidas",
+    place: "Restaurante Que Rico Arenal · Ruta hacia Parque Nacional, La Fortuna",
+    requirement: "Frente a vistas del Volcán Arenal",
+    cost: 180,
+    code: "AKAPP-QUERICO-15",
+    photo: "/merchants/que_rico_arenal.jpg",
+    logoInitials: "QR",
+    logoBg: "#B45309",
+    logoGlyph: "mountain",
+  },
+  {
+    id: "b10",
+    storeName: "Arenal Springs (Rest. Ti-Cain)",
+    parkName: "P.N. Volcán Arenal",
+    region: "Alajuela / San Carlos",
+    businessType: "Resort y gastronomía",
+    location: "La Fortuna de San Carlos",
+    position: [10.4892, -84.6824],
+    category: "hospedaje",
+    tag: "RESORT Y GASTRONOMÍA",
+    discountBadge: "20% DCTO",
+    title: "20% de descuento en Restaurante Ti-Cain o pase de día termal",
+    place: "Arenal Springs (Rest. Ti-Cain) · La Fortuna de San Carlos",
+    requirement: "Gastronomía y termales frente al volcán",
+    cost: 380,
+    code: "AKAPP-TICAIN-20",
+    photo: "/merchants/arenal_springs.jpg",
+    logoInitials: "AS",
+    logoBg: "#065F46",
+    logoGlyph: "waves",
+  },
+  {
+    id: "b11",
+    storeName: "Hotel San Bada (Rest. Congo)",
+    parkName: "P.N. Manuel Antonio",
+    region: "Puntarenas / Quepos",
+    businessType: "Hotel y restaurante",
+    location: "Contiguo a entrada del Parque Nacional",
+    position: [9.3924, -84.1462],
+    category: "hospedaje",
+    tag: "HOTEL Y RESTAURANTE",
+    discountBadge: "15% DCTO",
+    title: "15% de descuento en almuerzo o cena en Restaurante Congo",
+    place: "Hotel San Bada (Rest. Congo) · Contiguo a entrada de Manuel Antonio",
+    requirement: "Al salir de los senderos del parque",
+    cost: 220,
+    code: "AKAPP-SANBADA-15",
+    photo: "/merchants/hotel_san_bada.jpg",
+    logoInitials: "SB",
+    logoBg: "#047857",
+    logoGlyph: "sun",
+  },
+  {
+    id: "b12",
+    storeName: "Hotel Playa Espadilla (Rest. Puerto Escondido)",
+    parkName: "P.N. Manuel Antonio",
+    region: "Puntarenas / Quepos",
+    businessType: "Hotel y restaurante",
+    location: "A 200 m de entrada de Manuel Antonio",
+    position: [9.3945, -84.1482],
+    category: "hospedaje",
+    tag: "HOTEL Y RESTAURANTE",
+    discountBadge: "15% DCTO",
+    title: "15% de descuento en mariscos y cocina costera en Rest. Puerto Escondido",
+    place: "Hotel Playa Espadilla · A 200 m de entrada de Manuel Antonio",
+    requirement: "A pasos de Playa Espadilla y el parque",
+    cost: 240,
+    code: "AKAPP-ESPADILLA-15",
+    photo: "/merchants/playa_espadilla.jpg",
+    logoInitials: "PE",
+    logoBg: "#0369A1",
+    logoGlyph: "waves",
+  },
+  {
+    id: "b13",
+    storeName: "Restaurante El Avión (Costa Verde)",
+    parkName: "P.N. Manuel Antonio",
+    region: "Puntarenas / Quepos",
+    businessType: "Restaurante icónico",
+    location: "Carretera principal hacia Manuel Antonio",
+    position: [9.4062, -84.1564],
+    category: "gastronomia",
+    tag: "RESTAURANTE ICÓNICO",
+    discountBadge: "15% DCTO",
+    title: "15% de descuento en platillos del mar y bebida al atardecer",
+    place: "Restaurante El Avión (Costa Verde) · Carretera principal hacia Manuel Antonio",
+    requirement: "En el histórico avión Fairchild C-123",
+    cost: 200,
+    code: "AKAPP-ELAVION-15",
+    photo: "/merchants/el_avion.jpg",
+    logoInitials: "EA",
+    logoBg: "#9A3412",
+    logoGlyph: "plane",
+  },
+  {
+    id: "b14",
+    storeName: "Buena Vista del Rincón (Rest. La Montaña)",
+    parkName: "P.N. Rincón de la Vieja",
+    region: "Guanacaste / Liberia",
+    businessType: "Eco-lodge y gastronomía",
+    location: "Faldas del Volcán Rincón de la Vieja",
+    position: [10.8145, -85.3685],
+    category: "hospedaje",
+    tag: "ECO-LODGE Y GASTRONOMÍA",
+    discountBadge: "20% DCTO",
+    title: "20% de descuento en Restaurante La Montaña o aguas termales del lodge",
+    place: "Buena Vista del Rincón · Faldas del Volcán Rincón de la Vieja",
+    requirement: "Experiencia eco-termal en el bosque",
+    cost: 320,
+    code: "AKAPP-BUENAVISTA-20",
+    photo: "/merchants/buena_vista_rincon.jpg",
+    logoInitials: "BV",
+    logoBg: "#15803D",
+    logoGlyph: "leaf",
+  },
+  {
+    id: "b15",
+    storeName: "Hotel Las Espuelas",
+    parkName: "P.N. Rincón de la Vieja",
+    region: "Guanacaste / Liberia",
+    businessType: "Hotel y restaurante",
+    location: "2 km al sur de la entrada a Liberia",
+    position: [10.6112, -85.4295],
+    category: "hospedaje",
+    tag: "HOTEL Y RESTAURANTE",
+    discountBadge: "15% DCTO",
+    title: "15% de descuento en restaurante guanacasteco o tarifa de hospedaje",
+    place: "Hotel Las Espuelas · 2 km al sur de la entrada a Liberia",
+    requirement: "Tradición sabanera en Guanacaste",
+    cost: 260,
+    code: "AKAPP-ESPUELAS-15",
+    photo: "/merchants/las_espuelas.jpg",
+    logoInitials: "LE",
+    logoBg: "#78350F",
+    logoGlyph: "sun",
+  },
+  {
+    id: "b16",
+    storeName: "Hotel El Pelícano (Rest. Doña Elsa)",
+    parkName: "P.N. Chirripó",
+    region: "San José / Pérez Zeledón",
+    businessType: "Hotel de montaña",
+    location: "San Gerardo de Rivas, frente a oficina SINAC",
+    position: [9.4692, -83.5938],
+    category: "hospedaje",
+    tag: "HOTEL DE MONTAÑA",
+    discountBadge: "15% DCTO",
+    title: "15% de descuento en trucha fresca en Rest. Doña Elsa o estadía",
+    place: "Hotel El Pelícano (Rest. Doña Elsa) · San Gerardo de Rivas, frente a SINAC",
+    requirement: "Punto de encuentro oficial de senderistas",
+    cost: 210,
+    code: "AKAPP-PELICANO-15",
+    photo: "/merchants/el_pelicano.jpg",
+    logoInitials: "HP",
+    logoBg: "#3F6212",
+    logoGlyph: "mountain",
   },
 ];
+
+function MerchantLogoBadge({ item, className = "" }) {
+  const renderGlyph = () => {
+    switch (item.logoGlyph) {
+      case "coffee":
+        return (
+          <path d="M5 7h9v5a4.5 4.5 0 0 1-9 0V7zm9 1h1.5a2 2 0 0 1 0 4H14M4 16.5h11" />
+        );
+      case "plane":
+        return <path d="M10 3l1.5 5 5.5 2-5.5 1.5L10 17l-1.5-5.5L3 10l5.5-2L10 3z" />;
+      case "waves":
+        return (
+          <path d="M3 9c2-1.5 4-1.5 6 0s4 1.5 6 0M3 13.5c2-1.5 4-1.5 6 0s4 1.5 6 0" />
+        );
+      case "mountain":
+        return <path d="M3 15.5l4.5-7.5 3.2 4.8 2.3-3.3 4 6H3z" />;
+      case "sun":
+        return (
+          <>
+            <circle cx="10" cy="10" r="3.5" />
+            <path d="M10 3.5v1.5M10 15v1.5M3.5 10H5M15 10h1.5" />
+          </>
+        );
+      case "lodge":
+        return <path d="M3 10l7-5.5L17 10v6H3v-6zm5 6v-4h4v4" />;
+      case "bowl":
+        return <path d="M3.5 9.5h13a6.5 6.5 0 0 1-13 0zm2.5 6.5h8" />;
+      case "leaf":
+        return <path d="M15.5 4.5C9 4.5 5 8.5 5 15c6.5 0 10.5-4 10.5-10.5zM5 15l5-5" />;
+      default:
+        return (
+          <path d="M10 3.5c2.5 3 4.5 5.2 4.5 7.8a4.5 4.5 0 1 1-9 0c0-2.6 2-4.8 4.5-7.8z" />
+        );
+    }
+  };
+
+  return (
+    <div
+      style={{ backgroundColor: item.logoBg || "#14532D" }}
+      className={`w-11 h-11 rounded-2xl border border-white/30 shadow-md flex flex-col items-center justify-center text-white shrink-0 select-none ${className}`}
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 20 20"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="w-4 h-4 opacity-95 -mb-0.5"
+      >
+        {renderGlyph()}
+      </svg>
+      <span className="text-[10px] font-bold tracking-wider leading-none mt-0.5">
+        {item.logoInitials}
+      </span>
+    </div>
+  );
+}
 
 const WEEKLY_KM = [
   { day: "L", km: 3.2 },
@@ -638,6 +989,7 @@ function TrailMiniMap({
 }
 
 const PARK_DOT_BLUE = "#1D8CF0";
+const MERCHANT_DOT_COLOR = "#EA580C";
 
 // Red de parques del directorio de comercios aliados. Coordenadas aproximadas
 const PARK_NETWORK = [
@@ -656,17 +1008,21 @@ const PARK_NETWORK = [
   { id: "braulio", name: "Parque Nacional Braulio Carrillo", area: "Heredia", position: [10.165, -83.953] },
 ];
 
-// Mapa general a pantalla completa con la red de parques como puntos interactivos
-function GeneralParksMap({ onOpenRoute }) {
+// Mapa general a pantalla completa con la red de parques y comercios aliados
+function GeneralParksMap({ onOpenRoute, onOpenMerchant }) {
   const containerRef = useRef(null);
   const dotsRef = useRef({});
+  const merchantDotsRef = useRef({});
   const [selectedParkId, setSelectedParkId] = useState(null);
+  const [selectedMerchantId, setSelectedMerchantId] = useState(null);
 
   const selectedPark =
     PARK_NETWORK.find((park) => park.id === selectedParkId) || null;
   const selectedRoute = selectedPark?.routeId
     ? ROUTES.find((route) => route.id === selectedPark.routeId)
     : null;
+  const selectedMerchant =
+    BENEFITS.find((b) => b.id === selectedMerchantId) || null;
 
   useEffect(() => {
     const map = L.map(containerRef.current, {
@@ -680,7 +1036,10 @@ function GeneralParksMap({ onOpenRoute }) {
     });
     map.setMinZoom(map.getZoom() - 0.5);
     map.setMaxBounds(L.latLngBounds(COSTA_RICA_BOUNDS).pad(0.6));
-    map.on("click", () => setSelectedParkId(null));
+    map.on("click", () => {
+      setSelectedParkId(null);
+      setSelectedMerchantId(null);
+    });
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 18,
@@ -691,6 +1050,7 @@ function GeneralParksMap({ onOpenRoute }) {
       dotsRef.current[park.id] = L.marker(park.position, {
         title: park.name,
         alt: park.name,
+        zIndexOffset: 200,
         icon: L.divIcon({
           className: "park-dot-pin",
           html: `<span class="park-dot" style="background:${PARK_DOT_BLUE}"></span>`,
@@ -699,8 +1059,30 @@ function GeneralParksMap({ onOpenRoute }) {
         }),
       })
         .on("click", () => {
+          setSelectedMerchantId(null);
           setSelectedParkId(park.id);
           map.panTo(park.position);
+        })
+        .addTo(map);
+    });
+
+    BENEFITS.forEach((merchant) => {
+      if (!merchant.position) return;
+      merchantDotsRef.current[merchant.id] = L.marker(merchant.position, {
+        title: `${merchant.storeName} (${merchant.parkName})`,
+        alt: merchant.storeName,
+        zIndexOffset: 100,
+        icon: L.divIcon({
+          className: "merchant-dot-pin",
+          html: `<span class="merchant-dot" style="background:${MERCHANT_DOT_COLOR}"></span>`,
+          iconSize: [32, 32],
+          iconAnchor: [16, 16],
+        }),
+      })
+        .on("click", () => {
+          setSelectedParkId(null);
+          setSelectedMerchantId(merchant.id);
+          map.panTo(merchant.position);
         })
         .addTo(map);
     });
@@ -717,18 +1099,46 @@ function GeneralParksMap({ onOpenRoute }) {
   useEffect(() => {
     PARK_NETWORK.forEach((park) => {
       dotsRef.current[park.id]
-        .getElement()
+        ?.getElement()
         ?.classList.toggle("is-selected", park.id === selectedParkId);
     });
   }, [selectedParkId]);
+
+  useEffect(() => {
+    BENEFITS.forEach((merchant) => {
+      merchantDotsRef.current[merchant.id]
+        ?.getElement()
+        ?.classList.toggle("is-selected", merchant.id === selectedMerchantId);
+    });
+  }, [selectedMerchantId]);
 
   return (
     <div className="absolute inset-0">
       <div
         ref={containerRef}
         className="park-map absolute inset-0 z-0"
-        aria-label="Mapa de parques nacionales de Costa Rica"
+        aria-label="Mapa de parques nacionales y comercios aliados de Costa Rica"
       />
+
+      {/* Leyenda minimalista de puntos en el mapa */}
+      <div className="absolute z-10 top-16 left-4 pointer-events-none">
+        <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-full bg-content1/90 backdrop-blur-md border border-default-200 shadow-sm text-[11px] font-medium text-foreground">
+          <span className="inline-flex items-center gap-1.5">
+            <span
+              className="w-3 h-3 rounded-full border border-white shadow-sm shrink-0"
+              style={{ backgroundColor: PARK_DOT_BLUE }}
+            />
+            Parques ({PARK_NETWORK.length})
+          </span>
+          <span className="inline-flex items-center gap-1.5">
+            <span
+              className="w-2.5 h-2.5 rounded-full border border-white shadow-sm shrink-0"
+              style={{ backgroundColor: MERCHANT_DOT_COLOR }}
+            />
+            Comercios ({BENEFITS.length})
+          </span>
+        </div>
+      </div>
 
       {selectedPark && (
         <div className="absolute z-10 inset-x-0 bottom-24 px-4 pointer-events-none">
@@ -755,6 +1165,41 @@ function GeneralParksMap({ onOpenRoute }) {
                 onPress={() => onOpenRoute(selectedRoute)}
               >
                 Ver senderos
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {selectedMerchant && (
+        <div className="absolute z-10 inset-x-0 bottom-24 px-4 pointer-events-none">
+          <div
+            role="status"
+            className="scan-result-card pointer-events-auto max-w-md mx-auto p-3.5 rounded-2xl bg-content1/95 backdrop-blur-md shadow-lg flex items-center justify-between gap-3 border border-default-200"
+          >
+            <div className="flex items-center gap-3 min-w-0">
+              <MerchantLogoBadge item={selectedMerchant} />
+              <div className="min-w-0">
+                <strong className="text-sm font-semibold block truncate">
+                  {selectedMerchant.storeName}
+                </strong>
+                <span className="text-xs text-default-500 block truncate">
+                  {selectedMerchant.parkName} · {selectedMerchant.businessType}
+                </span>
+                <span className="text-xs font-semibold text-secondary block">
+                  {selectedMerchant.discountBadge} · {selectedMerchant.cost} pts
+                </span>
+              </div>
+            </div>
+            {onOpenMerchant && (
+              <Button
+                size="sm"
+                radius="full"
+                color="primary"
+                className="min-h-[40px] text-xs font-medium px-3.5 shrink-0"
+                onPress={() => onOpenMerchant(selectedMerchant)}
+              >
+                Ver cupón
               </Button>
             )}
           </div>
@@ -1880,6 +2325,7 @@ export default function App() {
 
   // Estado de Cupones Separados y Pase Perforado
   const [couponCategory, setCouponCategory] = useState("todos");
+  const [couponQuery, setCouponQuery] = useState("");
   const [redeemedIds, setRedeemedIds] = useState([]);
   const [justRedeemedCoupon, setJustRedeemedCoupon] = useState(null);
   const [copiedCode, setCopiedCode] = useState(null);
@@ -2016,6 +2462,12 @@ export default function App() {
     setActiveView("explorar");
   }, []);
 
+  const handleOpenMerchantFromMap = useCallback((merchant) => {
+    setCouponCategory("todos");
+    setCouponQuery(merchant.storeName);
+    setActiveView("cupones");
+  }, []);
+
   const goToExplore = () => {
     setOpenedRouteId(null);
     setNavigatingRouteId(null);
@@ -2125,12 +2577,22 @@ export default function App() {
   };
 
   const filteredCoupons = useMemo(() => {
+    const clean = couponQuery.trim().toLowerCase();
     return BENEFITS.filter((b) => {
-      if (couponCategory === "canjeados") return redeemedIds.includes(b.id);
-      if (couponCategory === "todos") return true;
-      return b.category === couponCategory;
+      const matchesCat =
+        couponCategory === "canjeados"
+          ? redeemedIds.includes(b.id)
+          : couponCategory === "todos"
+          ? true
+          : b.category === couponCategory;
+
+      if (!matchesCat) return false;
+      if (!clean) return true;
+      return `${b.storeName} ${b.parkName} ${b.region} ${b.businessType} ${b.location} ${b.title}`
+        .toLowerCase()
+        .includes(clean);
     });
-  }, [couponCategory, redeemedIds]);
+  }, [couponCategory, couponQuery, redeemedIds]);
 
   const redeemedCouponsList = useMemo(
     () => BENEFITS.filter((b) => redeemedIds.includes(b.id)),
@@ -2650,7 +3112,10 @@ export default function App() {
         {/* ========================================================= */}
         {activeView === "mapa" && (
           <main className="tab-view fixed inset-0 z-0">
-            <GeneralParksMap onOpenRoute={handleOpenRouteFromMap} />
+            <GeneralParksMap
+              onOpenRoute={handleOpenRouteFromMap}
+              onOpenMerchant={handleOpenMerchantFromMap}
+            />
           </main>
         )}
 
@@ -2731,27 +3196,86 @@ export default function App() {
         )}
 
         {/* ========================================================= */}
-        {/* VISTA 3: BILLETERA DE CUPONES CON BOLETOS PERFORADOS      */}
+        {/* VISTA 3: DIRECTORIO DE COMERCIOS Y CUPONES ESTILO PARQUES */}
         {/* ========================================================= */}
         {activeView === "cupones" && (
-          <main className="tab-view flex flex-col gap-4 mt-2 flex-1">
-            
-            {/* Tarjeta Héroe de Billetera de puntos perfectamente alineada */}
-            <div className="p-4 rounded-3xl bg-primary text-primary-foreground flex items-center justify-between gap-3 shadow-sm">
-              <div>
-                <h1 className="text-xs font-medium opacity-90">
-                  Cupones canjeables
-                </h1>
-                <div className="flex items-baseline gap-2 mt-0.5">
-                  <strong className="font-display text-2xl tabular-nums leading-none">
-                    {tsiro} pts
-                  </strong>
-                  <span className="text-xs opacity-80">disponibles</span>
-                </div>
+          <main className="tab-view flex flex-col gap-4 mt-1 flex-1">
+            {/* Barra de búsqueda flotante estilo cápsula (igual que Explorar) */}
+            <div className="flex flex-col gap-2.5">
+              <Input
+                type="search"
+                size="md"
+                radius="full"
+                variant="bordered"
+                value={couponQuery}
+                onValueChange={setCouponQuery}
+                placeholder="Buscar comercio, parque o ubicación..."
+                aria-label="Buscar comercio, parque o ubicación"
+                endContent={
+                  couponQuery ? (
+                    <button
+                      type="button"
+                      onClick={() => setCouponQuery("")}
+                      className="text-xs font-medium text-default-500 px-2 py-1 rounded-full hover:bg-default-100"
+                    >
+                      Limpiar
+                    </button>
+                  ) : null
+                }
+                classNames={{
+                  inputWrapper:
+                    "bg-content1 min-h-[48px] border-default-300 shadow-sm px-4",
+                  input: "text-sm !bg-transparent",
+                }}
+              />
+
+              {/* Barra de Categorías de Comercios */}
+              <div
+                role="tablist"
+                aria-label="Categorías de comercios aliados"
+                className="grid grid-cols-4 gap-1 p-1 rounded-2xl bg-content1 border border-default-200"
+              >
+                {[
+                  { key: "todos", label: `Todos (${BENEFITS.length})` },
+                  { key: "gastronomia", label: "Restaurantes" },
+                  { key: "hospedaje", label: "Hoteles / Lodges" },
+                  {
+                    key: "canjeados",
+                    label: `Códigos (${redeemedCouponsList.length})`,
+                  },
+                ].map((tab) => {
+                  const active = couponCategory === tab.key;
+                  return (
+                    <button
+                      key={tab.key}
+                      type="button"
+                      role="tab"
+                      aria-selected={active}
+                      onClick={() => setCouponCategory(tab.key)}
+                      className={`min-h-[40px] px-1 rounded-xl text-[11px] font-semibold flex items-center justify-center text-center whitespace-nowrap transition-colors ${
+                        active
+                          ? "bg-primary text-primary-foreground shadow-sm"
+                          : "text-default-600 hover:bg-default-100"
+                      }`}
+                    >
+                      {tab.label}
+                    </button>
+                  );
+                })}
               </div>
-              <BadgePill tone="secondary">
-                {redeemedCouponsList.length} activos
-              </BadgePill>
+            </div>
+
+            {/* Cabecera alineada al estilo de Explorar Parques */}
+            <div className="flex items-center justify-between gap-2 px-1">
+              <div className="min-w-0">
+                <h1 className="font-display text-lg tracking-tight">
+                  Comercios aliados
+                </h1>
+                <span className="text-xs text-default-500 block">
+                  {BENEFITS.length} establecimientos verificados cerca de parques
+                </span>
+              </div>
+              <BadgePill tone="secondary">{tsiro} pts disponibles</BadgePill>
             </div>
 
             {/* BOLETO PERFORADO ACTIVO PARA CAJA */}
@@ -2776,11 +3300,16 @@ export default function App() {
                     </Button>
                   </div>
 
-                  <div>
-                    <p className="text-sm font-semibold">{justRedeemedCoupon.title}</p>
-                    <p className="text-xs text-default-500">
-                      {justRedeemedCoupon.place}
-                    </p>
+                  <div className="flex items-center gap-3">
+                    <MerchantLogoBadge item={justRedeemedCoupon} />
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold truncate">
+                        {justRedeemedCoupon.storeName}
+                      </p>
+                      <p className="text-xs text-default-500">
+                        {justRedeemedCoupon.title}
+                      </p>
+                    </div>
                   </div>
 
                   <div className="border-t-2 border-dashed border-default-200 my-1" />
@@ -2823,7 +3352,7 @@ export default function App() {
                       <rect x="206" y="2" width="4" height="28" fill="currentColor" />
                     </svg>
                     <span className="text-xs text-default-500">
-                      Válido sin conexión · Comercio local afiliado
+                      Válido sin conexión · {justRedeemedCoupon.parkName}
                     </span>
                   </div>
 
@@ -2843,62 +3372,32 @@ export default function App() {
               </div>
             )}
 
-            {/* Barra de Categorías de Cupones en una sola línea centrada */}
-            <div
-              role="tablist"
-              aria-label="Categorías de cupones"
-              className="grid grid-cols-5 gap-1 p-1 rounded-2xl bg-content1 border border-default-200"
-            >
-              {[
-                { key: "todos", label: "Todos" },
-                { key: "gastronomia", label: "Comida" },
-                { key: "guias", label: "Guías" },
-                { key: "hospedaje", label: "Estadías" },
-                {
-                  key: "canjeados",
-                  label: `Códigos (${redeemedCouponsList.length})`,
-                },
-              ].map((tab) => {
-                const active = couponCategory === tab.key;
-                return (
-                  <button
-                    key={tab.key}
-                    type="button"
-                    role="tab"
-                    aria-selected={active}
-                    onClick={() => setCouponCategory(tab.key)}
-                    className={`min-h-[40px] px-1 rounded-xl text-[11px] font-semibold flex items-center justify-center text-center whitespace-nowrap transition-colors ${
-                      active
-                        ? "bg-primary text-primary-foreground shadow-sm"
-                        : "text-default-600 hover:bg-default-100"
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                );
-              })}
-            </div>
-
             {filteredCoupons.length === 0 && (
               <Card shadow="none" className="border border-default-200 bg-content1 rounded-2xl">
                 <CardBody className="py-7 px-4 text-center flex flex-col items-center gap-3">
                   <p className="text-sm font-medium">
-                    Aún no has reclamado ningún cupón
+                    {couponCategory === "canjeados"
+                      ? "Aún no has reclamado ningún cupón"
+                      : "No encontramos comercios con ese filtro"}
                   </p>
                   <Button
                     size="sm"
                     radius="full"
                     variant="flat"
                     className="min-h-[44px] font-medium px-4"
-                    onPress={() => setCouponCategory("todos")}
+                    onPress={() => {
+                      setCouponCategory("todos");
+                      setCouponQuery("");
+                    }}
                   >
-                    Ver cupones disponibles
+                    Ver todos los comercios ({BENEFITS.length})
                   </Button>
                 </CardBody>
               </Card>
             )}
 
-            <div className="flex flex-col gap-3">
+            {/* Tarjetas de Comercios con estética de Parques Nacionales */}
+            <div className="flex flex-col gap-4">
               {filteredCoupons.map((item) => {
                 const isRedeemed = redeemedIds.includes(item.id);
                 const canAfford = tsiro >= item.cost;
@@ -2910,40 +3409,72 @@ export default function App() {
                 return (
                   <Card
                     key={item.id}
-                    shadow="none"
+                    shadow="sm"
                     className={`border bg-content1 rounded-3xl overflow-hidden ${
                       isRedeemed ? "border-secondary" : "border-default-200"
                     }`}
                   >
-                    <CardBody className="p-4 flex flex-col gap-2.5">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="text-[11px] font-semibold tracking-wider uppercase text-secondary">
-                          {item.tag} · {item.discountBadge}
-                        </span>
-                        <BadgePill
-                          tone={
-                            isRedeemed || canAfford
-                              ? "secondaryFlat"
-                              : "neutral"
-                          }
-                        >
-                          {item.cost} pts
+                    {/* Imagen del establecimiento con gradiente, píldoras y logo */}
+                    <div className="w-full h-48 relative overflow-hidden flex flex-col justify-between p-3.5 bg-default-200">
+                      <img
+                        src={item.photo}
+                        alt={item.storeName}
+                        loading="lazy"
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
+
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          background:
+                            "linear-gradient(to bottom, rgba(10, 22, 16, 0.54) 0%, rgba(10, 22, 16, 0.18) 45%, rgba(10, 22, 16, 0.94) 100%)",
+                        }}
+                      />
+
+                      {/* Píldoras superiores estilo Parque */}
+                      <div className="relative z-10 flex items-center justify-between gap-2">
+                        <BadgePill tone="darkGlass">
+                          {item.parkName} · {item.businessType}
+                        </BadgePill>
+                        <BadgePill tone="secondary">
+                          {item.discountBadge} · {item.cost} pts
                         </BadgePill>
                       </div>
 
+                      {/* Logo del negocio y nombre sobre la fotografía */}
+                      <div className="relative z-10 flex items-center gap-3 text-white text-left">
+                        <MerchantLogoBadge item={item} />
+                        <div className="min-w-0">
+                          <span className="text-xs font-medium text-white/85 block truncate">
+                            {item.region} · {item.location}
+                          </span>
+                          <h2 className="font-display text-lg leading-snug truncate">
+                            {item.storeName}
+                          </h2>
+                        </div>
+                      </div>
+                    </div>
+
+                    <CardBody className="p-4 flex flex-col gap-3">
                       <div>
-                        <h2 className="text-sm font-semibold leading-snug">
+                        <p className="text-sm font-medium text-foreground leading-relaxed">
                           {item.title}
-                        </h2>
-                        <p className="text-xs text-default-500 mt-0.5">
-                          {item.place}
                         </p>
+                        <span className="text-xs text-default-500 block mt-0.5">
+                          {isRedeemed
+                            ? "Cupón activo · Disponible sin conexión"
+                            : canAfford
+                            ? item.requirement
+                            : `Tienes ${tsiro}/${item.cost} pts (faltan ${
+                                item.cost - tsiro
+                              } pts)`}
+                        </span>
                       </div>
 
                       {isRedeemed && (
                         <div className="p-3 rounded-2xl bg-default-100 border border-dashed border-secondary flex items-center justify-between gap-2">
                           <span className="text-xs font-medium text-default-600">
-                            Tu código de canje:
+                            Código de canje:
                           </span>
                           <strong className="font-mono text-sm font-semibold tracking-wider text-secondary">
                             {item.code}
@@ -2953,7 +3484,7 @@ export default function App() {
 
                       {!isRedeemed && !canAfford && (
                         <Progress
-                          aria-label={`Progreso para ${item.title}`}
+                          aria-label={`Progreso para ${item.storeName}`}
                           value={pct}
                           color="secondary"
                           size="sm"
@@ -2961,50 +3492,35 @@ export default function App() {
                         />
                       )}
 
-                      <div className="border-t border-dashed border-default-200 pt-2.5 mt-0.5 flex items-center justify-between gap-2">
-                        <span className="text-xs text-default-500">
-                          {isRedeemed
-                            ? "Reclamado · Disponible offline"
-                            : canAfford
-                            ? item.requirement
-                            : `Tienes ${tsiro}/${item.cost} pts (faltan ${
-                                item.cost - tsiro
-                              })`}
-                        </span>
-
-                        {isRedeemed ? (
-                          <Button
-                            size="sm"
-                            radius="full"
-                            variant="flat"
-                            color="secondary"
-                            className="min-h-[44px] font-medium text-xs px-4 shrink-0"
-                            onPress={() => setJustRedeemedCoupon(item)}
-                          >
-                            Mostrar en grande
-                          </Button>
-                        ) : canAfford ? (
-                          <Button
-                            size="sm"
-                            radius="full"
-                            color="primary"
-                            className="min-h-[44px] font-medium text-xs px-4 shrink-0"
-                            onPress={() => handleRedeemCoupon(item)}
-                          >
-                            Canjear ahora
-                          </Button>
-                        ) : (
-                          <Button
-                            size="sm"
-                            radius="full"
-                            variant="flat"
-                            className="min-h-[44px] font-medium text-xs px-4 shrink-0"
-                            onPress={handleNfcPress}
-                          >
-                            Escanear Àk
-                          </Button>
-                        )}
-                      </div>
+                      {isRedeemed ? (
+                        <Button
+                          radius="full"
+                          color="secondary"
+                          variant="flat"
+                          className="w-full min-h-[50px] text-sm font-semibold"
+                          onPress={() => setJustRedeemedCoupon(item)}
+                        >
+                          Mostrar cupón en pantalla
+                        </Button>
+                      ) : canAfford ? (
+                        <Button
+                          radius="full"
+                          color="primary"
+                          className="w-full min-h-[50px] text-sm font-semibold"
+                          onPress={() => handleRedeemCoupon(item)}
+                        >
+                          Canjear cupón ({item.cost} pts)
+                        </Button>
+                      ) : (
+                        <Button
+                          radius="full"
+                          variant="flat"
+                          className="w-full min-h-[50px] text-sm font-semibold"
+                          onPress={handleNfcPress}
+                        >
+                          Escanear Àk para sumar puntos
+                        </Button>
+                      )}
                     </CardBody>
                   </Card>
                 );

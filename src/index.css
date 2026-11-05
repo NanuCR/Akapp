@@ -453,6 +453,28 @@ button[data-pressed="true"] {
     0 0 0 6px rgba(29, 140, 240, 0.22);
 }
 
+.merchant-dot-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.merchant-dot {
+  width: 10px;
+  height: 10px;
+  border: 2px solid #ffffff;
+  border-radius: 9999px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease-out;
+}
+
+.merchant-dot-pin.is-selected .merchant-dot {
+  transform: scale(1.6);
+  box-shadow:
+    0 1px 5px rgba(0, 0, 0, 0.45),
+    0 0 0 5px rgba(234, 88, 12, 0.28);
+}
+
 /* OpenStreetMap clasico sin filtros, tambien en modo noche, para leerlo bien */
 .park-map {
   background: #eef0ef;
