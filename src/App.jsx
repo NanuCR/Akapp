@@ -1186,9 +1186,14 @@ function GeneralParksMap({ onOpenRoute, onOpenMerchant }) {
                 <span className="text-xs text-default-500 block truncate">
                   {selectedMerchant.parkName} · {selectedMerchant.businessType}
                 </span>
-                <span className="text-xs font-semibold text-secondary block">
-                  {selectedMerchant.discountBadge} · {selectedMerchant.cost} pts
-                </span>
+                <div className="flex items-center gap-1.5 mt-1">
+                  <span className="inline-flex items-center justify-center rounded-full bg-[#EA580C] text-white text-[10px] font-bold px-2 h-5 leading-none whitespace-nowrap">
+                    {selectedMerchant.discountBadge}
+                  </span>
+                  <span className="inline-flex items-center justify-center rounded-full bg-secondary text-secondary-foreground text-[10px] font-bold px-2 h-5 leading-none whitespace-nowrap tabular-nums">
+                    {selectedMerchant.cost} pts
+                  </span>
+                </div>
               </div>
             </div>
             {onOpenMerchant && (
@@ -3431,22 +3436,27 @@ export default function App() {
                         }}
                       />
 
-                      {/* Píldoras superiores estilo Parque */}
-                      <div className="relative z-10 flex items-center justify-between gap-2">
-                        <BadgePill tone="darkGlass">
-                          {item.parkName} · {item.businessType}
-                        </BadgePill>
-                        <BadgePill tone="secondary">
-                          {item.discountBadge} · {item.cost} pts
-                        </BadgePill>
+                      {/* Píldoras superiores estilo Parque perfectamente alineadas */}
+                      <div className="relative z-10 flex items-center justify-between gap-2 w-full">
+                        <span className="inline-flex items-center min-w-0 max-w-[52%] truncate leading-none font-semibold text-xs px-3 h-7 rounded-full bg-black/65 text-white border border-white/20 backdrop-blur-md select-none">
+                          <span className="truncate">{item.parkName}</span>
+                        </span>
+                        <div className="flex items-center gap-1.5 shrink-0">
+                          <span className="inline-flex items-center justify-center text-center leading-none font-bold text-[11px] px-2.5 h-7 rounded-full bg-[#EA580C] text-white shadow-sm whitespace-nowrap select-none">
+                            {item.discountBadge}
+                          </span>
+                          <span className="inline-flex items-center justify-center text-center leading-none font-semibold text-xs px-2.5 h-7 rounded-full bg-secondary text-secondary-foreground shadow-sm whitespace-nowrap tabular-nums select-none">
+                            {item.cost} pts
+                          </span>
+                        </div>
                       </div>
 
                       {/* Logo del negocio y nombre sobre la fotografía */}
                       <div className="relative z-10 flex items-center gap-3 text-white text-left">
                         <MerchantLogoBadge item={item} />
-                        <div className="min-w-0">
+                        <div className="min-w-0 flex-1">
                           <span className="text-xs font-medium text-white/85 block truncate">
-                            {item.region} · {item.location}
+                            {item.businessType} · {item.region}
                           </span>
                           <h2 className="font-display text-lg leading-snug truncate">
                             {item.storeName}
@@ -3456,15 +3466,18 @@ export default function App() {
                     </div>
 
                     <CardBody className="p-4 flex flex-col gap-3">
-                      <div>
+                      <div className="flex flex-col gap-1">
                         <p className="text-sm font-medium text-foreground leading-relaxed">
                           {item.title}
                         </p>
-                        <span className="text-xs text-default-500 block mt-0.5">
+                        <span className="text-xs text-default-500 block">
+                          {item.location}
+                        </span>
+                        <span className="text-xs font-medium text-secondary block">
                           {isRedeemed
                             ? "Cupón activo · Disponible sin conexión"
                             : canAfford
-                            ? item.requirement
+                            ? `${item.requirement} · Costo: ${item.cost} pts`
                             : `Tienes ${tsiro}/${item.cost} pts (faltan ${
                                 item.cost - tsiro
                               } pts)`}
