@@ -560,6 +560,48 @@ button[data-pressed="true"] {
   animation: faunaBob 2.8s ease-in-out infinite;
 }
 
+/* Hub deslizable minimalista de Piedras Ak */
+.ak-no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.ak-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes akArrowTwinkleRight {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(-50%) translateX(0);
+  }
+  50% {
+    opacity: 0.82;
+    transform: translateY(-50%) translateX(2.5px);
+  }
+}
+
+@keyframes akArrowTwinkleLeft {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(-50%) translateX(0);
+  }
+  50% {
+    opacity: 0.82;
+    transform: translateY(-50%) translateX(-2.5px);
+  }
+}
+
+.ak-hint-arrow-right {
+  animation: akArrowTwinkleRight 1.8s ease-in-out infinite;
+}
+
+.ak-hint-arrow-left {
+  animation: akArrowTwinkleLeft 1.8s ease-in-out infinite;
+}
+
 @keyframes viewFade {
   from {
     opacity: 0;

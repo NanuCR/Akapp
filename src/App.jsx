@@ -903,6 +903,149 @@ function SettingToggle({ label, isOn, onChange }) {
   );
 }
 
+function AkStonesCarouselHub({ routeId, aks, totalTsiro, scannedAkIds }) {
+  const trackRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    setCurrentIndex(0);
+    if (trackRef.current) {
+      trackRef.current.scrollTo({ left: 0, behavior: "instant" });
+    }
+  }, [routeId]);
+
+  const handleScroll = () => {
+    const el = trackRef.current;
+    if (!el || !el.clientWidth) return;
+    const idx = Math.round(el.scrollLeft / el.clientWidth);
+    if (idx >= 0 && idx < aks.length && idx !== currentIndex) {
+      setCurrentIndex(idx);
+    }
+  };
+
+  const scrollToSlide = (targetIdx) => {
+    const clamped = Math.max(0, Math.min(aks.length - 1, targetIdx));
+    setCurrentIndex(clamped);
+    const el = trackRef.current;
+    if (el) {
+      el.scrollTo({
+        left: clamped * el.clientWidth,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const hasPrev = currentIndex > 0;
+  const hasNext = currentIndex < aks.length - 1;
+
+  return (
+    <section className="flex flex-col gap-2">
+      <div className="flex items-center justify-between gap-2 px-1">
+        <div className="flex items-center gap-2">
+          <h2 className="text-sm font-semibold">Piedras Àk</h2>
+          <span className="text-[11px] font-medium text-default-400 tabular-nums">
+            {currentIndex + 1} / {aks.length}
+          </span>
+        </div>
+        <span className="text-xs text-default-500">
+          Hasta +{totalTsiro} pts
+        </span>
+      </div>
+
+      <div className="relative rounded-2xl bg-content1 border border-default-200 overflow-hidden">
+        {hasPrev && (
+          <button
+            type="button"
+            onClick={() => scrollToSlide(currentIndex - 1)}
+            aria-label="Ver piedra Àk anterior"
+            className="ak-hint-arrow-left absolute left-0.5 top-1/2 z-10 w-8 h-11 flex items-center justify-center rounded-xl text-default-500 hover:text-foreground focus:outline-none"
+          >
+            <svg
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-4 h-4"
+              aria-hidden="true"
+            >
+              <path d="M12.5 15L7.5 10L12.5 5" />
+            </svg>
+          </button>
+        )}
+
+        {hasNext && (
+          <button
+            type="button"
+            onClick={() => scrollToSlide(currentIndex + 1)}
+            aria-label="Deslizar a la siguiente piedra Àk"
+            className="ak-hint-arrow-right absolute right-0.5 top-1/2 z-10 w-8 h-11 flex items-center justify-center rounded-xl text-default-500 hover:text-foreground focus:outline-none"
+          >
+            <svg
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-4 h-4"
+              aria-hidden="true"
+            >
+              <path d="M7.5 5L12.5 10L7.5 15" />
+            </svg>
+          </button>
+        )}
+
+        <div
+          ref={trackRef}
+          onScroll={handleScroll}
+          className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth ak-no-scrollbar touch-pan-x"
+        >
+          {aks.map((ak) => (
+            <div
+              key={ak.id}
+              className="w-full shrink-0 snap-center pt-3.5 pb-2 px-8 flex flex-col gap-1.5"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <strong className="text-sm font-semibold min-w-0 truncate">
+                  {ak.code} · {ak.name}
+                </strong>
+                {scannedAkIds.includes(ak.id) && (
+                  <BadgePill tone="successFlat">Sellado</BadgePill>
+                )}
+              </div>
+              <span className="text-xs text-default-500 tabular-nums">
+                {ak.trail} · {ak.km}
+              </span>
+              <span className="text-xs text-default-500 tabular-nums">
+                +{ak.tsiro} pts · +{ak.xp} XP · {ak.lat.toFixed(4)},{" "}
+                {ak.lng.toFixed(4)}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div className="pb-2.5 flex items-center justify-center gap-1.5">
+          {aks.map((ak, idx) => (
+            <button
+              key={ak.id}
+              type="button"
+              onClick={() => scrollToSlide(idx)}
+              aria-label={`Ir a ${ak.code}`}
+              className={`h-1 rounded-full transition-all duration-300 ${
+                idx === currentIndex
+                  ? "w-4 bg-primary/70"
+                  : "w-1.5 bg-default-300/70"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 const TAB_ORDER = ["mapa", "explorar", "escanear", "cupones", "config", "perfil"];
 const NFC_SPARK_ANGLES = [0, 45, 90, 135, 180, 225, 270, 315];
 
@@ -2290,36 +2433,12 @@ export default function App() {
               </div>
             </section>
 
-            <section className="flex flex-col gap-2">
-              <div className="flex items-center justify-between gap-2 px-1">
-                <h2 className="text-sm font-semibold">Piedras Àk</h2>
-                <span className="text-xs text-default-500">
-                  Hasta +{openedRoute.totalTsiro} pts
-                </span>
-              </div>
-              {openedRoute.aks.map((ak) => (
-                <div
-                  key={ak.id}
-                  className="p-3.5 rounded-2xl bg-content1 border border-default-200 flex flex-col gap-1.5"
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <strong className="text-sm font-semibold min-w-0 truncate">
-                      {ak.code} · {ak.name}
-                    </strong>
-                    {scannedAkIds.includes(ak.id) && (
-                      <BadgePill tone="successFlat">Sellado</BadgePill>
-                    )}
-                  </div>
-                  <span className="text-xs text-default-500 tabular-nums">
-                    {ak.trail} · {ak.km}
-                  </span>
-                  <span className="text-xs text-default-500 tabular-nums">
-                    +{ak.tsiro} pts · +{ak.xp} XP · {ak.lat.toFixed(4)},{" "}
-                    {ak.lng.toFixed(4)}
-                  </span>
-                </div>
-              ))}
-            </section>
+            <AkStonesCarouselHub
+              routeId={openedRoute.id}
+              aks={openedRoute.aks}
+              totalTsiro={openedRoute.totalTsiro}
+              scannedAkIds={scannedAkIds}
+            />
 
             {/* Botón Desplegable Opcional de Guías Locales con Icono de Sombrero Safari */}
             <div className="flex flex-col gap-2.5">
