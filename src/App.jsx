@@ -20,6 +20,19 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { PETROGLYPHS } from "./petroglyphs";
 
+const ONBOARDING_STORAGE_KEY = "akapp_onboarding_hidden_v1";
+
+function normalizeText(value = "") {
+  return String(value)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+}
+
+function buildWazeUrl(lat, lng) {
+  return `https://waze.com/ul?ll=${lat},${lng}&navigate=yes`;
+}
+
 const ROUTES = [
   {
     id: "poas",
@@ -36,6 +49,7 @@ const ROUTES = [
     duration: "1h 45m",
     totalPoints: 50,
     center: [10.1894, -84.2309],
+    wazeUrl: "https://waze.com/ul?ll=10.1894,-84.2309&navigate=yes",
     zoom: 16,
     trailsSummary: "2 senderos conectados (Cráter Principal y Laguna Botos)",
     trailPath: [
@@ -155,6 +169,7 @@ const ROUTES = [
     duration: "2h 30m",
     totalPoints: 65,
     center: [10.7082, -84.9918],
+    wazeUrl: "https://waze.com/ul?ll=10.7082,-84.9918&navigate=yes",
     zoom: 14,
     trailsSummary:
       "Sendero Misterios del Tenorio (Catarata, Laguna Azul y Teñideros)",
@@ -244,6 +259,7 @@ const ROUTES = [
     duration: "1h 30m",
     totalPoints: 40,
     center: [9.7505, -83.7826],
+    wazeUrl: "https://waze.com/ul?ll=9.7505,-83.7826&navigate=yes",
     zoom: 16,
     trailsSummary:
       "Senderos Oropéndola, Arbolado y La Pava junto al río Grande de Orosi",
@@ -992,25 +1008,119 @@ function TrailMiniMap({
 const PARK_DOT_BLUE = "#1D8CF0";
 const MERCHANT_DOT_COLOR = "#EA580C";
 
-// Red de parques del directorio de comercios aliados. Coordenadas aproximadas
+// Red de parques del directorio de comercios aliados. Coordenadas geográficas exactas en Costa Rica
 const PARK_NETWORK = [
-  { id: "poas", name: "Parque Nacional Volcán Poás", area: "Alajuela", position: [10.1894, -84.2309], routeId: "poas" },
-  { id: "tenorio", name: "Parque Nacional Volcán Tenorio", area: "Alajuela", position: [10.7082, -84.9918], routeId: "tenorio" },
-  { id: "tapanti", name: "Parque Nacional Tapantí", area: "Cartago", position: [9.7505, -83.7826], routeId: "tapanti" },
-  { id: "irazu", name: "Parque Nacional Volcán Irazú", area: "Cartago", position: [9.979, -83.852] },
-  { id: "arenal", name: "Parque Nacional Volcán Arenal", area: "Alajuela", position: [10.463, -84.703] },
-  { id: "manuel-antonio", name: "Parque Nacional Manuel Antonio", area: "Puntarenas", position: [9.392, -84.137] },
-  { id: "rincon", name: "Parque Nacional Rincón de la Vieja", area: "Guanacaste", position: [10.83, -85.324] },
-  { id: "chirripo", name: "Parque Nacional Chirripó", area: "San José", position: [9.484, -83.489] },
-  { id: "ballena", name: "Parque Nacional Marino Ballena", area: "Puntarenas", position: [9.138, -83.737] },
-  { id: "cahuita", name: "Parque Nacional Cahuita", area: "Limón", position: [9.737, -82.817] },
-  { id: "tortuguero", name: "Parque Nacional Tortuguero", area: "Limón", position: [10.543, -83.502] },
-  { id: "corcovado", name: "Parque Nacional Corcovado", area: "Puntarenas", position: [8.541, -83.571] },
-  { id: "braulio", name: "Parque Nacional Braulio Carrillo", area: "Heredia", position: [10.165, -83.953] },
+  {
+    id: "poas",
+    name: "Parque Nacional Volcán Poás",
+    area: "Alajuela",
+    position: [10.1894, -84.2309],
+    wazeUrl: "https://waze.com/ul?ll=10.1894,-84.2309&navigate=yes",
+    routeId: "poas",
+    keywords: "volcan poas crater laguna botos alajuela",
+  },
+  {
+    id: "tenorio",
+    name: "Parque Nacional Volcán Tenorio",
+    area: "Alajuela · Guatuso",
+    position: [10.7082, -84.9918],
+    wazeUrl: "https://waze.com/ul?ll=10.7082,-84.9918&navigate=yes",
+    routeId: "tenorio",
+    keywords: "volcan tenorio rio celeste catarata tenideros guatuso bijagua",
+  },
+  {
+    id: "tapanti",
+    name: "Parque Nacional Tapantí",
+    area: "Cartago · Orosi",
+    position: [9.7505, -83.7826],
+    wazeUrl: "https://waze.com/ul?ll=9.7505,-83.7826&navigate=yes",
+    routeId: "tapanti",
+    keywords: "tapanti macizo de la muerte orosi cartago sendero oropendola",
+  },
+  {
+    id: "irazu",
+    name: "Parque Nacional Volcán Irazú",
+    area: "Cartago · Oreamuno",
+    position: [9.979, -83.852],
+    wazeUrl: "https://waze.com/ul?ll=9.979,-83.852&navigate=yes",
+    keywords: "volcan irazu cartago crater",
+  },
+  {
+    id: "arenal",
+    name: "Parque Nacional Volcán Arenal",
+    area: "Alajuela · La Fortuna",
+    position: [10.463, -84.703],
+    wazeUrl: "https://waze.com/ul?ll=10.463,-84.703&navigate=yes",
+    keywords: "volcan arenal la fortuna san carlos coladas",
+  },
+  {
+    id: "manuel-antonio",
+    name: "Parque Nacional Manuel Antonio",
+    area: "Puntarenas · Quepos",
+    position: [9.392, -84.137],
+    wazeUrl: "https://waze.com/ul?ll=9.392,-84.137&navigate=yes",
+    keywords: "manuel antonio quepos puntarenas playa espadilla",
+  },
+  {
+    id: "rincon",
+    name: "Parque Nacional Volcán Rincón de la Vieja",
+    area: "Guanacaste · Liberia",
+    position: [10.83, -85.324],
+    wazeUrl: "https://waze.com/ul?ll=10.83,-85.324&navigate=yes",
+    keywords: "volcan rincon de la vieja pailas liberia guanacaste",
+  },
+  {
+    id: "chirripo",
+    name: "Parque Nacional Chirripó",
+    area: "San José · Pérez Zeledón",
+    position: [9.484, -83.489],
+    wazeUrl: "https://waze.com/ul?ll=9.484,-83.489&navigate=yes",
+    keywords: "chirripo cerro crestones san gerardo de rivas perez zeledon",
+  },
+  {
+    id: "ballena",
+    name: "Parque Nacional Marino Ballena",
+    area: "Puntarenas · Uvita",
+    position: [9.138, -83.737],
+    wazeUrl: "https://waze.com/ul?ll=9.138,-83.737&navigate=yes",
+    keywords: "marino ballena uvita osa puntarenas",
+  },
+  {
+    id: "cahuita",
+    name: "Parque Nacional Cahuita",
+    area: "Limón · Talamanca",
+    position: [9.737, -82.817],
+    wazeUrl: "https://waze.com/ul?ll=9.737,-82.817&navigate=yes",
+    keywords: "cahuita limon caribe arrecife",
+  },
+  {
+    id: "tortuguero",
+    name: "Parque Nacional Tortuguero",
+    area: "Limón · Pococí",
+    position: [10.543, -83.502],
+    wazeUrl: "https://waze.com/ul?ll=10.543,-83.502&navigate=yes",
+    keywords: "tortuguero limon canales",
+  },
+  {
+    id: "corcovado",
+    name: "Parque Nacional Corcovado",
+    area: "Puntarenas · Península de Osa",
+    position: [8.541, -83.571],
+    wazeUrl: "https://waze.com/ul?ll=8.541,-83.571&navigate=yes",
+    keywords: "corcovado osa sirena puntarenas",
+  },
+  {
+    id: "braulio",
+    name: "Parque Nacional Braulio Carrillo",
+    area: "Heredia · Zurquí",
+    position: [10.165, -83.953],
+    wazeUrl: "https://waze.com/ul?ll=10.165,-83.953&navigate=yes",
+    keywords: "braulio carrillo volcan barva zurqui heredia",
+  },
 ];
 
 // Mapa general a pantalla completa con la red de parques y comercios aliados
-function GeneralParksMap({ onOpenRoute, onOpenMerchant }) {
+function GeneralParksMap({ onOpenRoute, onOpenMerchant, onNavigateWaze }) {
   const containerRef = useRef(null);
   const dotsRef = useRef({});
   const merchantDotsRef = useRef({});
@@ -1145,29 +1255,49 @@ function GeneralParksMap({ onOpenRoute, onOpenMerchant }) {
         <div className="absolute z-10 inset-x-0 bottom-24 px-4 pointer-events-none">
           <div
             role="status"
-            className="scan-result-card pointer-events-auto max-w-md mx-auto p-4 rounded-2xl bg-content1/95 backdrop-blur-md shadow-lg flex items-center justify-between gap-3"
+            className="scan-result-card pointer-events-auto max-w-md mx-auto p-4 rounded-2xl bg-content1/95 backdrop-blur-md shadow-lg flex flex-col gap-3 border border-default-200"
           >
-            <div className="min-w-0">
-              <strong className="text-sm font-semibold block truncate">
-                {selectedPark.name}
-              </strong>
-              <span className="text-xs text-default-500 block">
-                {selectedRoute
-                  ? selectedPark.area
-                  : `${selectedPark.area} · Senderos próximamente`}
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <strong className="text-sm font-semibold block truncate">
+                  {selectedPark.name}
+                </strong>
+                <span className="text-xs text-default-500 block">
+                  {selectedRoute
+                    ? selectedPark.area
+                    : `${selectedPark.area} · Senderos próximamente`}
+                </span>
+              </div>
+              <span className="text-[11px] font-medium text-default-400 tabular-nums shrink-0">
+                {selectedPark.position[0].toFixed(4)}, {selectedPark.position[1].toFixed(4)}
               </span>
             </div>
-            {selectedRoute && (
-              <Button
-                size="sm"
-                radius="full"
-                color="primary"
-                className="min-h-[40px] text-xs font-medium px-4 shrink-0"
-                onPress={() => onOpenRoute(selectedRoute)}
-              >
-                Ver senderos
-              </Button>
-            )}
+            <div className="flex items-center gap-2">
+              {onNavigateWaze && (
+                <Button
+                  size="sm"
+                  radius="full"
+                  variant="flat"
+                  color="secondary"
+                  className="min-h-[40px] flex-1 text-xs font-semibold px-3.5"
+                  onPress={() => onNavigateWaze(selectedPark)}
+                >
+                  <WazeIcon className="w-4 h-4 shrink-0" />
+                  <span>Navegar con Waze</span>
+                </Button>
+              )}
+              {selectedRoute && (
+                <Button
+                  size="sm"
+                  radius="full"
+                  color="primary"
+                  className="min-h-[40px] flex-1 text-xs font-semibold px-4"
+                  onPress={() => onOpenRoute(selectedRoute)}
+                >
+                  Ver senderos
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -1314,6 +1444,23 @@ function BackIcon(props) {
     <NavIcon {...props}>
       <path d="M19 12H5M12 19l-7-7 7-7" />
     </NavIcon>
+  );
+}
+
+function WazeIcon({ className = "w-5 h-5" }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M12 2L19 21l-7-4-7 4 7-19z" />
+    </svg>
   );
 }
 
@@ -2290,6 +2437,503 @@ function SafariGuideIcon({ className = "w-5 h-5" }) {
   );
 }
 
+const ONBOARDING_SLIDES = [
+  {
+    id: "welcome",
+    stepBadge: "PASO 1 DE 4 · RED NACIONAL",
+    title: "Bienvenida a Akapp",
+    description:
+      "Explora la red de Parques Nacionales de Costa Rica con cartografía offline-first, senderos oficiales georreferenciados y navegación directa con Waze hasta la entrada de cada parque.",
+    highlights: ["13 Parques Nacionales", "Mapas Offline", "Ruta con Waze"],
+  },
+  {
+    id: "scan",
+    stepBadge: "PASO 2 DE 4 · SENDERISMO GAMIFICADO",
+    title: "Escaneo de Piedras Àk",
+    description:
+      "Sigue los senderos autorizados por el SINAC. Al acercar tu dispositivo a cada hito en ruta, presiona la runa central para despertar la piedra tallada, registrar tu visita y acumular puntos.",
+    highlights: ["+10 a +25 pts por hito", "Sin señal celular", "Runa central NFC"],
+  },
+  {
+    id: "sinac",
+    stepBadge: "PASO 3 DE 4 · CIENCIA CIUDADANA",
+    title: "Herramientas SINAC",
+    description:
+      "Durante la navegación activa en el sendero, utiliza los controles flotantes de cámara y micrófono para reportar avistamientos de fauna y grabar paisajes sonoros con coordenadas GPS exactas.",
+    highlights: ["Fotografía GPS", "Monitoreo acústico", "Apoyo al SINAC"],
+  },
+  {
+    id: "rewards",
+    stepBadge: "PASO 4 DE 4 · ECONOMÍA LOCAL",
+    title: "Canje de Recompensas",
+    description:
+      "Convierte tus pasos en beneficio para la comunidad. Usa tus puntos acumulados en la sección de Cupones para obtener descuentos reales en sodas típicas, cafeterías, posadas y guías locales.",
+    highlights: ["Comercios aliados", "Guías certificados", "Pase digital en caja"],
+  },
+];
+
+function OnboardingSlideIllustration({ slideId }) {
+  if (slideId === "welcome") {
+    return (
+      <div className="relative w-full h-44 rounded-3xl bg-gradient-to-br from-[#0F5C46] via-[#14704F] to-[#0D9488] text-white p-4 overflow-hidden flex flex-col justify-between">
+        <div
+          className="absolute -right-8 -top-8 w-36 h-36 rounded-full opacity-25"
+          style={{
+            background: "radial-gradient(circle, #67E8F9 0%, transparent 70%)",
+          }}
+        />
+        <div className="relative z-10 flex items-center justify-between gap-2">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/30 text-[11px] font-semibold">
+            <span className="w-2 h-2 rounded-full bg-emerald-300" />
+            Costa Rica · SINAC
+          </span>
+          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/15 text-[11px] font-semibold">
+            <WazeIcon className="w-3.5 h-3.5 text-cyan-200" />
+            GPS Waze
+          </span>
+        </div>
+
+        <div className="relative z-10 my-auto flex items-center justify-center gap-4">
+          <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/25 flex items-center justify-center">
+            <CostaRicaIcon className="w-8 h-8 text-emerald-100" />
+          </div>
+          <div className="flex flex-col">
+            <LogoMark className="h-9 text-white" decorative />
+            <span className="text-xs text-emerald-100/90 font-medium mt-0.5">
+              Turismo regenerativo y senderos
+            </span>
+          </div>
+        </div>
+
+        <div className="relative z-10 flex items-center justify-between text-[11px] text-emerald-100/90 font-medium">
+          <span>Poás · Tenorio · Tapantí · Chirripó</span>
+          <span className="font-semibold text-cyan-200">Offline-First</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (slideId === "scan") {
+    return (
+      <div className="relative w-full h-44 rounded-3xl bg-[#090A07] text-[#E8EBDD] p-4 overflow-hidden flex flex-col items-center justify-center gap-2.5 border border-emerald-500/25">
+        <div
+          className="absolute inset-0 opacity-35"
+          style={{
+            background:
+              "radial-gradient(circle at 50% 50%, rgba(20, 184, 166, 0.45), rgba(20, 112, 79, 0.15) 55%, transparent 75%)",
+          }}
+        />
+        <div className="relative z-10 flex items-center justify-center">
+          <span className="absolute w-28 h-28 rounded-full border border-emerald-400/30 animate-ping" style={{ animationDuration: "2.8s" }} />
+          <span className="absolute w-24 h-24 rounded-full border border-cyan-400/40" />
+          <div className="energy-core w-16 h-16 rounded-full text-[#090A07] flex items-center justify-center">
+            <span className="rune-mark w-9 h-9" aria-hidden="true" />
+          </div>
+        </div>
+        <div className="relative z-10 flex items-center gap-2 mt-1">
+          <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-200 text-xs font-semibold">
+            Àk #01 · Mirador
+          </span>
+          <span className="px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/30 text-cyan-200 text-xs font-bold tabular-nums">
+            +20 pts
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  if (slideId === "sinac") {
+    return (
+      <div className="relative w-full h-44 rounded-3xl bg-gradient-to-br from-[#0E2A22] via-[#134E4A] to-[#0F5C46] text-white p-4 overflow-hidden flex flex-col justify-between">
+        <div className="flex items-center justify-between gap-2">
+          <span className="px-2.5 py-1 rounded-full bg-white/15 text-[11px] font-semibold text-cyan-100">
+            Reporte en ruta activa
+          </span>
+          <span className="font-mono text-[11px] text-emerald-200 tabular-nums">
+            10.1894, -84.2309
+          </span>
+        </div>
+
+        <div className="my-auto flex items-center justify-center gap-5">
+          <div className="flex flex-col items-center gap-1.5">
+            <div className="w-14 h-14 rounded-full bg-white text-[#0E2A22] flex items-center justify-center">
+              <MicIcon className="w-6 h-6 text-[#0F5C46]" />
+            </div>
+            <span className="text-[11px] font-medium text-emerald-100">
+              Audio 5s
+            </span>
+          </div>
+
+          <div className="w-12 h-12 rounded-full bg-emerald-400/20 border border-emerald-300/40 flex items-center justify-center">
+            <FaunaAvatar
+              avatar={FAUNA_AVATARS[0]}
+              className="w-9 h-9 rounded-full"
+            />
+          </div>
+
+          <div className="flex flex-col items-center gap-1.5">
+            <div className="w-14 h-14 rounded-full bg-white text-[#0E2A22] flex items-center justify-center">
+              <CameraIcon className="w-6 h-6 text-[#0D9488]" />
+            </div>
+            <span className="text-[11px] font-medium text-cyan-100">
+              Foto GPS
+            </span>
+          </div>
+        </div>
+
+        <p className="text-center text-[11px] text-emerald-100/90 font-medium">
+          Datos comunitarios para proteger la biodiversidad
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative w-full h-44 rounded-3xl bg-gradient-to-br from-[#0F5C46] via-[#0F766E] to-[#14704F] text-white p-4 overflow-hidden flex flex-col justify-between">
+      <div className="flex items-center justify-between gap-2">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/15 text-[11px] font-semibold">
+          <PointsIcon className="w-3.5 h-3.5 text-emerald-200" />
+          285 pts disponibles
+        </span>
+        <span className="px-2.5 py-1 rounded-full bg-cyan-400/25 border border-cyan-300/40 text-cyan-100 text-[11px] font-bold">
+          15% DCTO
+        </span>
+      </div>
+
+      <div className="my-auto p-3 rounded-2xl bg-white/95 text-[#0E2A22] flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-[#0F5C46] text-white flex items-center justify-center shrink-0">
+            <TicketIcon className="w-5 h-5" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-xs font-bold truncate">
+              Sodas, Cafeterías y Posadas
+            </p>
+            <p className="text-[11px] text-default-500 truncate">
+              Código digital válido sin conexión
+            </p>
+          </div>
+        </div>
+        <span className="font-mono text-[11px] font-bold px-2.5 py-1 rounded-lg bg-emerald-50 text-[#0F5C46] border border-emerald-300 shrink-0">
+          AKAPP-15
+        </span>
+      </div>
+
+      <div className="flex items-center justify-between text-[11px] text-emerald-100/90 font-medium">
+        <span>44 comercios verificados</span>
+        <span className="text-cyan-200 font-semibold">Apoyo rural directo</span>
+      </div>
+    </div>
+  );
+}
+
+function OnboardingModal({ onClose }) {
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [slideDirection, setSlideDirection] = useState(1);
+  const [dontShowAgain, setDontShowAgain] = useState(false);
+  const touchStartXRef = useRef(null);
+
+  const currentSlide = ONBOARDING_SLIDES[slideIndex];
+  const isFirst = slideIndex === 0;
+  const isLast = slideIndex === ONBOARDING_SLIDES.length - 1;
+
+  const persistHidePreference = useCallback(() => {
+    try {
+      window.localStorage.setItem(ONBOARDING_STORAGE_KEY, "true");
+    } catch {
+      // Ignorar si el navegador restringe localStorage
+    }
+  }, []);
+
+  const handleDismiss = useCallback(() => {
+    persistHidePreference();
+    onClose();
+  }, [onClose, persistHidePreference]);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        handleDismiss();
+      } else if (event.key === "ArrowRight" && !isLast) {
+        setSlideDirection(1);
+        setSlideIndex((prev) => Math.min(ONBOARDING_SLIDES.length - 1, prev + 1));
+      } else if (event.key === "ArrowLeft" && !isFirst) {
+        setSlideDirection(-1);
+        setSlideIndex((prev) => Math.max(0, prev - 1));
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [handleDismiss, isFirst, isLast]);
+
+  const goToSlide = (targetIdx) => {
+    if (targetIdx < 0 || targetIdx >= ONBOARDING_SLIDES.length || targetIdx === slideIndex) {
+      return;
+    }
+    setSlideDirection(targetIdx > slideIndex ? 1 : -1);
+    setSlideIndex(targetIdx);
+  };
+
+  const handleNext = () => {
+    if (isLast) {
+      handleDismiss();
+      return;
+    }
+    setSlideDirection(1);
+    setSlideIndex((prev) => prev + 1);
+  };
+
+  const handlePrev = () => {
+    if (isFirst) return;
+    setSlideDirection(-1);
+    setSlideIndex((prev) => prev - 1);
+  };
+
+  const handleToggleDontShow = (checked) => {
+    setDontShowAgain(checked);
+    try {
+      if (checked) {
+        window.localStorage.setItem(ONBOARDING_STORAGE_KEY, "true");
+      } else {
+        window.localStorage.removeItem(ONBOARDING_STORAGE_KEY);
+      }
+    } catch {
+      // Ignorar errores de almacenamiento
+    }
+  };
+
+  const handleTouchStart = (event) => {
+    touchStartXRef.current = event.touches?.[0]?.clientX ?? null;
+  };
+
+  const handleTouchEnd = (event) => {
+    if (touchStartXRef.current === null) return;
+    const endX = event.changedTouches?.[0]?.clientX ?? touchStartXRef.current;
+    const deltaX = endX - touchStartXRef.current;
+    touchStartXRef.current = null;
+    if (deltaX < -40 && !isLast) {
+      handleNext();
+    } else if (deltaX > 40 && !isFirst) {
+      handlePrev();
+    }
+  };
+
+  return (
+    <MotionConfig reducedMotion="user">
+      <motion.div
+        className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) handleDismiss();
+        }}
+      >
+        <motion.div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="onboardingModalTitle"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+          className="w-full max-w-md bg-content1 text-foreground rounded-3xl border border-default-200 p-5 flex flex-col gap-4 overflow-hidden"
+          initial={{ y: 28, scale: 0.96, opacity: 0 }}
+          animate={{ y: 0, scale: 1, opacity: 1 }}
+          exit={{ y: 20, scale: 0.96, opacity: 0 }}
+          transition={{ type: "spring", bounce: 0.2, duration: 0.45 }}
+        >
+          {/* Barra superior con indicador de paso y botón Omitir */}
+          <div className="flex items-center justify-between gap-2">
+            <span className="inline-flex items-center px-3 h-7 rounded-full bg-primary/10 text-primary text-[11px] font-semibold tracking-wide">
+              {currentSlide.stepBadge}
+            </span>
+            <button
+              type="button"
+              onClick={handleDismiss}
+              className="min-h-[44px] px-3.5 rounded-full text-xs font-semibold text-default-500 hover:text-foreground hover:bg-default-100 transition-colors"
+            >
+              Omitir
+            </button>
+          </div>
+
+          {/* Diapositiva interactiva estilo carrusel iOS */}
+          <AnimatePresence mode="wait" custom={slideDirection}>
+            <motion.div
+              key={currentSlide.id}
+              custom={slideDirection}
+              initial={{ opacity: 0, x: slideDirection * 28 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: slideDirection * -28 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              className="flex flex-col gap-4"
+            >
+              <OnboardingSlideIllustration slideId={currentSlide.id} />
+
+              <div className="flex flex-col gap-2 text-left px-0.5">
+                <h2
+                  id="onboardingModalTitle"
+                  className="font-display text-2xl leading-tight text-foreground"
+                >
+                  {currentSlide.title}
+                </h2>
+                <p className="text-sm text-default-600 leading-relaxed">
+                  {currentSlide.description}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-1.5">
+                {currentSlide.highlights.map((item) => (
+                  <span
+                    key={item}
+                    className="inline-flex items-center px-2.5 h-6 rounded-full bg-secondary/10 border border-secondary/25 text-secondary text-[11px] font-semibold"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Indicadores de paginación del carrusel */}
+          <div
+            role="tablist"
+            aria-label="Diapositivas del tutorial de bienvenida"
+            className="flex items-center justify-center gap-2 pt-1"
+          >
+            {ONBOARDING_SLIDES.map((slide, idx) => {
+              const active = idx === slideIndex;
+              return (
+                <button
+                  key={slide.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  aria-label={`Ir al paso ${idx + 1}: ${slide.title}`}
+                  onClick={() => goToSlide(idx)}
+                  className={`h-2 rounded-full transition-all duration-300 ${
+                    active
+                      ? "w-6 bg-primary"
+                      : "w-2 bg-default-300 hover:bg-default-400"
+                  }`}
+                />
+              );
+            })}
+          </div>
+
+          {/* Casilla No volver a mostrar */}
+          <label className="min-h-[44px] px-3 py-2 rounded-2xl bg-default-100/80 flex items-center justify-between gap-3 cursor-pointer select-none">
+            <span className="text-xs font-medium text-default-700">
+              No volver a mostrar al iniciar
+            </span>
+            <input
+              type="checkbox"
+              checked={dontShowAgain}
+              onChange={(event) => handleToggleDontShow(event.target.checked)}
+              className="w-5 h-5 rounded-md accent-[#0F5C46] cursor-pointer"
+            />
+          </label>
+
+          {/* Botones de navegación Anterior / Siguiente */}
+          <div className="grid grid-cols-2 gap-2.5 pt-0.5">
+            <Button
+              radius="full"
+              variant="flat"
+              isDisabled={isFirst}
+              onPress={handlePrev}
+              className="min-h-[48px] text-sm font-semibold bg-default-100 text-foreground disabled:opacity-40"
+            >
+              Anterior
+            </Button>
+            <Button
+              radius="full"
+              color="primary"
+              onPress={handleNext}
+              className="min-h-[48px] text-sm font-semibold"
+            >
+              {isLast ? "Comenzar a explorar" : "Siguiente"}
+            </Button>
+          </div>
+        </motion.div>
+      </motion.div>
+    </MotionConfig>
+  );
+}
+
+function WazeFallbackBanner({ target, onClose }) {
+  const [copiedGps, setCopiedGps] = useState(false);
+  if (!target) return null;
+
+  const coordsText = `${target.lat.toFixed(4)}, ${target.lng.toFixed(4)}`;
+  const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${target.lat},${target.lng}`;
+
+  const handleCopyCoords = () => {
+    if (navigator?.clipboard?.writeText) {
+      navigator.clipboard.writeText(`${target.lat}, ${target.lng}`).catch(() => {});
+    }
+    setCopiedGps(true);
+    setTimeout(() => setCopiedGps(false), 1800);
+  };
+
+  return (
+    <div className="fixed inset-x-0 bottom-24 z-40 px-4 pointer-events-none">
+      <div
+        role="status"
+        className="scan-result-card pointer-events-auto max-w-md mx-auto p-3.5 rounded-3xl bg-content1/95 border border-secondary/40 flex flex-col gap-2.5"
+      >
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-center gap-2.5 min-w-0">
+            <div className="w-9 h-9 rounded-2xl bg-secondary/15 text-secondary flex items-center justify-center shrink-0">
+              <WazeIcon className="w-5 h-5" />
+            </div>
+            <div className="min-w-0">
+              <strong className="text-xs font-semibold block truncate">
+                Ruta en Waze · {target.name}
+              </strong>
+              <span className="text-[11px] text-default-500 block tabular-nums">
+                Coordenadas GPS: {coordsText}
+              </span>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Cerrar aviso de navegación"
+            className="min-h-[36px] px-2.5 rounded-full text-xs font-medium text-default-500 hover:bg-default-100"
+          >
+            Cerrar
+          </button>
+        </div>
+
+        <div className="grid grid-cols-3 gap-1.5">
+          <a
+            href={target.wazeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="min-h-[40px] px-2.5 rounded-full bg-primary text-primary-foreground text-xs font-semibold inline-flex items-center justify-center text-center"
+          >
+            Abrir Waze
+          </a>
+          <a
+            href={googleMapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="min-h-[40px] px-2.5 rounded-full bg-default-100 text-foreground text-xs font-medium inline-flex items-center justify-center text-center"
+          >
+            Mapa Web
+          </a>
+          <button
+            type="button"
+            onClick={handleCopyCoords}
+            className="min-h-[40px] px-2.5 rounded-full bg-default-100 text-foreground text-xs font-medium inline-flex items-center justify-center text-center"
+          >
+            {copiedGps ? "GPS copiado" : "Copiar GPS"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [isDark, setIsDark] = useState(false);
   const [vibrateOnScan, setVibrateOnScan] = useState(true);
@@ -2336,6 +2980,38 @@ export default function App() {
   const [redeemedIds, setRedeemedIds] = useState([]);
   const [justRedeemedCoupon, setJustRedeemedCoupon] = useState(null);
   const [copiedCode, setCopiedCode] = useState(null);
+
+  // Estado de Tutorial Onboarding (gestionado con localStorage) y Fallback de Waze
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(() => {
+    try {
+      return window.localStorage.getItem(ONBOARDING_STORAGE_KEY) !== "true";
+    } catch {
+      return true;
+    }
+  });
+  const [wazeFallbackTarget, setWazeFallbackTarget] = useState(null);
+
+  const handleNavigateWithWaze = useCallback((targetPark) => {
+    if (!targetPark) return;
+    const coords = targetPark.center || targetPark.position;
+    if (!coords || coords.length < 2) return;
+    const [lat, lng] = coords;
+    const wazeUrl = targetPark.wazeUrl || buildWazeUrl(lat, lng);
+
+    setWazeFallbackTarget({
+      name: targetPark.name,
+      lat,
+      lng,
+      wazeUrl,
+    });
+
+    if (typeof window !== "undefined") {
+      const openedWindow = window.open(wazeUrl, "_blank", "noopener,noreferrer");
+      if (openedWindow) {
+        openedWindow.opener = null;
+      }
+    }
+  }, []);
 
   const allAks = useMemo(() => ROUTES.flatMap((r) => r.aks), []);
   const scannerAk = useMemo(
@@ -2402,10 +3078,10 @@ export default function App() {
     document.documentElement.classList.toggle("light", !dark);
   };
 
-  // Búsqueda de rutas cercanas o asistente AX
+  // Búsqueda de rutas cercanas o asistente AX (insensible a mayúsculas y acentos)
   const handleRouteSearch = (val) => {
     setRouteQuery(val);
-    const clean = val.trim().toLowerCase();
+    const clean = normalizeText(val.trim());
 
     if (!clean) {
       setAxSuggestion(null);
@@ -2437,7 +3113,7 @@ export default function App() {
   };
 
   const filteredRoutes = useMemo(() => {
-    const clean = routeQuery.trim().toLowerCase();
+    const clean = normalizeText(routeQuery.trim());
     const isQuestion =
       clean.includes("hora") ||
       clean.includes("?") ||
@@ -2446,9 +3122,34 @@ export default function App() {
 
     return ROUTES.filter((r) => {
       if (!clean || isQuestion) return true;
-      return `${r.name} ${r.region} ${r.trailsSummary}`
-        .toLowerCase()
-        .includes(clean);
+      const aksText = r.aks
+        .map((ak) => `${ak.code} ${ak.name} ${ak.trail}`)
+        .join(" ");
+      const guidesText = r.guides
+        .map((g) => `${g.name} ${g.specialty}`)
+        .join(" ");
+      const searchable = normalizeText(
+        `${r.name} ${r.region} ${r.trailsSummary} ${r.difficulty} ${r.surface} ${aksText} ${guidesText}`
+      );
+      return searchable.includes(clean);
+    });
+  }, [routeQuery]);
+
+  const filteredNetworkParks = useMemo(() => {
+    const clean = normalizeText(routeQuery.trim());
+    const isQuestion =
+      clean.includes("hora") ||
+      clean.includes("?") ||
+      clean.includes("suave") ||
+      clean.includes("recomienda");
+
+    if (!clean || isQuestion) return [];
+    return PARK_NETWORK.filter((park) => {
+      if (park.routeId) return false;
+      const searchable = normalizeText(
+        `${park.name} ${park.area} ${park.keywords || ""}`
+      );
+      return searchable.includes(clean);
     });
   }, [routeQuery]);
 
@@ -2545,8 +3246,17 @@ export default function App() {
   };
 
   const handleResultBackToMap = () => {
+    const ownerRoute =
+      ROUTES.find((r) => r.aks.some((a) => a.id === scannerAkId)) ||
+      openedRoute ||
+      ROUTES[0];
     setScanState("idle");
-    setActiveView(navigatingRouteId ? "explorar" : "mapa");
+    if (ownerRoute) {
+      setOpenedRouteId(ownerRoute.id);
+      setNavigatingRouteId(ownerRoute.id);
+      setSelectedMapAkId(scannerAkId);
+    }
+    setActiveView("explorar");
   };
 
 
@@ -2559,6 +3269,13 @@ export default function App() {
     setJustRedeemedCoupon(null);
     setReports([]);
     setScanState("idle");
+    setWazeFallbackTarget(null);
+    try {
+      window.localStorage.removeItem(ONBOARDING_STORAGE_KEY);
+    } catch {
+      // Ignorar errores de almacenamiento
+    }
+    setIsOnboardingOpen(true);
     goToExplore();
   };
 
@@ -2584,7 +3301,7 @@ export default function App() {
   };
 
   const filteredCoupons = useMemo(() => {
-    const clean = couponQuery.trim().toLowerCase();
+    const clean = normalizeText(couponQuery.trim());
     return BENEFITS.filter((b) => {
       const matchesCat =
         couponCategory === "canjeados"
@@ -2595,9 +3312,9 @@ export default function App() {
 
       if (!matchesCat) return false;
       if (!clean) return true;
-      return `${b.storeName} ${b.parkName} ${b.region} ${b.businessType} ${b.location} ${b.title}`
-        .toLowerCase()
-        .includes(clean);
+      return normalizeText(
+        `${b.storeName} ${b.parkName} ${b.region} ${b.businessType} ${b.location} ${b.title} ${b.place}`
+      ).includes(clean);
     });
   }, [couponCategory, couponQuery, redeemedIds]);
 
@@ -2733,7 +3450,7 @@ export default function App() {
               <BadgePill tone="successFlat">GPS Activo</BadgePill>
             </div>
 
-            {filteredRoutes.length === 0 && (
+            {filteredRoutes.length === 0 && filteredNetworkParks.length === 0 && (
               <Card shadow="none" className="border border-default-200 bg-content1 rounded-2xl">
                 <CardBody className="py-7 px-4 text-center flex flex-col items-center gap-3">
                   <p className="text-sm font-medium">
@@ -2803,22 +3520,85 @@ export default function App() {
                       </div>
                     </div>
 
-                    <CardBody className="p-4 flex flex-col gap-3.5">
+                    <CardBody className="p-4 flex flex-col gap-3">
                       <p className="text-sm text-default-600 leading-relaxed">
                         {route.trailsSummary}
                       </p>
-                      <Button
-                        radius="full"
-                        color="primary"
-                        className="w-full min-h-[52px] text-base font-semibold"
-                        onPress={() => openRouteDetail(route)}
-                      >
-                        Ver senderos
-                      </Button>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <Button
+                          radius="full"
+                          color="primary"
+                          className="w-full min-h-[48px] text-sm font-semibold"
+                          onPress={() => openRouteDetail(route)}
+                        >
+                          Ver senderos
+                        </Button>
+                        <Button
+                          radius="full"
+                          variant="flat"
+                          color="secondary"
+                          className="w-full min-h-[48px] text-sm font-semibold"
+                          onPress={() => handleNavigateWithWaze(route)}
+                        >
+                          <WazeIcon className="w-4 h-4 shrink-0" />
+                          <span>Navegar con Waze</span>
+                        </Button>
+                      </div>
                     </CardBody>
                   </Card>
                 );
               })}
+
+              {filteredNetworkParks.map((park) => (
+                <Card
+                  key={park.id}
+                  shadow="sm"
+                  className="border border-default-200 bg-content1 rounded-3xl overflow-hidden"
+                >
+                  <CardBody className="p-4 flex flex-col gap-3">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <span className="text-xs font-medium text-secondary block">
+                          {park.area} · Red Nacional SINAC
+                        </span>
+                        <h2 className="font-display text-lg leading-snug mt-0.5">
+                          {park.name}
+                        </h2>
+                      </div>
+                      <BadgePill tone="primaryFlat">GPS Waze</BadgePill>
+                    </div>
+                    <p className="text-xs text-default-500 tabular-nums">
+                      Coordenadas de entrada: {park.position[0].toFixed(4)},{" "}
+                      {park.position[1].toFixed(4)}
+                    </p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <Button
+                        radius="full"
+                        color="primary"
+                        className="w-full min-h-[48px] text-sm font-semibold"
+                        onPress={() => handleNavigateWithWaze(park)}
+                      >
+                        <WazeIcon className="w-4 h-4 shrink-0" />
+                        <span>Navegar con Waze</span>
+                      </Button>
+                      <Button
+                        radius="full"
+                        variant="flat"
+                        className="w-full min-h-[48px] text-sm font-medium"
+                        onPress={() => {
+                          setCouponCategory("todos");
+                          setCouponQuery(
+                            park.name.replace(/^Parque Nacional\s*/i, "")
+                          );
+                          setActiveView("cupones");
+                        }}
+                      >
+                        Ver comercios aliados
+                      </Button>
+                    </div>
+                  </CardBody>
+                </Card>
+              ))}
             </div>
           </main>
         )}
@@ -2845,16 +3625,32 @@ export default function App() {
               </button>
             </div>
 
-            <div className="px-1">
-              <span className="text-xs text-default-500 block">
-                {openedRoute.region} · {openedRoute.condition}
-              </span>
-              <h1 className="font-display text-2xl leading-tight mt-1">
-                {openedRoute.name}
-              </h1>
-              <p className="text-sm text-default-600 leading-relaxed mt-2">
-                {openedRoute.trailsSummary}.
-              </p>
+            <div className="px-1 flex flex-col gap-3">
+              <div>
+                <span className="text-xs text-default-500 block">
+                  {openedRoute.region} · {openedRoute.condition}
+                </span>
+                <h1 className="font-display text-2xl leading-tight mt-1">
+                  {openedRoute.name}
+                </h1>
+                <p className="text-sm text-default-600 leading-relaxed mt-2">
+                  {openedRoute.trailsSummary}.
+                </p>
+              </div>
+
+              <Button
+                radius="full"
+                variant="flat"
+                color="secondary"
+                className="w-full min-h-[48px] text-sm font-semibold"
+                onPress={() => handleNavigateWithWaze(openedRoute)}
+              >
+                <WazeIcon className="w-4 h-4 shrink-0" />
+                <span>
+                  Navegar con Waze ({openedRoute.center[0].toFixed(4)},{" "}
+                  {openedRoute.center[1].toFixed(4)})
+                </span>
+              </Button>
             </div>
 
             <div className="grid grid-cols-2 gap-2">
@@ -3104,6 +3900,7 @@ export default function App() {
         {/* ========================================================= */}
         {isOnTrail && (
           <TrailView
+            key={openedRoute.id}
             route={openedRoute}
             scannedAkIds={scannedAkIds}
             selectedAkId={selectedMapAkId}
@@ -3122,6 +3919,7 @@ export default function App() {
             <GeneralParksMap
               onOpenRoute={handleOpenRouteFromMap}
               onOpenMerchant={handleOpenMerchantFromMap}
+              onNavigateWaze={handleNavigateWithWaze}
             />
           </main>
         )}
@@ -3182,6 +3980,14 @@ export default function App() {
             </Card>
 
             <div className="flex flex-col gap-2">
+              <Button
+                radius="full"
+                variant="flat"
+                className="min-h-[48px] font-medium text-sm"
+                onPress={() => setIsOnboardingOpen(true)}
+              >
+                Ver tutorial de bienvenida
+              </Button>
               <Button
                 radius="full"
                 variant="flat"
@@ -3798,17 +4604,43 @@ export default function App() {
               </CardBody>
             </Card>
 
-            <Button
-              radius="full"
-              variant="light"
-              className="min-h-[48px] font-medium text-sm mb-2"
-              onPress={handleResetDemo}
-            >
-              Reiniciar demo
-            </Button>
+            <div className="flex flex-col gap-2 mb-2">
+              <Button
+                radius="full"
+                variant="flat"
+                className="min-h-[48px] font-medium text-sm"
+                onPress={() => setIsOnboardingOpen(true)}
+              >
+                Ver tutorial de bienvenida
+              </Button>
+              <Button
+                radius="full"
+                variant="light"
+                className="min-h-[48px] font-medium text-sm"
+                onPress={handleResetDemo}
+              >
+                Reiniciar demo
+              </Button>
+            </div>
           </main>
         )}
       </div>
+
+      {/* BANNER FALLBACK DE NAVEGACIÓN WAZE (WEB / ESCRITORIO) */}
+      <WazeFallbackBanner
+        target={wazeFallbackTarget}
+        onClose={() => setWazeFallbackTarget(null)}
+      />
+
+      {/* MODAL DE TUTORIAL ONBOARDING PASO A PASO */}
+      <AnimatePresence>
+        {isOnboardingOpen && (
+          <OnboardingModal
+            key="onboarding-modal"
+            onClose={() => setIsOnboardingOpen(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* FLUJO NFC: PROXIMIDAD, LECTURA RÚNICA Y RESULTADO */}
       <MotionConfig reducedMotion="user">
