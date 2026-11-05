@@ -9,7 +9,6 @@ export default {
   ],
   theme: {
     extend: {
-      // Sombras dispersas estilo iOS
       boxShadow: {
         sm: "0 1px 2px rgba(14, 42, 34, 0.04), 0 4px 14px rgba(14, 42, 34, 0.05)",
         md: "0 2px 4px rgba(14, 42, 34, 0.04), 0 8px 22px rgba(14, 42, 34, 0.07)",
@@ -18,11 +17,18 @@ export default {
       },
       fontFamily: {
         sans: [
+          '"Schibsted Grotesk"',
           "-apple-system",
           "BlinkMacSystemFont",
           '"SF Pro Display"',
           '"SF Pro Text"',
           '"Inter"',
+          "system-ui",
+          "sans-serif",
+        ],
+        display: [
+          '"Jockey One"',
+          '"Schibsted Grotesk"',
           "system-ui",
           "sans-serif",
         ],
@@ -42,10 +48,13 @@ export default {
       themes: {
         light: {
           colors: {
-            background: "#F8FAF9",
+            background: "#F3F5EE",
             foreground: "#0E2A22",
             content1: "#FFFFFF",
-            content2: "#EEF3F1",
+            content2: "#E8EEE4",
+            content3: "#DFE6DA",
+            content4: "#D2DBCC",
+            divider: "#DCE3D8",
             primary: {
               DEFAULT: "#0F5C46",
               foreground: "#FFFFFF",
@@ -67,6 +76,9 @@ export default {
             foreground: "#E8EBDD",
             content1: "#15180F",
             content2: "#20251A",
+            content3: "#2A3022",
+            content4: "#343B2B",
+            divider: "#2A2E25",
             primary: {
               DEFAULT: "#8FA65A",
               foreground: "#090A07",

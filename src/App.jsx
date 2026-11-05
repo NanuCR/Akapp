@@ -18,6 +18,8 @@ import {
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { PETROGLYPHS } from "./petroglyphs";
+import { createNaturalEarthTileLayer } from "./naturalEarthMap";
 
 const ROUTES = [
   {
@@ -886,7 +888,7 @@ function TrailMiniMap({
     });
     map.attributionControl.setPrefix(false);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    createNaturalEarthTileLayer({
       maxZoom: 18,
       attribution: "© OpenStreetMap",
     }).addTo(map);
@@ -1041,7 +1043,7 @@ function GeneralParksMap({ onOpenRoute, onOpenMerchant }) {
       setSelectedMerchantId(null);
     });
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    createNaturalEarthTileLayer({
       maxZoom: 18,
       attribution: "© OpenStreetMap",
     }).addTo(map);
@@ -1271,11 +1273,12 @@ function TicketIcon(props) {
   );
 }
 
-function GearIcon(props) {
+function PassportIcon(props) {
   return (
     <NavIcon {...props}>
-      <circle cx="12" cy="12" r="3" />
-      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+      <rect x="5" y="3" width="14" height="18" rx="2.5" />
+      <circle cx="12" cy="10.5" r="3.2" />
+      <path d="M8.5 17h7" />
     </NavIcon>
   );
 }
@@ -3619,44 +3622,117 @@ export default function App() {
               </CardBody>
             </Card>
 
-            {/* Ritmo Semanal de Senderismo */}
-            <Card
-              shadow="none"
-              className="border border-default-200 bg-content1 rounded-3xl"
-            >
-              <CardBody className="p-4 flex flex-col gap-3">
-                <div className="flex items-center justify-between gap-2">
-                  <h2 className="text-sm font-semibold">
-                    Actividad semanal en senderos
-                  </h2>
-                  <BadgePill tone="secondaryFlat">33,1 km</BadgePill>
+            {/* Colección de Sellos de Parques */}
+            <div className="flex items-end justify-between gap-2 px-1 mt-1">
+              <h2 className="font-display text-xl">Tu colección</h2>
+              <BadgePill tone="secondaryFlat">
+                {scannedAkIds.length} de{" "}
+                {ROUTES.reduce((acc, r) => acc + r.aks.length, 0)} piedras
+              </BadgePill>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              {ROUTES.map((r) => {
+                const doneCount = r.aks.filter((ak) =>
+                  scannedAkIds.includes(ak.id)
+                ).length;
+                return (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => {
+                      setActiveView("explorar");
+                      openRouteDetail(r);
+                      window.scrollTo(0, 0);
+                    }}
+                    className="text-left border border-default-200 bg-content1 rounded-3xl overflow-hidden"
+                  >
+                    <img
+                      src={r.photo}
+                      alt=""
+                      className="w-full h-20 object-cover"
+                    />
+                    <div className="p-3 flex flex-col gap-1.5">
+                      <span className="text-sm font-semibold leading-tight line-clamp-2">
+                        {r.name.replace(/^(Parque Nacional|P\.N\.)\s*/, "")}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        {r.aks.map((ak) => (
+                          <span
+                            key={ak.id}
+                            className={`w-3.5 h-3.5 rounded-full border-2 ${
+                              scannedAkIds.includes(ak.id)
+                                ? "bg-secondary border-secondary"
+                                : "border-default-300"
+                            }`}
+                          />
+                        ))}
+                        <small className="text-xs text-default-500 ml-1 tabular-nums">
+                          {doneCount}/{r.aks.length}
+                        </small>
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+
+              <div className="border border-dashed border-default-300 rounded-3xl flex items-center justify-center text-center text-xs text-default-500 p-3 min-h-[120px]">
+                +27 parques
+                <br />
+                por descubrir
+              </div>
+            </div>
+
+            {/* Insignias con Petroglifos */}
+            <h2 className="font-display text-xl px-1 mt-1">Insignias</h2>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                {
+                  id: "first",
+                  label: "Primer Àk",
+                  on: scannedAkIds.length > 0,
+                  glyph: "espiral",
+                },
+                ...ROUTES.map((r, idx) => ({
+                  glyph: ["rana", "doble-espiral", "lagartija", "ave", "sol"][
+                    idx % 5
+                  ],
+                  id: r.id,
+                  label: `Guardián de ${
+                    r.name
+                      .replace(/^(Parque Nacional|P\.N\.)\s*/, "")
+                      .split(" · ")[0]
+                  }`,
+                  on: r.aks.every((ak) => scannedAkIds.includes(ak.id)),
+                })),
+              ].map((badge) => (
+                <div
+                  key={badge.id}
+                  className={`flex items-center gap-2.5 p-3 rounded-2xl border border-default-200 bg-content1 text-xs font-semibold ${
+                    badge.on ? "" : "opacity-50"
+                  }`}
+                >
+                  <span
+                    className={`w-7 h-7 rounded-full shrink-0 flex items-center justify-center ${
+                      badge.on
+                        ? "bg-secondary text-secondary-foreground"
+                        : "border-2 border-default-300 text-default-400"
+                    }`}
+                  >
+                    <span
+                      className="petro-glyph w-4 h-4"
+                      style={{
+                        "--glyph": `url(${
+                          PETROGLYPHS[badge.glyph || "espiral"]
+                        })`,
+                      }}
+                      aria-hidden="true"
+                    />
+                  </span>
+                  {badge.label}
                 </div>
-                <div className="grid grid-cols-7 gap-2 items-end h-20 pt-2 px-1">
-                  {WEEKLY_KM.map((d) => {
-                    const heightPct = Math.max(
-                      12,
-                      Math.round((d.km / 12) * 100)
-                    );
-                    return (
-                      <div
-                        key={d.day}
-                        className="flex flex-col items-center gap-1 h-full justify-end"
-                      >
-                        <div
-                          style={{ height: `${heightPct}%` }}
-                          className={`w-full rounded-md ${
-                            d.km > 0 ? "bg-primary" : "bg-default-200"
-                          }`}
-                        />
-                        <span className="text-xs text-default-500 font-medium">
-                          {d.day}
-                        </span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </CardBody>
-            </Card>
+              ))}
+            </div>
 
             {/* Códigos reclamados visibles también en el perfil */}
             <Card
@@ -3701,6 +3777,36 @@ export default function App() {
                 )}
               </CardBody>
             </Card>
+
+            {/* Configuración integrada en Pasaporte */}
+            <h2 className="font-display text-xl px-1 mt-1">Configuración</h2>
+            <Card
+              shadow="none"
+              className="border border-default-200 bg-content1 rounded-3xl"
+            >
+              <CardBody className="p-4 flex flex-col gap-4">
+                <SettingToggle
+                  label="Modo noche"
+                  isOn={isDark}
+                  onChange={setTheme}
+                />
+                <Divider />
+                <SettingToggle
+                  label="Vibrar al escanear"
+                  isOn={vibrateOnScan}
+                  onChange={setVibrateOnScan}
+                />
+              </CardBody>
+            </Card>
+
+            <Button
+              radius="full"
+              variant="light"
+              className="min-h-[48px] font-medium text-sm mb-2"
+              onPress={handleResetDemo}
+            >
+              Reiniciar demo
+            </Button>
           </main>
         )}
       </div>
@@ -3798,12 +3904,15 @@ export default function App() {
           </NavButton>
 
           <NavButton
-            label="Ajustes"
-            ariaLabel="Configuración"
-            active={activeView === "config"}
-            onPress={() => setActiveView("config")}
+            label="Pasaporte"
+            ariaLabel="Pasaporte y configuración"
+            active={activeView === "perfil" || activeView === "config"}
+            onPress={() => {
+              setOpenedRouteId(null);
+              setActiveView("perfil");
+            }}
           >
-            <GearIcon />
+            <PassportIcon />
           </NavButton>
         </div>
       </nav>
